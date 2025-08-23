@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Serviço para o Frontend Angular
+  urban-soccer-frontend:
+    # Constrói a imagem a partir do Dockerfile no diretório atual
+    build: .
+    # Nome do container para fácil identificação
+    container_name: urban-soccer-frontend
+    # Mapeia a porta 4200 do seu computador para a porta 80 do container
+    ports:
+      - "4200:80"
+    # Reinicia o container automaticamente em caso de falha
+    restart: unless-stopped
+
+  # --- Placeholder para o Futuro Backend ---
+  # Descomente e configure quando o backend FastAPI estiver pronto.
+  #
+  # urban-soccer-backend:
+  #   build: ./backend  # Supondo que o Dockerfile do backend esteja em uma pasta 'backend'
+  #   container_name: urban-soccer-backend
+  #   ports:
+  #     - "8000:8000"
+  #   restart: unless-stopped

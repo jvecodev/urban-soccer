@@ -1,0 +1,23 @@
+# Ignora o próprio Git e suas configurações
+.git
+.gitignore
+
+# Ignora os arquivos do Docker, pois não são necessários dentro da imagem
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignora as dependências locais, pois serão instaladas dentro do container
+node_modules
+
+# Ignora arquivos de build e cache do Angular
+dist
+tmp
+out-tsc
+.angular/cache
+
+# Ignora logs e configurações de IDE
+npm-debug.log
+yarn-error.log
+.idea/
+.vscode/

@@ -13,30 +13,30 @@ Nossa paleta de cores é inspirada na identidade visual da logo, transmitindo um
 ### Paleta Principal
 
 #### Cores de Fundo e Base
-* ![#14223D](https://via.placeholder.com/15/14223D/000000?text=+) **Azul Noite (`#14223D`)**
+*  **Azul Noite (`#14223D`)**
     * **Uso Recomendado:** Cor de fundo principal para telas, menus e contêineres. É a base escura que faz todos os outros elementos se destacarem.
 
-* ![#7C2C78](https://via.placeholder.com/15/7C2C78/000000?text=+) **Roxo Urbano (`#7C2C78` / `#792A76`)**
+* **Roxo Urbano (`#7C2C78` / `#792A76`)**
     * **Uso Recomendado:** Para painéis secundários, cards ou gradientes sutis no fundo, adicionando profundidade à interface.
 
 #### Cores de Ação e Destaque (Acentos)
-* ![#EB6E19](https://via.placeholder.com/15/EB6E19/000000?text=+) **Laranja Vibrante (`#EB6E19`)**
+* **Laranja Vibrante (`#EB6E19`)**
     * **Uso Recomendado:** A principal cor de ação (call-to-action). Use para botões primários ("Entrar", "Confirmar"), alertas importantes e elementos que precisam de atenção imediata.
 
-* ![#F4A028](https://via.placeholder.com/15/F4A028/000000?text=+) **Amarelo Dourado (`#F4A028`)**
+* **Amarelo Dourado (`#F4A028`)**
     * **Uso Recomendado:** Para estados de "hover" (mouse sobre) em botões laranja, ícones de destaque ou como cor secundária em gradientes de ação.
 
-* ![#30C9F9](https://via.placeholder.com/15/30C9F9/000000?text=+) **Ciano Elétrico (`#30C9F9`)**
+* **Ciano Elétrico (`#30C9F9`)**
     * **Uso Recomendado:** Acento secundário. Ideal para destacar campos de formulário selecionados, ícones de status, barras de progresso (energia/XP) e textos de stats.
 
-* ![#1095CF](https://via.placeholder.com/15/1095CF/000000?text=+) **Azul Acento (`#1095CF`)**
+*  **Azul Acento (`#1095CF`)**
     * **Uso Recomendado:** Para botões secundários, links e elementos interativos que não são a ação principal da tela.
 
 #### Cores Neutras (Textos e Suporte)
-* ![#C9CBCA](https://via.placeholder.com/15/C9CBCA/000000?text=+) **Cinza Claro (`#C9CBCA`)**
+* **Cinza Claro (`#C9CBCA`)**
     * **Uso Recomendado:** A cor principal para todo o texto de corpo e parágrafos. Garante ótima legibilidade sobre o fundo `Azul Noite`.
 
-* ![#A2B9C7](https://via.placeholder.com/15/A2B9C7/000000?text=+) **Cinza Neutro (`#A2B9C7`)**
+* **Cinza Neutro (`#A2B9C7`)**
     * **Uso Recomendado:** Para textos secundários (placeholders em campos de texto, informações menos importantes) e bordas de contêineres.
 
 ---
