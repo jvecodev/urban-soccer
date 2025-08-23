@@ -1,6 +1,6 @@
 ![Urban Soccer Banner](./public/urbanSoccer.png)
 
-#  Urban Soccer: A Lenda do Asfalto
+#  Urban Soccer: A Lenda do Asfalto - Trainee Wise System
 
 ## 📖 Sobre o Projeto
 **Urban Soccer** é um ambicioso projeto que visa criar uma experiência imersiva de **RPG de Ação em um universo de futebol de rua**. Inspirado pela dramaticidade e pelas jogadas fantásticas de animes como *Super Campeões*, o jogo transporta o jogador para a **"Cidade do Futebol"**, uma metrópole vibrante onde o esporte é um estilo de vida e as lendas nascem no asfalto.
