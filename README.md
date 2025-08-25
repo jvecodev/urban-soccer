@@ -58,6 +58,8 @@ A identidade visual do Urban Soccer transmite a energia da **cultura de rua**, a
 - **Press Start 2P**: Stats e elementos retrô da UI  
 - **Inter**: Corpo de texto e diálogos  
 
+Acompanhe toda a estilização pelo arquivo [style-guide](./style-guide.md) 
+
 ---
 
 ## 🛠️ Como Executar o Projeto
