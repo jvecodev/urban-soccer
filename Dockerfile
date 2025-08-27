@@ -1,5 +1,5 @@
-# Estágio 1: Build da Aplicação Angular
-# Usamos uma imagem Node.js para instalar as dependências e construir o projeto.
+#Build da Aplicação Angular
+
 FROM node:20-alpine as build
 
 # Define o diretório de trabalho dentro do container
@@ -17,8 +17,8 @@ COPY . .
 # Executa o script de build para produção, definido no package.json
 RUN npm run build
 
-# Estágio 2: Servidor Web (Nginx)
-# Usamos uma imagem leve do Nginx para servir os arquivos estáticos gerados no estágio de build.
+#Estágio 2: Servidor Web (Nginx)
+
 FROM nginx:alpine
 
 # Copia os arquivos construídos do estágio 'build' para o diretório padrão do Nginx
