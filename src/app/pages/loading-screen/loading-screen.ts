@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-loading-screen',
@@ -17,7 +16,7 @@ export class LoadingScreenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingTimer = window.setTimeout(() => {
       this.navigateToLogin();
-    }, 10000);
+    }, 3000);
   }
 
   ngOnDestroy(): void {
