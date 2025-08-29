@@ -1,0 +1,38 @@
+:host, .animation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #A2B9C7, #C9CBCA);
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+}
+
+.loading-content {
+  text-align: center;
+  color: #14223D;
+  z-index: 1;
+}
+
+.loading-gif {
+  width: 400px;
+  height: auto;
+  margin-bottom: 30px;
+  border-radius: 15px;
+;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 20px 0;
+  background: linear-gradient(45deg, #EB6E19, #F4A028);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 4px rgba(20, 34, 61, 0.3);
+  font-family: 'Teko', sans-serif;
+  letter-spacing: 2px;
+}
+
