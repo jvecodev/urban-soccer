@@ -2,19 +2,103 @@
 
 
 
+/* Animações com Keyframes */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95) translateY(20px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes slideInBackground {
+  0% {
+    transform: translateX(-100%);
+    filter: brightness(1);
+  }
+  100% {
+    transform: translateX(0);
+    filter: brightness(3);
+  }
+}
+
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1) translateY(-20px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7) translateY(-50px);
+    filter: blur(8px);
+  }
+}
+
+@keyframes slideOutBackground {
+  0% {
+    transform: translateX(0);
+    filter: brightness(3);
+  }
+  100% {
+    transform: translateX(100%);
+    filter: brightness(0.5);
+  }
+}
+
+@keyframes pulseTitle {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 0 20px rgba(235, 110, 25, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 30px rgba(235, 110, 25, 0.6);
+  }
+}
+
+.animation-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
 .city-silhouette {
   position: absolute;
   bottom: 0;
   left: 0;
   padding: auto;
-  width: 100%; /* O dobro da largura para a animação de scroll */
-  height: 100%; /* Ajuste a altura conforme necessário */
+  width: 100%;
+  height: 100%;
   background-image: url(/78786.jpg);
   background-repeat: no-repeat;
   background-position: 0%;
   background-size: cover;
   z-index: 0;
-  filter: brightness(3);
+
+  /* Animação de entrada */
+  animation: slideInBackground 1.2s ease-out forwards;
+}
+
+/* Animação de saída para o background */
+.animation-container.exiting .city-silhouette {
+  animation: slideOutBackground 1.5s ease-in-out forwards;
 }
 
 .loading-content {
@@ -28,6 +112,25 @@
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
+  transition: all 0.8s ease-in-out;
+}
+
+.animation-container.exiting {
+  animation: fadeOutScale 1.5s ease-in-out forwards;
+}
+
+.loading-gif {
+  width: 400px;
+  height: auto;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  /* Efeito de entrada suave */
+  animation: fadeInScale 1.8s ease-out 0.6s both;
+}
+
+/* Animação específica para o GIF na saída */
+.animation-container.exiting .loading-gif {
+  animation: fadeOutScale 1.2s ease-in-out forwards;
 }
 
 .loading-gif {
@@ -47,15 +150,28 @@ h1 {
   background-clip: text;
   font-family: var(--font-accent);
   letter-spacing: 2px;
+
+  /* Animações de entrada */
+  animation:
+    fadeInScale 2s ease-out 0.9s both,
+    pulseTitle 3s ease-in-out 2s infinite;
 }
 
+/* Animação específica para o título na saída */
+.animation-container.exiting h1 {
+  animation: fadeOutScale 1s ease-in-out forwards;
+}
 
-/* Animação para a silhueta da cidade */
-@keyframes move-city {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%); /* Move a imagem para a esquerda */
-  }
+.loading-gif {
+  width: 400px;
+  height: auto;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  /* Efeito de entrada suave */
+  animation: fadeInScale 1.8s ease-out 0.6s both;
+}
+
+/* Animação específica para o GIF na saída */
+.animation-container.exiting .loading-gif {
+  animation: fadeOutScale 1.2s ease-in-out forwards;
 }
