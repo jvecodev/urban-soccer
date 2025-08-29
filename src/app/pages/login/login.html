@@ -1,1 +1,34 @@
-<p>login works!</p>
+<div class="login-container">
+  <p-card styleClass="login-card">
+    <div>
+      <img alt="logo" src="/urbanSoccer.ico" class="logo" />
+    </div>
+
+    <form #frm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            autocomplete="off"
+          />
+          <label for="email">Email</label>
+        </p-floatlabel>
+         <p-floatlabel>
+          <input
+            pInputText
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            autocomplete="off"
+          />
+          <label for="email">Senha</label>
+        </p-floatlabel>
+      </div>
+
+
+    </form>
+  </p-card>
+</div>

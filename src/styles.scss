@@ -1,1 +1,90 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* 1. Importação das Fontes do Google */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Press+Start+2P&family=Russo+One&family=Teko:wght@600;700&display=swap');
+
+
+:root {
+  /* Paleta de Cores */
+  --azul-noite: #14223D;
+  --roxo-urbano: #7C2C78;
+  --laranja-vibrante: #EB6E19;
+  --amarelo-dourado: #F4A028;
+  --ciano-eletrico: #30C9F9;
+  --azul-acento: #1095CF;
+  --cinza-claro: #C9CBCA;
+  --cinza-neutro: #A2B9C7;
+
+  /* Tipografia */
+  --font-primary: 'Teko', sans-serif;
+  --font-secondary: 'Russo One', sans-serif;
+  --font-accent: 'Press Start 2P', cursive;
+  --font-body: 'Inter', sans-serif;
+
+
+  --primary-color: var(--laranja-vibrante);
+  --primary-color-text: var(--azul-noite);
+  --surface-ground: var(--azul-noite); /* Fundo da página */
+  --text-color: var(--cinza-claro); /* Cor do texto principal */
+  --text-color-secondary: var(--cinza-neutro); /* Cor de texto secundário */
+
+
+}
+
+
+body {
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+
+.p-button {
+  font-family: var(--font-secondary); /* Usando Russo One para botões, por exemplo */
+}
+
+.p-button.p-button-primary {
+  background: var(--laranja-vibrante) !important;
+  border-color: var(--laranja-vibrante) !important;
+  color: var(--azul-noite) !important;
+}
+
+.p-button.p-button-primary:hover {
+  background: var(--amarelo-dourado) !important;
+  border-color: var(--amarelo-dourado) !important;
+}
+
+/* Exemplo de uso em um botão secundário */
+.p-button.p-button-secondary {
+    background: var(--azul-acento) !important;
+    border-color: var(--azul-acento) !important;
+    color: var(--cinza-claro) !important;
+}
+
+p-floatlabel {
+  display: block;
+  margin: 2rem 0;
+
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--cinza-neutro);
+    border-radius: 4px;
+  }
+
+  label {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    transition: 0.2s ease all;
+    color: var(--cinza-neutro);
+  }
+
+}
