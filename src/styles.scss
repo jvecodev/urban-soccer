@@ -20,16 +20,12 @@
   --font-accent: 'Press Start 2P', cursive;
   --font-body: 'Inter', sans-serif;
 
-
   --primary-color: var(--laranja-vibrante);
   --primary-color-text: var(--azul-noite);
   --surface-ground: var(--azul-noite); /* Fundo da página */
   --text-color: var(--cinza-claro); /* Cor do texto principal */
   --text-color-secondary: var(--cinza-neutro); /* Cor de texto secundário */
-
-
 }
-
 
 body {
   background-color: var(--surface-ground);
@@ -37,6 +33,7 @@ body {
   font-family: var(--font-body);
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -45,46 +42,160 @@ h1, h2, h3 {
   text-transform: uppercase;
 }
 
-
+/* Botões Primários baseados no Style Guide */
 .p-button {
-  font-family: var(--font-secondary); /* Usando Russo One para botões, por exemplo */
+  font-family: var(--font-secondary) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
 }
 
 .p-button.p-button-primary {
   background: var(--laranja-vibrante) !important;
   border-color: var(--laranja-vibrante) !important;
   color: var(--azul-noite) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 15px rgba(235, 110, 25, 0.3) !important;
 }
 
 .p-button.p-button-primary:hover {
   background: var(--amarelo-dourado) !important;
   border-color: var(--amarelo-dourado) !important;
+  color: var(--azul-noite) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(244, 160, 40, 0.4) !important;
 }
 
-/* Exemplo de uso em um botão secundário */
+/* Botões Secundários */
 .p-button.p-button-secondary {
-    background: var(--azul-acento) !important;
-    border-color: var(--azul-acento) !important;
-    color: var(--cinza-claro) !important;
+  background: var(--azul-acento) !important;
+  border-color: var(--azul-acento) !important;
+  color: var(--cinza-claro) !important;
+
+  &:hover {
+    background: var(--ciano-eletrico) !important;
+    border-color: var(--ciano-eletrico) !important;
+    color: var(--azul-noite) !important;
+  }
 }
 
+/* Botões de Contraste */
+.p-button[severity="contrast"] {
+  background: var(--azul-acento) !important;
+  border-color: var(--azul-acento) !important;
+  color: var(--cinza-claro) !important;
+
+  &:hover {
+    background: var(--ciano-eletrico) !important;
+    border-color: var(--ciano-eletrico) !important;
+    color: var(--azul-noite) !important;
+  }
+}
+
+/* Botões Text/Plain */
+.p-button.p-button-text,
+.p-button[text] {
+  color: var(--cinza-claro) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+
+  &:hover {
+    background: var(--roxo-urbano) !important;
+    color: var(--cinza-claro) !important;
+  }
+}
+
+/* Campos de Input baseados no Style Guide */
 p-floatlabel {
   display: block;
   margin: 2rem 0;
 
-  input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--cinza-neutro);
-    border-radius: 4px;
+  input, .p-inputtext {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 2px solid var(--cinza-neutro) !important;
+    border-radius: 8px !important;
+    background: var(--azul-noite) !important;
+    color: var(--cinza-claro) !important;
+    font-family: var(--font-body) !important;
+    transition: all 0.3s ease !important;
+
+    &:focus {
+      border-color: var(--ciano-eletrico) !important;
+      box-shadow: 0 0 0 3px rgba(48, 201, 249, 0.2) !important;
+      outline: none !important;
+    }
+
+    &::placeholder {
+      color: var(--cinza-neutro) !important;
+    }
   }
 
   label {
     position: absolute;
-    left: 0.5rem;
-    top: 0.5rem;
-    transition: 0.2s ease all;
-    color: var(--cinza-neutro);
+    left: 0.75rem;
+    top: 0.75rem;
+    transition: 0.3s ease all;
+    color: var(--cinza-neutro) !important;
+    font-family: var(--font-body) !important;
+    background: var(--azul-noite);
+    padding: 0 0.25rem;
   }
 
+  .p-float-label input:focus ~ label,
+  .p-float-label input.p-filled ~ label {
+    color: var(--ciano-eletrico) !important;
+    transform: translateY(-1.5rem) scale(0.85) !important;
+  }
+}
+
+/* Toolbar personalizada */
+.p-toolbar {
+  background: var(--azul-noite) !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Cards e superfícies */
+.p-card {
+  background: var(--azul-noite) !important;
+  border: 1px solid var(--cinza-neutro) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--azul-noite);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ciano-eletrico);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--amarelo-dourado);
+}
+
+/* Classes utilitárias para tipografia */
+.text-primary {
+  font-family: var(--font-primary) !important;
+}
+
+.text-secondary {
+  font-family: var(--font-secondary) !important;
+}
+
+.text-accent {
+  font-family: var(--font-accent) !important;
+}
+
+.text-body {
+  font-family: var(--font-body) !important;
 }

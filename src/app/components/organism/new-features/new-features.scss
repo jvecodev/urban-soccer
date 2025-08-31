@@ -1,0 +1,213 @@
+/* ===== SEÇÃO NEW FEATURES ===== */
+
+/* Container principal da seção */
+#features {
+  background-color: var(--azul-noite);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Container interno para centralizar conteúdo */
+.features-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 4rem 1.5rem;
+}
+
+/* Grid customizado para cards */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  justify-items: center;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ===== TÍTULOS E TEXTOS ===== */
+
+/* Título principal */
+.text-surface-900 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  color: var(--cinza-claro);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+/* Subtítulo */
+.text-muted-color {
+  font-family: var(--font-body);
+  color: var(--cinza-neutro);
+  font-size: 1.2rem;
+}
+
+/* ===== CARDS DE FEATURES ===== */
+
+/* Container dos cards */
+.feature-card {
+  background: linear-gradient(135deg, var(--ciano-eletrico) 0%, var(--azul-acento) 100%);
+  border-radius: 12px;
+  padding: 3px;
+  transition: all 0.3s ease;
+  height: 100%;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(48, 201, 249, 0.3);
+}
+
+/* Conteúdo interno do card */
+.feature-card-content {
+  background: var(--azul-noite);
+  border-radius: 10px;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+/* Ícones dos cards */
+.feature-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  background: linear-gradient(135deg, var(--laranja-vibrante), var(--amarelo-dourado));
+}
+
+.feature-icon i {
+  color: var(--azul-noite);
+  font-size: 1.5rem;
+}
+
+/* Títulos dos cards */
+.feature-title {
+  font-family: var(--font-secondary);
+  color: var(--cinza-claro);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Descrições dos cards */
+.feature-description {
+  font-family: var(--font-body);
+  color: var(--cinza-neutro);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ===== SEÇÃO DE DEPOIMENTO ===== */
+
+.testimonial-section {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6)
+  ),
+  radial-gradient(
+    77.36% 256.97% at 77.36% 57.52%,
+    #efe1af 0%,
+    #c3dcfa 100%
+  );
+}
+
+.testimonial-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.testimonial-name {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: 600;
+}
+
+.testimonial-company {
+  color: #6b7280;
+  font-size: 1.25rem;
+}
+
+.testimonial-text {
+  color: #1f2937;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+.testimonial-logo {
+  margin-top: 1.5rem;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+@media (max-width: 768px) {
+  .features-container {
+    padding: 2rem 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .feature-card {
+    min-height: 250px;
+  }
+
+  .text-4xl {
+    font-size: 2.5rem;
+  }
+
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+
+  .testimonial-section {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
+  }
+
+  .testimonial-content {
+    padding: 1rem 0.5rem;
+  }
+}

@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
     selector: 'app-header',
     templateUrl: './header.html',
+    styleUrls: ['./header.scss'],
     standalone: true,
     imports: [Toolbar, AvatarModule, ButtonModule]
 })

@@ -1,0 +1,108 @@
+#hero {
+  background: linear-gradient(
+    135deg,
+    var(--azul-noite) 0%,
+    var(--roxo-urbano) 50%,
+    var(--azul-noite) 100%
+  ) !important;
+  clip-path: ellipse(150% 87% at 93% 13%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at 70% 30%,
+      rgba(235, 110, 25, 0.1) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+  }
+
+  h1 {
+    font-family: var(--font-primary) !important;
+    font-weight: 700 !important;
+    color: var(--cinza-claro) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
+    .font-light {
+      font-family: var(--font-secondary) !important;
+      font-weight: 400 !important;
+      color: var(--cinza-neutro) !important;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+  }
+
+  p {
+    font-family: var(--font-body) !important;
+    color: var(--cinza-claro) !important;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .p-button {
+    font-family: var(--font-secondary) !important;
+    background: var(--laranja-vibrante) !important;
+    border-color: var(--laranja-vibrante) !important;
+    color: var(--azul-noite) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    padding: 1rem 2rem !important;
+    font-size: 1.1rem !important;
+    box-shadow: 0 4px 15px rgba(235, 110, 25, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--amarelo-dourado) !important;
+      border-color: var(--amarelo-dourado) !important;
+      color: var(--azul-noite) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(244, 160, 40, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  img {
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  #hero {
+    padding-top: 6rem !important;
+    text-align: center;
+
+    h1 {
+      font-size: 3rem !important;
+    }
+
+    p {
+      font-size: 1.1rem !important;
+      margin: 0 auto;
+    }
+  }
+}

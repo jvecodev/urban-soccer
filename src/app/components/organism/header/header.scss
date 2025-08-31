@@ -1,0 +1,74 @@
+p-toolbar {
+  background-color: var(--azul-noite) !important;
+  width: 100%;
+  border: 0px !important;
+  border-bottom: 1px solid var(--cinza-neutro) !important;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--azul-noite) !important;
+}
+
+.menu {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  img {
+    height: 3rem;
+    width: auto;
+  }
+
+  .p-button {
+    font-family: var(--font-secondary) !important;
+    color: var(--cinza-claro) !important;
+    background: transparent !important;
+    border: none !important;
+    text-transform: uppercase;
+
+    &:hover {
+      background: var(--roxo-urbano) !important;
+      color: var(--cinza-claro) !important;
+    }
+  }
+}
+
+/* Botões de ação do lado direito */
+.p-button[label="Cadastrar"] {
+  background: var(--azul-acento) !important;
+  border-color: var(--azul-acento) !important;
+  color: var(--cinza-claro) !important;
+  font-family: var(--font-secondary) !important;
+  text-transform: uppercase;
+
+  &:hover {
+    background: var(--ciano-eletrico) !important;
+    border-color: var(--ciano-eletrico) !important;
+    color: var(--azul-noite) !important;
+  }
+}
+
+.p-button[label="Entrar"] {
+  background: var(--laranja-vibrante) !important;
+  border-color: var(--laranja-vibrante) !important;
+  color: var(--azul-noite) !important;
+  font-family: var(--font-secondary) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+
+  &:hover {
+    background: var(--amarelo-dourado) !important;
+    border-color: var(--amarelo-dourado) !important;
+    color: var(--azul-noite) !important;
+  }
+}
