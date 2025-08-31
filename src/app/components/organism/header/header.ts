@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Toolbar } from 'primeng/toolbar';
 import { AvatarModule } from 'primeng/avatar';
-import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -11,5 +10,5 @@ import { ButtonModule } from 'primeng/button';
     imports: [Toolbar, AvatarModule, ButtonModule]
 })
 export class Header {
-  
+
 }

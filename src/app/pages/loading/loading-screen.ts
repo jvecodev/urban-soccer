@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './loading-screen.html',
   styleUrls: ['./loading-screen.scss']
 })
-export class LoadingScreenComponent implements OnInit, OnDestroy {
+export class LoadingScreen implements OnInit, OnDestroy {
   private loadingTimer?: number;
   isExiting = false;
 
@@ -27,13 +27,12 @@ export class LoadingScreenComponent implements OnInit, OnDestroy {
 
   private startExitAnimation(): void {
     this.isExiting = true;
-    // Aguarda a animação terminar antes de navegar
     setTimeout(() => {
-      this.navigateToLogin();
-    }, 1500); // Tempo da animação de saída
+      this.navigateToHome();
+    }, 1500);
   }
 
-  private navigateToLogin(): void {
-    this.router.navigate(['/login']);
+  private navigateToHome(): void {
+    this.router.navigate(['/home']);
   }
 }
