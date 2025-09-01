@@ -2,18 +2,17 @@
   <p-toolbar >
         <ng-template #start>
             <div class="menu">
-                 <img src="/Logo-Transparente-100.png"  alt="">
-                  <p-button label="Files" text plain />
-                <p-button label="Edit" text plain />
-                <p-button label="View" text plain />
+                 <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
+                <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
+                <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
+                <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
             </div>
         </ng-template>
 
         <ng-template #end>
             <div class="flex items-center gap-2 justify-center">
-                <p-button label="Cadastrar" severity="contrast" size="small" />
-                <p-button label="Entrar" severity="contrast" size="small" />
-
+                <app-button label="Cadastrar" [text]="true" [plain]="true" />
+                <app-button label="Entrar" [text]="true" [plain]="true"/>
             </div>
         </ng-template>
     </p-toolbar>

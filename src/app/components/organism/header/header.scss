@@ -3,6 +3,7 @@ p-toolbar {
   width: 100%;
   border: 0px !important;
   border-bottom: 1px solid var(--cinza-neutro) !important;
+  padding: 0% 1% !important;
 }
 
 .card {
@@ -25,7 +26,7 @@ p-toolbar {
   gap: 1rem;
 
   img {
-    height: 3rem;
+    height: 7rem;
     width: auto;
   }
 

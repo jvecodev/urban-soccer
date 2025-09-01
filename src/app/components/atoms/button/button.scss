@@ -1,0 +1,140 @@
+// Base button styles
+.urban-button {
+  transition: all 0.2s ease-in-out;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }
+
+  // Size variants
+  &--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  &--large {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  // Variant styles
+  &--primary {
+    background-color: #3b82f6;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: #2563eb;
+    }
+  }
+
+  &--secondary {
+    background-color: #6b7280;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: #4b5563;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    
+    &:hover:not(:disabled) {
+      background-color: #3b82f6;
+      color: white;
+    }
+  }
+
+  &--text {
+    background-color: transparent;
+    color: #3b82f6;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  &--newsletter {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // State styles
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  &--loading {
+    pointer-events: none;
+    
+    .pi-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+}
+
+// Animation for spinner
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Custom styling for PrimeNG button integration
+:host ::ng-deep {
+  .p-button {
+    &.urban-button--newsletter {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      
+      &:hover {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+}
+
+// Utility classes
+.ml-2 {
+  margin-left: 0.5rem;
+}

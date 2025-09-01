@@ -8,11 +8,12 @@ import { Header } from '../../components/organism/header/header';
 import { FirstOrganism } from '../../components/organism/first-organism/first-organism';
 import { Features } from '../../components/organism/new-features/new-features';
 import { Footer } from '../../components/organism/footer/footer';
+import { ScrollToTop } from '../../components/atoms/scroll-to-top/scroll-to-top';
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [RouterModule, Header, FirstOrganism, Features, Footer, RippleModule, StyleClassModule, ButtonModule, DividerModule],
+    imports: [RouterModule, Header, FirstOrganism, Features, Footer, ScrollToTop, RippleModule, StyleClassModule, ButtonModule, DividerModule],
     templateUrl: './home.html',
     styleUrl: './home.scss'
 })
