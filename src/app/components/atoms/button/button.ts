@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text' | 'newsletter';
 export type ButtonSize = 'small' | 'large';
@@ -9,7 +10,7 @@ export type ButtonSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'hel
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [ButtonModule, CommonModule],
+  imports: [ButtonModule, CommonModule, RouterModule],
   templateUrl: './button.html',
   styleUrl: './button.scss'
 })
@@ -30,6 +31,7 @@ export class Button {
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() customClass: string = '';
   @Input() fullWidth: boolean = false;
+  @Input() routerLink: string | null = null;
 
   @Output() onClick = new EventEmitter<Event>();
 

@@ -853,6 +853,95 @@
     margin-bottom: 1.5rem;
   }
 
+  .footer-brand {
+    .brand-title {
+      font-size: 1.2rem;
+    }
+
+    .brand-description {
+      font-size: 0.8rem;
+      max-width: 250px;
+      line-height: 1.4;
+    }
+
+    .social-links {
+      gap: 0.5rem;
+
+      .social-link {
+        width: 35px;
+        height: 35px;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .footer-nav {
+    gap: 1rem;
+
+    .nav-section .nav-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .nav-links li {
+      margin-bottom: 0.5rem;
+
+      .nav-link {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .footer-newsletter {
+    padding: 1rem;
+    margin-bottom: 2rem;
+
+    .newsletter-title {
+      font-size: 1.1rem;
+    }
+
+    .newsletter-description {
+      font-size: 0.8rem;
+    }
+
+    .contact-form {
+      .form-input,
+      .form-textarea {
+        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .form-textarea {
+        min-height: 80px;
+        margin-bottom: 1rem;
+      }
+
+      .form-button {
+        max-width: 180px;
+        padding: 0.7rem 1rem;
+        font-size: 0.8rem;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    padding-top: 1.5rem;
+
+    .copyright p {
+      font-size: 0.75rem;
+
+      &:first-child {
+        font-size: 0.8rem;
+      }
+    }
+  }
   .footer-newsletter {
     margin-bottom: 1.5rem;
   }
@@ -1136,5 +1225,98 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Modal responsivo */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: 400px;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 0.75rem;
+
+    .modal-title {
+      font-size: 1.4rem;
+    }
+  }
+
+  .modal-body {
+    padding: 1rem 1.5rem;
+
+    .modal-message {
+      font-size: 0.95rem;
+    }
+
+    .modal-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+
+  .modal-footer {
+    padding: 0.75rem 1.5rem 1.5rem;
+
+    .modal-button {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95%;
+    max-width: 350px;
+  }
+
+  .modal-header {
+    padding: 1.25rem 1.25rem 0.5rem;
+
+    .modal-icon {
+      width: 50px;
+      height: 50px;
+
+      i {
+        font-size: 1.5rem;
+      }
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+    }
+  }
+
+  .modal-body {
+    padding: 0.75rem 1.25rem;
+
+    .modal-message {
+      font-size: 0.9rem;
+    }
+
+    .modal-subtitle {
+      font-size: 0.8rem;
+    }
+  }
+
+  .modal-footer {
+    padding: 0.5rem 1.25rem 1.25rem;
+
+    .modal-button {
+      padding: 0.7rem 1.25rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  .modal-close {
+    width: 35px;
+    height: 35px;
+    top: 0.75rem;
+    right: 0.75rem;
+
+    i {
+      font-size: 0.9rem;
+    }
   }
 }

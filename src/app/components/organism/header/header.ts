@@ -3,13 +3,15 @@ import { Toolbar } from 'primeng/toolbar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { Button } from '../../atoms/button/button';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.html',
     styleUrls: ['./header.scss'],
     standalone: true,
-    imports: [Toolbar, AvatarModule, ButtonModule, Button]
+    imports: [Toolbar, AvatarModule, ButtonModule, Button, RouterModule, CommonModule]
 })
 export class Header {
     isMobileMenuOpen = false;
@@ -25,6 +27,7 @@ export class Header {
                 behavior: 'smooth'
             });
         }
+        this.closeMobileMenu();
     }
 
     scrollToTop(): void {

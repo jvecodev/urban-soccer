@@ -1,34 +1,71 @@
-<div class="login-container">
-  <p-card styleClass="login-card">
-    <div>
-      <img alt="logo" src="/Logo-Transparente.svg" class="logo" />
-    </div>
+<div
+  class="login"
+>
+  <div class="flex flex-col items-center justify-center">
+    <div
+      style="
+        border-radius: 56px;
+        padding: 0.3rem;
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 0%,
+          rgba(198, 243, 33, 0) 20%
+        );
+      "
+    >
+      <div
+        class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20"
+        style="border-radius: 53px"
+      >
+        <div class="text-center mb-8">
 
-    <form #frm="ngForm" (ngSubmit)="onSubmit()">
-      <div class="p-fluid">
-        <p-floatlabel>
+          <div
+            class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4"
+          >
+            Junte-se a comunidade
+          </div>
+          <span class="text-muted-color font-medium">Entre para continuar</span>
+        </div>
+
+        <div>
+
           <input
             pInputText
-            id="email"
+            id="email1"
+            type="text"
+            placeholder="Email"
+            class="w-full md:w-120 mb-8"
             [(ngModel)]="email"
-            name="email"
-            autocomplete="off"
           />
-          <label for="email">Email</label>
-        </p-floatlabel>
-         <p-floatlabel>
-          <input
-            pInputText
-            id="password"
+
+          <p-password
+            id="password1"
             [(ngModel)]="password"
-            name="password"
-            autocomplete="off"
-          />
-          <label for="email">Senha</label>
-        </p-floatlabel>
+            placeholder="Password"
+            [toggleMask]="true"
+            styleClass="mb-4"
+            [fluid]="true"
+            [feedback]="false"
+          ></p-password>
+
+          <div class="flex items-center justify-between mt-2 mb-8 gap-8">
+            <div class="flex items-center">
+              <p-checkbox
+                [(ngModel)]="checked"
+                id="rememberme1"
+                binary
+                class="mr-2"
+              ></p-checkbox>
+              <label for="rememberme1">Remember me</label>
+            </div>
+            <span
+              class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+              >Forgot password?</span
+            >
+          </div>
+         <app-button label="Início" [text]="true" [plain]="true" />
+        </div>
       </div>
-
-
-    </form>
-  </p-card>
+    </div>
+  </div>
 </div>
