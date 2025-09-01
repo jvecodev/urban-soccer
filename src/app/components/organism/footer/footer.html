@@ -1,4 +1,4 @@
-<footer class="urban-footer" id>
+<footer class="urban-footer" id="footer">
   <div class="footer-container">
 
     <!-- Seção Principal do Footer -->
@@ -64,20 +64,20 @@
 
         <input type="hidden" name="_captcha" value="false" />
         <div class="form-row">
-          <input 
-            type="text" 
-            name="name" 
-            required 
-            placeholder="Nome" 
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="Nome"
             class="form-input"
             [(ngModel)]="formData.name"
             #nameField="ngModel" />
 
-          <input 
-            type="email" 
-            name="email" 
-            required 
-            placeholder="Email" 
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Email"
             class="form-input"
             [(ngModel)]="formData.email"
             #emailField="ngModel" />
@@ -92,8 +92,8 @@
             #messageField="ngModel"
           ></textarea>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="form-button"
           [disabled]="isSubmitting || !contactForm.valid">
           <i class="pi pi-send" *ngIf="!isSubmitting"></i>
@@ -123,7 +123,7 @@
           <i class="pi pi-times"></i>
         </button>
       </div>
-      
+
       <div class="modal-body">
         <p class="modal-message">
           Obrigado pelo seu contato! Recebemos sua mensagem e entraremos em contato em breve.
@@ -132,7 +132,7 @@
           Nossa equipe responde em até 24 horas úteis.
         </p>
       </div>
-      
+
       <div class="modal-footer">
         <button class="modal-button" (click)="closeModal()">
           <i class="pi pi-check"></i>

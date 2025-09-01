@@ -1,19 +1,57 @@
-<div class="card" >
-  <p-toolbar >
-        <ng-template #start>
-            <div class="menu">
-                 <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
-                <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
-                <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
-                <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
-            </div>
-        </ng-template>
+<div class="card">
+  <p-toolbar>
+    <ng-template #start>
+      <div class="menu desktop-menu">
+        <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
+        <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
+        <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
+        <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
+      </div>
 
-        <ng-template #end>
-            <div class="flex items-center gap-2 justify-center">
-                <app-button label="Cadastrar" [text]="true" [plain]="true" />
-                <app-button label="Entrar" [text]="true" [plain]="true"/>
-            </div>
-        </ng-template>
-    </p-toolbar>
+      <!-- Mobile Logo -->
+      <div class="mobile-logo">
+        <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
+      </div>
+    </ng-template>
+
+    <ng-template #end>
+      <!-- Desktop Buttons -->
+      <div class="desktop-actions flex items-center gap-2 justify-center">
+        <app-button label="Cadastrar" [text]="true" [plain]="true" />
+        <app-button label="Entrar" [text]="true" [plain]="true"/>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="mobile-menu-button">
+        <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()">
+    <div class="mobile-menu-content" (click)="$event.stopPropagation()">
+      <div class="mobile-menu-header">
+        <img src="/Logo-Transparente.png" alt="Urban Soccer" class="mobile-menu-logo">
+        <button class="mobile-close-btn" (click)="closeMobileMenu()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="mobile-menu-nav">
+        <app-button (onClick)="navigateAndClose('hero')" label="Início" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
+        <app-button (onClick)="navigateAndClose('features')" label="Recursos" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
+        <app-button (onClick)="navigateAndClose('footer')" label="Contato" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
+      </div>
+
+      <div class="mobile-menu-actions">
+        <app-button label="Cadastrar" [text]="true" [plain]="true" customClass="mobile-action-btn mobile-cadastrar" />
+        <app-button label="Entrar" [text]="true" [plain]="true" customClass="mobile-action-btn mobile-entrar" />
+      </div>
+    </div>
+  </div>
 </div>

@@ -12,6 +12,7 @@ import { Button } from '../../atoms/button/button';
     imports: [Toolbar, AvatarModule, ButtonModule, Button]
 })
 export class Header {
+    isMobileMenuOpen = false;
 
     scrollToSection(sectionId: string): void {
         const element = document.getElementById(sectionId);
@@ -31,5 +32,25 @@ export class Header {
             top: 0,
             behavior: 'smooth'
         });
+    }
+
+    toggleMobileMenu(): void {
+        this.isMobileMenuOpen = !this.isMobileMenuOpen;
+        // Previne scroll do body quando menu está aberto
+        if (this.isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }
+
+    closeMobileMenu(): void {
+        this.isMobileMenuOpen = false;
+        document.body.style.overflow = 'unset';
+    }
+
+    navigateAndClose(sectionId: string): void {
+        this.scrollToSection(sectionId);
+        this.closeMobileMenu();
     }
 }
