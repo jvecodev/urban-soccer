@@ -1,73 +1,110 @@
-:host {
-  display: block;
-}
-
-.login-container {
+.login {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 20px;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--azul-noite);
+  padding: 1rem;
+  overflow-x: hidden;
 }
 
-.login-card {
-  width: 100%;
-  max-width: 400px;
-  background-color: var(--roxo-urbano) !important;
-  border-radius: 8px;
-  border: 1px solid var(--ciano-eletrico);
-}
-
-.logo {
-  display: block;
-  margin: 20px auto;
-  width: 150px;
-}
-
-label {
-  font-family: var(--font-secondary);
-  color: var(--cinza-claro);
-  margin-bottom: 8px;
-  display: block;
-}
-
-.p-field {
-  margin-bottom: 1.5rem;
-}
-
-// Estilo dos inputs do PrimeNG
-:host ::ng-deep .p-inputtext {
-  background-color: var(--azul-noite) !important;
-  border: 1px solid var(--cinza-neutro) !important;
-  color: var(--cinza-claro) !important;
-}
-
-:host ::ng-deep .p-inputtext:focus {
-  border-color: var(--ciano-eletrico) !important;
-  box-shadow: 0 0 0 1px var(--ciano-eletrico) !important;
-}
-
-// Estilo do botão
-.p-button-primary {
-  width: 100%;
-  font-family: var(--font-primary) !important;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-}
-
-.extra-links {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-family: var(--font-body);
-
-  a {
-    color: var(--ciano-eletrico);
-    text-decoration: none;
-    margin: 0 10px;
-    font-size: 0.9rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
+/* Responsividade da página de login */
+@media (max-width: 1024px) {
+  .login {
+    padding: 0.75rem;
   }
 }
+
+@media (max-width: 768px) {
+  .login {
+    padding: 0.5rem;
+  }
+
+  /* Ajustar o container do formulário */
+  .w-full.bg-surface-0 {
+    padding: 3rem 1.5rem !important;
+  }
+
+  .text-3xl {
+    font-size: 2rem !important;
+  }
+
+  .text-2xl {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .login {
+    padding: 0.25rem;
+  }
+
+  .w-full.bg-surface-0 {
+    padding: 2rem 1rem !important;
+  }
+
+  .text-3xl {
+    font-size: 1.8rem !important;
+  }
+
+  .text-2xl {
+    font-size: 1.2rem !important;
+  }
+
+  .w-full.md\\:w-120 {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .login {
+    padding: 0.125rem;
+  }
+
+  .w-full.bg-surface-0 {
+    padding: 1.5rem 0.75rem !important;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .text-2xl {
+    font-size: 1rem !important;
+  }
+
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .mt-2.mb-8.gap-8 {
+    gap: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .flex.items-center.justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .w-full.bg-surface-0 {
+    padding: 1rem 0.5rem !important;
+  }
+
+  .text-3xl {
+    font-size: 1.3rem !important;
+  }
+
+  .text-2xl {
+    font-size: 0.9rem !important;
+  }
+}
+

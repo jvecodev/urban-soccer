@@ -1,4 +1,38 @@
 /* Estilos da página Home */
 .home-container {
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; /* Previne scroll horizontal */
+}
+
+/* Responsividade geral da página home */
+@media (max-width: 1200px) {
+  .home-container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 0;
+  }
+
+  /* Ajustar espaçamento entre seções em mobile */
+  .landing-wrapper {
+    padding: 0;
+  }
+
+  #home {
+    padding-top: 4rem; /* Espaço para header fixo em mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: 0;
+  }
+
+  #home {
+    padding-top: 3.5rem; /* Espaço menor para header em telas muito pequenas */
+  }
 }

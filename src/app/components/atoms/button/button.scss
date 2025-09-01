@@ -11,7 +11,7 @@
   border: none;
   outline: none;
   text-decoration: none;
-  
+
   &:focus {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
   }
@@ -33,7 +33,7 @@
   &--primary {
     background-color: #3b82f6;
     color: white;
-    
+
     &:hover:not(:disabled) {
       background-color: #2563eb;
     }
@@ -42,7 +42,7 @@
   &--secondary {
     background-color: #6b7280;
     color: white;
-    
+
     &:hover:not(:disabled) {
       background-color: #4b5563;
     }
@@ -52,7 +52,7 @@
     background-color: transparent;
     border: 2px solid #3b82f6;
     color: #3b82f6;
-    
+
     &:hover:not(:disabled) {
       background-color: #3b82f6;
       color: white;
@@ -62,7 +62,7 @@
   &--text {
     background-color: transparent;
     color: #3b82f6;
-    
+
     &:hover:not(:disabled) {
       background-color: rgba(59, 130, 246, 0.1);
     }
@@ -76,7 +76,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    
+
     &:hover:not(:disabled) {
       background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
       transform: translateY(-1px);
@@ -88,7 +88,7 @@
   &--disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    
+
     &:hover {
       transform: none !important;
       box-shadow: none !important;
@@ -97,7 +97,7 @@
 
   &--loading {
     pointer-events: none;
-    
+
     .pi-spinner {
       animation: spin 1s linear infinite;
     }
@@ -118,13 +118,67 @@
   }
 }
 
+// Responsividade para botões
+@media (max-width: 768px) {
+  .urban-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    gap: 0.4rem;
+
+    &--small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    &--large {
+      padding: 0.65rem 1.3rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .urban-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    gap: 0.3rem;
+
+    &--small {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.75rem;
+    }
+
+    &--large {
+      padding: 0.6rem 1.1rem;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .urban-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+
+    &--small {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+    }
+
+    &--large {
+      padding: 0.55rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
 // Custom styling for PrimeNG button integration
 :host ::ng-deep {
   .p-button {
     &.urban-button--newsletter {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border: none;
-      
+
       &:hover {
         background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         transform: translateY(-1px);

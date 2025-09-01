@@ -1,19 +1,50 @@
-<div class="card" >
-  <p-toolbar >
-        <ng-template #start>
-            <div class="menu">
-                 <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
-                <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
-                <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
-                <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
-            </div>
-        </ng-template>
+<div class="card">
+  <p-toolbar>
+    <ng-template #start>
+      <div class="header-start">
+        <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
 
-        <ng-template #end>
-            <div class="flex items-center gap-2 justify-center">
-                <app-button label="Cadastrar" [text]="true" [plain]="true" />
-                <app-button label="Entrar" [text]="true" [plain]="true"/>
-            </div>
-        </ng-template>
-    </p-toolbar>
+        <!-- Menu Desktop -->
+        <div class="desktop-menu">
+          <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
+          <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
+          <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #end>
+      <div class="header-end">
+        <!-- Botões de ação desktop -->
+        <div class="desktop-actions">
+          <app-button label="Cadastrar" [text]="true" [plain]="true" routerLink="/signup"/>
+          <app-button label="Entrar" [text]="true" [plain]="true" routerLink="/login"/>
+        </div>
+
+        <!-- Botão Hambúrguer -->
+        <div class="mobile-menu-toggle">
+          <app-button
+            [icon]="isMobileMenuOpen ? 'pi pi-times' : 'pi pi-bars'"
+            (onClick)="toggleMobileMenu()"
+            [text]="true"
+            [plain]="true"
+            customClass="hamburger-btn" />
+        </div>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <!-- Menu Mobile -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-content">
+      <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" [fullWidth]="true" />
+      <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" [fullWidth]="true" />
+      <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" [fullWidth]="true" />
+
+      <div class="mobile-actions">
+        <app-button label="Cadastrar" [text]="true" [plain]="true" routerLink="/signup" [fullWidth]="true" (onClick)="closeMobileMenu()" />
+        <app-button label="Entrar" [text]="true" [plain]="true" routerLink="/login" [fullWidth]="true" (onClick)="closeMobileMenu()" />
+      </div>
+    </div>
+  </div>
 </div>

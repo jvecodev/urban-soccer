@@ -183,6 +183,72 @@ img {
 
 /* ===== RESPONSIVIDADE ===== */
 
+@media (max-width: 1200px) {
+  .features-container {
+    padding: 3rem 1.5rem;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 800px;
+  }
+
+  .testimonial-section {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .testimonial-text {
+    font-size: 1.1rem;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .features-container {
+    padding: 2.5rem 1rem;
+  }
+
+  .text-4xl {
+    font-size: 2.8rem;
+  }
+
+  .text-2xl {
+    font-size: 1.6rem;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .feature-card {
+    min-height: 260px;
+  }
+
+  .testimonial-section {
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
+    padding: 1.5rem;
+  }
+
+  .testimonial-name {
+    font-size: 1.6rem;
+  }
+
+  .testimonial-text {
+    font-size: 1rem;
+    max-width: 600px;
+  }
+
+  .testimonial-logo {
+    height: 8rem;
+  }
+}
+
 @media (max-width: 768px) {
   .features-container {
     padding: 2rem 1rem;
@@ -197,6 +263,8 @@ img {
 
   .feature-card {
     min-height: 250px;
+    max-width: 400px;
+    margin: 0 auto;
   }
 
   .text-4xl {
@@ -215,5 +283,201 @@ img {
 
   .testimonial-content {
     padding: 1rem 0.5rem;
+  }
+
+  .testimonial-name {
+    font-size: 1.4rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.95rem;
+    max-width: 500px;
+  }
+
+  .testimonial-logo {
+    height: 6rem;
+  }
+
+  .testimonial-logos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .features-container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .text-4xl {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+
+  .text-2xl {
+    font-size: 1.3rem;
+  }
+
+  .feature-card {
+    min-height: 230px;
+  }
+
+  .feature-card-content {
+    padding: 1.5rem;
+  }
+
+  .feature-icon {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-icon i {
+    font-size: 1.25rem;
+  }
+
+  .feature-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-description {
+    font-size: 0.9rem;
+  }
+
+  .testimonial-section {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding: 0.75rem;
+  }
+
+  .testimonial-name {
+    font-size: 1.2rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.9rem;
+    max-width: 400px;
+    margin-top: 1rem;
+  }
+
+  .testimonial-logo {
+    height: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #features {
+    padding: 0;
+  }
+
+  .features-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .text-4xl {
+    font-size: 1.8rem;
+    line-height: 1.1;
+  }
+
+  .text-2xl {
+    font-size: 1.1rem;
+  }
+
+  .features-grid {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .feature-card {
+    min-height: 200px;
+  }
+
+  .feature-card-content {
+    padding: 1.25rem;
+  }
+
+  .feature-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-icon i {
+    font-size: 1rem;
+  }
+
+  .feature-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-description {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .testimonial-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+  }
+
+  .testimonial-content {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .testimonial-name {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.8rem;
+    max-width: 300px;
+    margin-top: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .testimonial-logo {
+    height: 4rem;
+  }
+
+  img {
+    max-width: 10rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .features-container {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .text-4xl {
+    font-size: 1.6rem;
+  }
+
+  .text-2xl {
+    font-size: 1rem;
+  }
+
+  .feature-card {
+    min-height: 180px;
+  }
+
+  .feature-card-content {
+    padding: 1rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.75rem;
+    max-width: 250px;
+  }
+
+  .testimonial-logo {
+    height: 3.5rem;
   }
 }
