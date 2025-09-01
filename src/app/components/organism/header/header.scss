@@ -19,7 +19,8 @@ p-toolbar {
   background-color: var(--azul-noite) !important;
 }
 
-.header-start {
+.menu {
+  justify-content: center;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -29,191 +30,16 @@ p-toolbar {
     width: auto;
   }
 
-  .desktop-menu {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-}
-
-.header-end {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  .desktop-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .mobile-menu-toggle {
-    display: none;
-  }
-}
-
-// Estilos gerais dos botões
-.p-button {
-  font-family: var(--font-secondary) !important;
-  color: var(--cinza-claro) !important;
-  background: transparent !important;
-  border: none !important;
-  text-transform: uppercase;
-
-  &:hover {
-    background: var(--roxo-urbano) !important;
-    color: var(--cinza-claro) !important;
-  }
-}
-
-// Menu Mobile
-.mobile-menu {
-  position: fixed;
-  top: 100px; // Altura do header
-  left: 0;
-  right: 0;
-  background-color: var(--azul-noite);
-  border-bottom: 1px solid var(--cinza-neutro);
-  transform: translateY(-100%);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease-in-out;
-  z-index: 999;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-
-  &.open {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .mobile-menu-content {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    .mobile-actions {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--cinza-neutro);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  }
-}
-
-// Botão hambúrguer customizado
-.hamburger-btn {
   .p-button {
-    font-size: 1.2rem !important;
-    padding: 0.5rem !important;
-  }
-}
-@media (max-width: 1024px) {
-  .header-start {
-    gap: 0.5rem;
+    font-family: var(--font-secondary) !important;
+    color: var(--cinza-claro) !important;
+    background: transparent !important;
+    border: none !important;
+    text-transform: uppercase;
 
-    img {
-      height: 5rem;
-    }
-
-    .desktop-menu .p-button {
-      font-size: 0.9rem !important;
-      padding: 0.5rem !important;
-    }
-  }
-
-  .header-end {
-    .desktop-actions .p-button {
-      font-size: 0.9rem !important;
-      padding: 0.5rem !important;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  p-toolbar {
-    padding: 0% 0.5% !important;
-  }
-
-  .header-start {
-    gap: 0.25rem;
-
-    img {
-      height: 4rem;
-    }
-
-    // Ocultar menu desktop
-    .desktop-menu {
-      display: none;
-    }
-  }
-
-  .header-end {
-    // Ocultar botões de ação em mobile
-    .desktop-actions {
-      display: none !important;
-    }
-
-    // Mostrar botão hambúrguer
-    .mobile-menu-toggle {
-      display: block !important;
-    }
-  }
-
-  // Ajustar altura do menu mobile
-  .mobile-menu {
-    top: 80px; // Altura reduzida do header em mobile
-  }
-}
-
-@media (max-width: 480px) {
-  .header-start {
-    img {
-      height: 3.5rem;
-    }
-  }
-
-  // Ajustar altura do menu mobile para telas menores
-  .mobile-menu {
-    top: 70px;
-  }
-
-  .mobile-menu-content {
-    padding: 0.75rem;
-
-    .p-button {
-      font-size: 0.9rem !important;
-      padding: 0.6rem !important;
-    }
-  }
-}
-
-@media (max-width: 375px) {
-  .header-start {
-    img {
-      height: 3rem;
-    }
-  }
-
-  .mobile-menu {
-    top: 65px;
-  }
-
-  .mobile-menu-content {
-    padding: 0.5rem;
-
-    .p-button {
-      font-size: 0.8rem !important;
-      padding: 0.5rem !important;
-    }
-
-    .mobile-actions {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
+    &:hover {
+      background: var(--roxo-urbano) !important;
+      color: var(--cinza-claro) !important;
     }
   }
 }
@@ -279,7 +105,7 @@ p-toolbar {
   /* Logo mobile */
   .mobile-logo {
     img {
-      height: 5rem;
+      height: 7rem;
       width: auto;
       cursor: pointer;
     }
@@ -419,10 +245,11 @@ p-toolbar {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    align-items: center;
 
     .mobile-nav-btn {
       width: 100% !important;
-      justify-content: flex-start !important;
+      justify-content: center !important;
       padding: 1rem 1.5rem !important;
       border-radius: 8px !important;
       font-family: var(--font-secondary) !important;
@@ -432,12 +259,25 @@ p-toolbar {
       text-transform: uppercase !important;
       font-size: 1.1rem !important;
       transition: all 0.3s ease !important;
+      text-align: center !important;
 
       &:hover {
         background: var(--roxo-urbano) !important;
         border-color: var(--ciano-eletrico) !important;
         color: var(--cinza-claro) !important;
         transform: translateX(5px) !important;
+      }
+
+      p-button {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+
+        .p-button {
+          width: 100% !important;
+          justify-content: center !important;
+          text-align: center !important;
+        }
       }
     }
   }
@@ -448,6 +288,7 @@ p-toolbar {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    align-items: center;
 
     .mobile-action-btn {
       width: 100% !important;
@@ -459,34 +300,103 @@ p-toolbar {
       font-size: 1rem !important;
       font-weight: 600 !important;
       transition: all 0.3s ease !important;
+      text-align: center !important;
 
       &.mobile-cadastrar {
-        background: var(--azul-acento) !important;
-        border-color: var(--azul-acento) !important;
+        background: transparent !important;
+        border: 1px solid rgba(48, 201, 249, 0.2) !important;
         color: var(--cinza-claro) !important;
 
         &:hover {
-          background: var(--ciano-eletrico) !important;
+          background: var(--roxo-urbano) !important;
           border-color: var(--ciano-eletrico) !important;
-          color: var(--azul-noite) !important;
+          color: var(--cinza-claro) !important;
           transform: translateY(-2px) !important;
         }
       }
 
       &.mobile-entrar {
-        background: var(--laranja-vibrante) !important;
-        border-color: var(--laranja-vibrante) !important;
-        color: var(--azul-noite) !important;
+        background: transparent !important;
+        border: 1px solid rgba(48, 201, 249, 0.2) !important;
+        color: var(--cinza-claro) !important;
         font-weight: 700 !important;
 
         &:hover {
-          background: var(--amarelo-dourado) !important;
-          border-color: var(--amarelo-dourado) !important;
-          color: var(--azul-noite) !important;
+          background: var(--roxo-urbano) !important;
+          border-color: var(--ciano-eletrico) !important;
+          color: var(--cinza-claro) !important;
           transform: translateY(-2px) !important;
         }
       }
+
+      p-button {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+
+        .p-button {
+          width: 100% !important;
+          justify-content: center !important;
+          text-align: center !important;
+        }
+      }
     }
+  }
+
+  /* Força centralização dos botões PrimeNG no mobile */
+  .mobile-menu-nav .mobile-nav-btn p-button .p-button,
+  .mobile-menu-actions .mobile-action-btn p-button .p-button {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    background: transparent !important;
+    border: 1px solid rgba(48, 201, 249, 0.2) !important;
+  }
+
+  .mobile-menu-nav .mobile-nav-btn p-button,
+  .mobile-menu-actions .mobile-action-btn p-button {
+    width: 100% !important;
+    display: block !important;
+    background: transparent !important;
+  }
+
+  /* Remove backgrounds específicos dos botões de ação */
+  .mobile-menu-actions .mobile-action-btn.mobile-cadastrar p-button .p-button {
+    background: transparent !important;
+    border: 1px solid rgba(48, 201, 249, 0.2) !important;
+    color: var(--cinza-claro) !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .mobile-menu-actions .mobile-action-btn.mobile-entrar p-button .p-button {
+    background: transparent !important;
+    border: 1px solid rgba(48, 201, 249, 0.2) !important;
+    color: var(--cinza-claro) !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Força centralização do texto nos botões de ação */
+  .mobile-menu-actions .mobile-action-btn.mobile-cadastrar p-button .p-button .p-button-label,
+  .mobile-menu-actions .mobile-action-btn.mobile-entrar p-button .p-button .p-button-label {
+    text-align: center !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Hover states */
+  .mobile-menu-nav .mobile-nav-btn:hover p-button .p-button,
+  .mobile-menu-actions .mobile-action-btn:hover p-button .p-button {
+    background: var(--roxo-urbano) !important;
+    border-color: var(--ciano-eletrico) !important;
+    color: var(--cinza-claro) !important;
   }
 
   /* Ajustes no toolbar para mobile */
@@ -529,7 +439,7 @@ p-toolbar {
     padding: 1rem 1.5rem;
 
     .mobile-menu-logo {
-      height: 3.5rem;
+      height: 5rem;
     }
   }
 
