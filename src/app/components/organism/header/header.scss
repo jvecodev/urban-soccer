@@ -2,7 +2,6 @@ p-toolbar {
   background-color: var(--azul-noite) !important;
   width: 100%;
   border: 0px !important;
-  border-bottom: 1px solid var(--cinza-neutro) !important;
   padding: 0% 1% !important;
 }
 
@@ -12,6 +11,7 @@ p-toolbar {
   justify-content: center;
   width: 100%;
   position: fixed;
+  padding: 0% !important;
   top: 0;
   left: 0;
   right: 0;
@@ -210,7 +210,7 @@ p-toolbar {
     border-bottom: 1px solid rgba(48, 201, 249, 0.2);
 
     .mobile-menu-logo {
-      height: 4rem;
+      height: 7rem;
       width: auto;
     }
 
