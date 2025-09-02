@@ -1,7 +1,64 @@
-<div class="animation-container" [class.exiting]="isExiting">
-  <div class="city-silhouette"></div>
-  <section class="loading-content">
-    <img src="/Soccer player kick on the ball.gif" alt="Loading..." class="loading-gif" />
-    <h1>URBAN SOCCER</h1>
-  </section>
+<div class="loading-container" [class.exiting]="isExiting">
+  <!-- Background com campo de futebol -->
+  <div class="field-background">
+    <div class="field-lines"></div>
+    <div class="goal-area goal-left"></div>
+    <div class="goal-area goal-right"></div>
+  </div>
+
+  <!-- Partículas animadas -->
+  <div class="particles">
+    <div class="particle" *ngFor="let particle of particles; let i = index"
+         [style.left.px]="particle.x"
+         [style.top.px]="particle.y"
+         [style.animation-delay.s]="particle.delay"></div>
+  </div>
+
+
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <!-- Logo e título -->
+    <div class="brand-section">
+      <div class="title-container">
+
+           <img src="/Logo-Transparente.png"
+             alt="Urban Soccer Logo"
+             class="main-logo"
+             (error)="logoError = true"
+             [style.display]="logoError ? 'none' : 'block'" />
+      </div>
+      <p class="subtitle">{{currentLoadingText}}</p>
+
+    </div>
+
+    <!-- Barra de progresso customizada -->
+    <div class="progress-section">
+      <div class="progress-bar-container">
+        <div class="progress-bar" [style.width.%]="loadingProgress"></div>
+      </div>
+      <span class="progress-text">{{loadingProgress}}%</span>
+    </div>
+
+    <!-- Estágios de loading -->
+    <div class="loading-stages">
+      <div class="stage"
+           *ngFor="let stage of loadingStages; let i = index"
+           [class.active]="currentStage === i + 1"
+           [class.completed]="currentStage > i + 1">
+        <div class="stage-icon">
+          <i [class]="stage.icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Efeitos visuais adicionais -->
+  <div class="visual-effects">
+    <div class="light-beam light-beam-1"></div>
+    <div class="light-beam light-beam-2"></div>
+    <div class="light-beam light-beam-3"></div>
+  </div>
+
+  <!-- Overlay de transição -->
+  <div class="transition-overlay" [class.active]="isExiting"></div>
 </div>

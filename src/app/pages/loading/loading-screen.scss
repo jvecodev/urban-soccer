@@ -2,176 +2,596 @@
 
 
 
-/* Animações com Keyframes */
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(50px);
-    filter: blur(10px);
+/* ===============================
+   VARIÁVEIS E CONFIGURAÇÕES
+=============================== */
+:root {
+  --field-green: #2d5a2d;
+  --field-light: #3a6b3a;
+  --line-white: #ffffff;
+  --ball-black: #1a1a1a;
+  --ball-white: #ffffff;
+  --glow-primary: rgba(235, 110, 25, 0.8);
+  --glow-secondary: rgba(244, 160, 40, 0.6);
+}
+
+/* ===============================
+   ANIMAÇÕES KEYFRAMES
+=============================== */
+@keyframes fieldGlow {
+  0%, 100% {
+    box-shadow: inset 0 0 100px rgba(46, 160, 67, 0.2);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(0.95) translateY(20px);
-    filter: blur(5px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
+    box-shadow: inset 0 0 150px rgba(46, 160, 67, 0.4);
   }
 }
 
-@keyframes slideInBackground {
+@keyframes particleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) rotate(360deg);
+  }
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 10px var(--glow-primary),
+      0 0 20px var(--glow-primary),
+      0 0 30px var(--glow-primary);
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px var(--glow-primary));
+  }
+  50% {
+    text-shadow:
+      0 0 20px var(--glow-secondary),
+      0 0 40px var(--glow-secondary),
+      0 0 60px var(--glow-secondary);
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 30px var(--glow-secondary));
+  }
+}
+
+@keyframes progressFill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes progressBallMove {
+  0% { left: -2%; }
+  100% { left: 98%; }
+}
+
+@keyframes lightBeam {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%) rotate(45deg);
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100vw) rotate(45deg);
+  }
+}
+
+@keyframes stageActivate {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes exitSlide {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-100px);
+  }
+}
+
+@keyframes overlaySlide {
   0% {
     transform: translateX(-100%);
-    filter: brightness(1);
-  }
-  100% {
-    transform: translateX(0);
-    filter: brightness(3);
-  }
-}
-
-@keyframes fadeOutScale {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.1) translateY(-20px);
-    filter: blur(2px);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.7) translateY(-50px);
-    filter: blur(8px);
-  }
-}
-
-@keyframes slideOutBackground {
-  0% {
-    transform: translateX(0);
-    filter: brightness(3);
   }
   100% {
     transform: translateX(100%);
-    filter: brightness(0.5);
   }
 }
 
-@keyframes pulseTitle {
-  0%, 100% {
-    transform: scale(1);
-    text-shadow: 0 0 20px rgba(235, 110, 25, 0.3);
+@keyframes waveAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
   }
   50% {
-    transform: scale(1.05);
-    text-shadow: 0 0 30px rgba(235, 110, 25, 0.6);
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
   }
 }
 
-.animation-container {
-  width: 100%;
-  height: 100vh;
+@keyframes shootingStar {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(45deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(200px, 200px) rotate(45deg);
+  }
+}
+
+.title-container {
   position: relative;
-  overflow: hidden;
+  display: inline-block;
 }
 
-.city-silhouette {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: auto;
-  width: 100%;
-  height: 100%;
-  background-image: url(/78786.jpg);
-  background-repeat: no-repeat;
-  background-position: 0%;
-  background-size: cover;
-  z-index: 0;
-
-  /* Animação de entrada */
-  animation: slideInBackground 1.2s ease-out forwards;
-}
-
-/* Animação de saída para o background */
-.animation-container.exiting .city-silhouette {
-  animation: slideOutBackground 1.5s ease-in-out forwards;
-}
-
-.loading-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
+.sound-waves {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  transition: all 0.8s ease-in-out;
+  pointer-events: none;
+  z-index: -1;
 }
 
-.animation-container.exiting {
-  animation: fadeOutScale 1.5s ease-in-out forwards;
+.wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--laranja-vibrante);
+  border-radius: 50%;
+  animation: waveAnimation 3s ease-in-out infinite;
 }
 
-.loading-gif {
-  width: 400px;
+.wave-1 {
+  width: 150%;
+  height: 150%;
+  animation-delay: 0s;
+}
+
+.wave-2 {
+  width: 200%;
+  height: 200%;
+  animation-delay: 1s;
+}
+
+.wave-3 {
+  width: 250%;
+  height: 250%;
+  animation-delay: 2s;
+}
+
+/* ===============================
+   CONTAINER PRINCIPAL
+=============================== */
+.loading-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #14223D 0%, #1a2a4a 50%, #14223D 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+}
+
+.loading-container.exiting {
+  animation: exitSlide 2s ease-in-out forwards;
+}
+
+/* ===============================
+   CAMPO DE FUTEBOL BACKGROUND
+=============================== */
+.field-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(90deg, var(--field-green) 0%, var(--field-light) 50%, var(--field-green) 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 48px,
+      rgba(255, 255, 255, 0.1) 49px,
+      rgba(255, 255, 255, 0.1) 51px
+    );
+  opacity: 0.3;
+  animation: fieldGlow 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+.field-lines {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 60%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+}
+
+.field-lines::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.goal-area {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 200px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+}
+
+.goal-left {
+  left: 10%;
+  border-right: none;
+}
+
+.goal-right {
+  right: 10%;
+  border-left: none;
+}
+
+/* ===============================
+   PARTÍCULAS
+=============================== */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, var(--laranja-vibrante), transparent);
+  border-radius: 50%;
+  animation: particleFloat 8s linear infinite;
+  box-shadow: 0 0 10px var(--laranja-vibrante);
+}
+
+
+/* ===============================
+   CONTEÚDO PRINCIPAL
+=============================== */
+.main-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  color: var(--text-color);
+  animation: fadeInUp 1s ease-out;
+}
+
+
+
+
+.main-logo {
+  width: 350px;
   height: auto;
-  margin-bottom: 30px;
-  border-radius: 15px;
-  /* Efeito de entrada suave */
-  animation: fadeInScale 1.8s ease-out 0.6s both;
+  filter: drop-shadow(0 0 20px var(--glow-primary));
+  animation: titleGlow 3s ease-in-out infinite;
 }
 
-/* Animação específica para o GIF na saída */
-.animation-container.exiting .loading-gif {
-  animation: fadeOutScale 1.2s ease-in-out forwards;
-}
 
-.loading-gif {
-  width: 400px;
-  height: auto;
-  margin-bottom: 30px;
-  border-radius: 15px;
-}
-
-h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  margin: 20px 0;
-  background: linear-gradient(45deg, #EB6E19, #F4A028);
+.title-part {
+  display: block;
+  background: linear-gradient(45deg, var(--laranja-vibrante), var(--amarelo-dourado));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-family: var(--font-accent);
-  letter-spacing: 2px;
-
-  /* Animações de entrada */
-  animation:
-    fadeInScale 2s ease-out 0.9s both,
-    pulseTitle 3s ease-in-out 2s infinite;
+  animation: fadeInUp 1.5s ease-out 0.6s both;
 }
 
-/* Animação específica para o título na saída */
-.animation-container.exiting h1 {
-  animation: fadeOutScale 1s ease-in-out forwards;
+.title-part:nth-child(2) {
+  animation-delay: 0.8s;
 }
 
-.loading-gif {
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--cinza-neutro);
+  opacity: 0.8;
+  animation: fadeInUp 1.8s ease-out 1s both;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.progress-section {
+  margin: 40px 0;
+  animation: fadeInUp 2s ease-out 1.2s both;
+}
+
+.progress-bar-container {
+  position: relative;
   width: 400px;
-  height: auto;
-  margin-bottom: 30px;
-  border-radius: 15px;
-  /* Efeito de entrada suave */
-  animation: fadeInScale 1.8s ease-out 0.6s both;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin: 0 auto 15px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Animação específica para o GIF na saída */
-.animation-container.exiting .loading-gif {
-  animation: fadeOutScale 1.2s ease-in-out forwards;
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--laranja-vibrante), var(--amarelo-dourado));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 15px var(--glow-primary);
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+  animation: lightBeam 2s ease-in-out infinite;
+}
+
+.progress-text {
+  font-family: var(--font-secondary);
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--laranja-vibrante);
+  text-shadow: 0 0 10px var(--glow-primary);
+  margin-top: 15px;
+  display: block;
+}
+
+/* ===============================
+   ESTÁGIOS DE LOADING
+=============================== */
+.loading-stages {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 40px;
+  animation: fadeInUp 2.2s ease-out 1.4s both;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.3;
+  transition: all 0.4s ease;
+}
+
+.stage.active {
+  opacity: 1;
+  animation: stageActivate 0.5s ease-out;
+}
+
+.stage.completed {
+  opacity: 1;
+  color: var(--laranja-vibrante);
+}
+
+.stage-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.stage.active .stage-icon {
+  background: var(--laranja-vibrante);
+  color: white;
+  box-shadow: 0 0 20px var(--glow-primary);
+  transform: scale(1.1);
+}
+
+.stage.completed .stage-icon {
+  background: var(--laranja-vibrante);
+  color: white;
+  border-color: var(--laranja-vibrante);
+}
+
+.stage-text {
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* ===============================
+   EFEITOS VISUAIS
+=============================== */
+.visual-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.light-beam {
+  position: absolute;
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--glow-primary), transparent);
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.light-beam-1 {
+  top: 20%;
+  animation: lightBeam 3s ease-in-out infinite;
+}
+
+.light-beam-2 {
+  top: 60%;
+  animation: lightBeam 3s ease-in-out infinite 1s;
+}
+
+.light-beam-3 {
+  top: 80%;
+  animation: lightBeam 3s ease-in-out infinite 2s;
+}
+
+/* ===============================
+   OVERLAY DE TRANSIÇÃO
+=============================== */
+.transition-overlay {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--laranja-vibrante),
+    var(--amarelo-dourado),
+    transparent
+  );
+  z-index: 4;
+  opacity: 0;
+}
+
+.transition-overlay.active {
+  animation: overlaySlide 2s ease-in-out;
+  opacity: 0.8;
+}
+
+/* ===============================
+   RESPONSIVIDADE
+=============================== */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .progress-bar-container {
+    width: 300px;
+  }
+
+  .loading-stages {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .stage-text {
+    font-size: 0.8rem;
+  }
+
+  .main-logo {
+    width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .progress-bar-container {
+    width: 250px;
+  }
+
+  .loading-stages {
+    gap: 15px;
+  }
+
+  .stage-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* ===============================
+   ANIMAÇÕES DE ENTRADA/SAÍDA
+=============================== */
+.loading-container.exiting .main-content {
+  animation: exitSlide 1.5s ease-in-out forwards;
+}
+
+.loading-container.exiting .field-background {
+  animation: exitSlide 2s ease-in-out forwards;
+}
+
+.loading-container.exiting .particles {
+  animation: exitSlide 1.8s ease-in-out forwards;
 }

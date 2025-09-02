@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { Header } from "./components/organism/header/header";
+import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -11,11 +11,11 @@ import { filter } from 'rxjs/operators';
   imports: [
     RouterOutlet,
     ButtonModule,
-    Header,
+    ToastModule,
     CommonModule
 ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss', './shared/toast-styles.scss']
 })
 export class App implements OnInit, OnDestroy {
   protected title = 'urban-soccer';
@@ -40,8 +40,8 @@ export class App implements OnInit, OnDestroy {
 
   private updateHeaderVisibility(): void {
     const currentUrl = this.router.url;
-    // Ocultar header se estivermos na rota de loading ou na rota raiz (que redireciona para loading)
-    this.showHeader = !(currentUrl === '/loading' || currentUrl === '/' || currentUrl === '');
+    // Ocultar header nas páginas de loading, login e signup
+    this.showHeader = !(currentUrl === '/loading' || currentUrl === '/login' || currentUrl === '/signup' || currentUrl === '/' || currentUrl === '');
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,165 @@
+// Estilos personalizados para toasts que combinam com o design Urban Soccer
+:host ::ng-deep {
+  .p-toast {
+    .p-toast-message {
+      margin: 0 0 1rem 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      .p-toast-message-content {
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+
+        .p-toast-message-text {
+          margin-left: 1rem;
+
+          .p-toast-summary {
+            font-family: var(--font-secondary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+          }
+
+          .p-toast-detail {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            opacity: 0.9;
+          }
+        }
+
+        .p-toast-icon-close {
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 50%;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+
+      // Toast de erro
+      &.p-toast-message-error {
+        background: linear-gradient(135deg, rgba(220, 38, 127, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
+        border-color: rgba(239, 68, 68, 0.3);
+
+        .p-toast-message-icon {
+          color: #fef2f2;
+        }
+
+        .p-toast-message-text {
+          color: #fef2f2;
+
+          .p-toast-summary {
+            color: #ffffff;
+          }
+        }
+
+        .p-toast-icon-close {
+          color: #fef2f2;
+        }
+      }
+
+      // Toast de sucesso
+      &.p-toast-message-success {
+        background: linear-gradient(135deg, var(--laranja-vibrante) 0%, var(--amarelo-dourado) 100%);
+        border-color: rgba(235, 110, 25, 0.3);
+
+        .p-toast-message-icon {
+          color: var(--azul-noite);
+        }
+
+        .p-toast-message-text {
+          color: var(--azul-noite);
+
+          .p-toast-summary {
+            color: var(--azul-noite);
+          }
+        }
+
+        .p-toast-icon-close {
+          color: var(--azul-noite);
+        }
+      }
+
+      // Toast de informação
+      &.p-toast-message-info {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(99, 102, 241, 0.95) 100%);
+        border-color: rgba(59, 130, 246, 0.3);
+
+        .p-toast-message-icon {
+          color: #dbeafe;
+        }
+
+        .p-toast-message-text {
+          color: #dbeafe;
+
+          .p-toast-summary {
+            color: #ffffff;
+          }
+        }
+
+        .p-toast-icon-close {
+          color: #dbeafe;
+        }
+      }
+
+      // Toast de aviso
+      &.p-toast-message-warn {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.95) 0%, rgba(217, 119, 6, 0.95) 100%);
+        border-color: rgba(245, 158, 11, 0.3);
+
+        .p-toast-message-icon {
+          color: #fffbeb;
+        }
+
+        .p-toast-message-text {
+          color: #fffbeb;
+
+          .p-toast-summary {
+            color: #ffffff;
+          }
+        }
+
+        .p-toast-icon-close {
+          color: #fffbeb;
+        }
+      }
+    }
+  }
+}
+
+// Responsividade para toasts
+@media (max-width: 768px) {
+  :host ::ng-deep {
+    .p-toast {
+      width: calc(100vw - 2rem);
+      left: 1rem !important;
+      right: 1rem !important;
+
+      .p-toast-message {
+        .p-toast-message-content {
+          padding: 0.875rem 1rem;
+
+          .p-toast-message-text {
+            margin-left: 0.75rem;
+
+            .p-toast-summary {
+              font-size: 0.875rem;
+            }
+
+            .p-toast-detail {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

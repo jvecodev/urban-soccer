@@ -1,5 +1,5 @@
 <!-- Botão PrimeNG para variantes padrão -->
-<p-button 
+<p-button
   *ngIf="variant !== 'newsletter'"
   [label]="label"
   [icon]="icon"
@@ -20,16 +20,16 @@
 </p-button>
 
 <!-- Botão customizado para newsletter e casos especiais -->
-<button 
+<button
   *ngIf="variant === 'newsletter'"
   [type]="type"
   [disabled]="disabled || loading"
   [class]="buttonClasses"
   (click)="onButtonClick($event)">
-  
+
   <i *ngIf="loading" class="pi pi-spin pi-spinner"></i>
   <i *ngIf="!loading && icon" [class]="icon"></i>
   <span *ngIf="label" [class.ml-2]="icon && !loading">{{ label }}</span>
-  
+
   <ng-content></ng-content>
 </button>

@@ -1,71 +1,88 @@
-<div
-  class="login"
->
-  <div class="flex flex-col items-center justify-center">
-    <div
-      style="
-        border-radius: 56px;
-        padding: 0.3rem;
-        background: linear-gradient(
-          180deg,
-          var(--primary-color) 0%,
-          rgba(198, 243, 33, 0) 20%
-        );
-      "
-    >
-      <div
-        class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20"
-        style="border-radius: 53px"
-      >
-        <div class="text-center mb-8">
+<div class="login-container">
+  <!-- Seção da Imagem -->
+  <div class="login-image-section">
+    <div class="image-wrapper">
+      <img
+        src="/desenho-animado-de-um-jogador-de-futebol-profissional.jpg"
+        alt="Urban Soccer"
+        class="urban-soccer-image"
+      />
 
-          <div
-            class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4"
-          >
-            Junte-se a comunidade
-          </div>
-          <span class="text-muted-color font-medium">Entre para continuar</span>
-        </div>
+    </div>
+  </div>
 
-        <div>
+  <!-- Seção do Formulário -->
+  <div class="login-form-section">
+    <div class="form-container">
+      <div class="welcome-header">
+        <h2 class="welcome-title">BEM-VINDO DE VOLTA</h2>
+        <p class="welcome-subtitle">Faça login para continuar sua jornada</p>
+      </div>
 
+      <form class="login-form" (ngSubmit)="onLogin()">
+        <div class="input-group">
+          <label for="email" class="input-label">EMAIL</label>
           <input
             pInputText
-            id="email1"
-            type="text"
-            placeholder="Email"
-            class="w-full md:w-120 mb-8"
+            id="email"
+            type="email"
+            placeholder="Digite seu email"
+            class="urban-input"
             [(ngModel)]="email"
+            name="email"
+            required
           />
+        </div>
 
+        <div class="input-group">
+          <label for="password" class="input-label">SENHA</label>
           <p-password
-            id="password1"
+            id="password"
             [(ngModel)]="password"
-            placeholder="Password"
+            placeholder="Digite sua senha"
             [toggleMask]="true"
-            styleClass="mb-4"
+            styleClass="urban-password"
             [fluid]="true"
             [feedback]="false"
+            name="password"
+            required
           ></p-password>
-
-          <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-            <div class="flex items-center">
-              <p-checkbox
-                [(ngModel)]="checked"
-                id="rememberme1"
-                binary
-                class="mr-2"
-              ></p-checkbox>
-              <label for="rememberme1">Remember me</label>
-            </div>
-            <span
-              class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
-              >Forgot password?</span
-            >
-          </div>
-         <app-button label="Início" [text]="true" [plain]="true" />
         </div>
-      </div>
+
+        <div class="form-options">
+          <div class="remember-me">
+            <p-checkbox
+              [(ngModel)]="checked"
+              id="rememberme"
+              binary
+              name="remember"
+            ></p-checkbox>
+            <label for="rememberme" class="remember-label">Lembrar de mim</label>
+          </div>
+          <a href="#" class="forgot-password">Esqueceu a senha?</a>
+        </div>
+
+        <div class="button-group">
+          <button
+            type="submit"
+            class="custom-login-button"
+            [disabled]="isLoading">
+            <i *ngIf="isLoading" class="pi pi-spin pi-spinner mr-2"></i>
+            <span>ENTRAR</span>
+          </button>
+
+          <div class="divider">
+            <span>ou</span>
+          </div>
+
+          <button
+            type="button"
+            class="custom-signup-button"
+            (click)="goToSignup()">
+            <span>CRIAR CONTA</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

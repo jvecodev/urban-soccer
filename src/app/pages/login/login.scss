@@ -1,110 +1,383 @@
-.login {
+.login-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--azul-noite);
-  padding: 1rem;
-  overflow-x: hidden;
+  overflow: hidden;
+
+  // Seção da Imagem (metade esquerda)
+  .login-image-section {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--roxo-urbano) 0%, var(--azul-noite) 100%);
+    overflow: hidden;
+    height: 100vh;
+
+    .image-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .urban-soccer-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: drop-shadow(0 0 30px rgba(235, 110, 25, 0.3));
+    }
+
+  }
+
+  .login-form-section {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: var(--azul-noite);
+
+    .form-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .welcome-header {
+      text-align: center;
+      margin-bottom: 3rem;
+
+      .welcome-title {
+        font-family: var(--font-primary);
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--cinza-claro);
+        margin: 0 0 0.5rem 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .welcome-subtitle {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        color: var(--cinza-neutro);
+        margin: 0;
+        font-weight: 400;
+      }
+    }
+
+    .login-form {
+      .input-group {
+        margin-bottom: 1.5rem;
+
+        .input-label {
+          display: block;
+          font-family: var(--font-secondary);
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--cinza-claro);
+          margin-bottom: 0.5rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .urban-input {
+          width: 100%;
+          padding: 1rem;
+          background-color: rgba(162, 185, 199, 0.1);
+          border: 2px solid transparent;
+          border-radius: 8px;
+          color: var(--cinza-claro);
+          font-family: var(--font-body);
+          font-size: 1rem;
+          transition: all 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: var(--laranja-vibrante);
+            background-color: rgba(162, 185, 199, 0.15);
+            box-shadow: 0 0 0 3px rgba(235, 110, 25, 0.1);
+          }
+
+          &::placeholder {
+            color: var(--cinza-neutro);
+          }
+        }
+      }
+
+      .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+
+        .remember-me {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .remember-label {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--cinza-neutro);
+            cursor: pointer;
+          }
+        }
+
+        .forgot-password {
+          font-family: var(--font-body);
+          font-size: 0.9rem;
+          color: var(--laranja-vibrante);
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: var(--amarelo-dourado);
+          }
+        }
+      }
+
+      .button-group {
+        .custom-login-button {
+          width: 100%;
+          padding: 1rem 2rem;
+          background: linear-gradient(135deg, var(--laranja-vibrante) 0%, var(--amarelo-dourado) 100%);
+          border: none;
+          border-radius: 8px;
+          color: var(--azul-noite);
+          font-family: var(--font-secondary);
+          font-size: 1rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-bottom: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+
+          &:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--amarelo-dourado) 0%, var(--laranja-vibrante) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(235, 110, 25, 0.4);
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+
+        .custom-signup-button {
+          width: 100%;
+          padding: 1rem 2rem;
+          background: transparent;
+          border: 2px solid var(--cinza-neutro);
+          border-radius: 8px;
+          color: var(--cinza-claro);
+          font-family: var(--font-secondary);
+          font-size: 1rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background: var(--cinza-neutro);
+            color: var(--azul-noite);
+            border-color: var(--cinza-neutro);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(162, 185, 199, 0.3);
+          }
+        }
+
+        .divider {
+          text-align: center;
+          margin: 1.5rem 0;
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--cinza-neutro);
+            opacity: 0.3;
+          }
+
+          span {
+            background: var(--azul-noite);
+            padding: 0 1rem;
+            color: var(--cinza-neutro);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+          }
+        }
+      }
+    }
+  }
 }
 
-/* Responsividade da página de login */
+// Responsividade
 @media (max-width: 1024px) {
-  .login {
-    padding: 0.75rem;
+  .login-container {
+    .login-image-section {
+      .image-overlay {
+        .brand-title {
+          font-size: 2rem;
+        }
+
+        .brand-subtitle {
+          font-size: 1rem;
+        }
+      }
+    }
   }
 }
 
 @media (max-width: 768px) {
-  .login {
-    padding: 0.5rem;
-  }
+  .login-container {
+    flex-direction: column;
+    height: 100vh;
 
-  /* Ajustar o container do formulário */
-  .w-full.bg-surface-0 {
-    padding: 3rem 1.5rem !important;
-  }
+    .login-image-section {
+      flex: 0 0 40vh;
+      height: 40vh;
 
-  .text-3xl {
-    font-size: 2rem !important;
-  }
+      .image-overlay {
+        bottom: 5%;
 
-  .text-2xl {
-    font-size: 1.3rem !important;
-  }
-}
+        .brand-title {
+          font-size: 1.8rem;
+        }
 
-@media (max-width: 640px) {
-  .login {
-    padding: 0.25rem;
-  }
+        .brand-subtitle {
+          font-size: 0.9rem;
+        }
+      }
+    }
 
-  .w-full.bg-surface-0 {
-    padding: 2rem 1rem !important;
-  }
+    .login-form-section {
+      flex: 1;
+      height: 60vh;
+      overflow-y: auto;
+      padding: 2rem 1.5rem;
 
-  .text-3xl {
-    font-size: 1.8rem !important;
-  }
+      .welcome-header {
+        margin-bottom: 2rem;
 
-  .text-2xl {
-    font-size: 1.2rem !important;
-  }
-
-  .w-full.md\\:w-120 {
-    width: 100% !important;
+        .welcome-title {
+          font-size: 1.8rem;
+        }
+      }
+    }
   }
 }
 
 @media (max-width: 480px) {
-  .login {
-    padding: 0.125rem;
-  }
+  .login-container {
+    .login-image-section {
+      flex: 0 0 35vh;
+      height: 35vh;
 
-  .w-full.bg-surface-0 {
-    padding: 1.5rem 0.75rem !important;
-  }
+      .image-overlay {
+        .brand-title {
+          font-size: 1.5rem;
+        }
 
-  .text-3xl {
-    font-size: 1.5rem !important;
-    margin-bottom: 1rem !important;
-  }
+        .brand-subtitle {
+          font-size: 0.8rem;
+        }
+      }
+    }
 
-  .text-2xl {
-    font-size: 1rem !important;
-  }
+    .login-form-section {
+      height: 65vh;
+      padding: 1.5rem 1rem;
 
-  .mb-8 {
-    margin-bottom: 1rem !important;
-  }
+      .welcome-header {
+        .welcome-title {
+          font-size: 1.5rem;
+        }
 
-  .mb-4 {
-    margin-bottom: 0.75rem !important;
-  }
+        .welcome-subtitle {
+          font-size: 0.9rem;
+        }
+      }
 
-  .mt-2.mb-8.gap-8 {
-    gap: 1rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .flex.items-center.justify-between {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 0.5rem !important;
+      .login-form {
+        .form-options {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+      }
+    }
   }
 }
 
-@media (max-width: 375px) {
-  .w-full.bg-surface-0 {
-    padding: 1rem 0.5rem !important;
+// Estilos específicos para componentes PrimeNG
+:host ::ng-deep {
+  .urban-password .p-password-input {
+    width: 100%;
+    padding: 1rem;
+    background-color: rgba(162, 185, 199, 0.1);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: var(--cinza-claro);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--laranja-vibrante);
+      background-color: rgba(162, 185, 199, 0.15);
+      box-shadow: 0 0 0 3px rgba(235, 110, 25, 0.1);
+    }
+
+    &::placeholder {
+      color: var(--cinza-neutro);
+    }
   }
 
-  .text-3xl {
-    font-size: 1.3rem !important;
+  .urban-password .p-password-toggle-icon {
+    color: var(--cinza-neutro);
   }
 
-  .text-2xl {
-    font-size: 0.9rem !important;
+  .p-checkbox .p-checkbox-box {
+    background-color: rgba(162, 185, 199, 0.1);
+    border: 2px solid var(--cinza-neutro);
+    border-radius: 4px;
+
+    &.p-highlight {
+      background-color: var(--laranja-vibrante);
+      border-color: var(--laranja-vibrante);
+    }
+  }
+
+  .p-checkbox .p-checkbox-icon {
+    color: var(--azul-noite);
   }
 }
 
