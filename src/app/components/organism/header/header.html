@@ -17,8 +17,8 @@
     <ng-template #end>
       <!-- Desktop Buttons -->
       <div class="desktop-actions flex items-center gap-2 justify-center">
-        <app-button label="Cadastrar" [text]="true" [plain]="true" />
-        <app-button label="Entrar" [text]="true" [plain]="true"/>
+        <app-button label="Cadastrar" [text]="true" [plain]="true" routerLink="/signup" />
+        <app-button label="Entrar" [text]="true" [plain]="true" routerLink="/login"/>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -49,8 +49,8 @@
       </div>
 
       <div class="mobile-menu-actions">
-        <app-button label="Cadastrar"  [text]="true" [plain]="true" customClass="mobile-action-btn mobile-cadastrar" />
-        <app-button label="Entrar" [text]="true" [plain]="true" customClass="mobile-action-btn mobile-entrar" />
+        <app-button label="Cadastrar"  [text]="true" [plain]="true" customClass="mobile-action-btn mobile-cadastrar" routerLink="/signup"/>
+        <app-button label="Entrar" [text]="true" [plain]="true" customClass="mobile-action-btn mobile-entrar" routerLink="/login"/>
       </div>
     </div>
   </div>
