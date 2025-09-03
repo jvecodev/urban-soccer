@@ -41,25 +41,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 5rem ;
+    padding: 1rem;
     background-color: var(--azul-noite);
 
     .form-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 500px;
     }
 
     .welcome-header {
       text-align: center;
-      margin-bottom: 2.5rem;
-      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
 
       .welcome-title {
         font-family: var(--font-primary);
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         font-weight: 700;
         color: var(--cinza-claro);
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.3rem 0;
         letter-spacing: 0.05em;
         text-transform: uppercase;
       }
@@ -74,29 +73,46 @@
     }
 
     .signup-form {
+      .form-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 1rem;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+          gap: 0.8rem;
+        }
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
       .input-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
 
         .input-label {
           display: block;
           font-family: var(--font-secondary);
           font-size: 0.9rem;
+          padding: auto;
           font-weight: 600;
           color: var(--cinza-claro);
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.4rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
         }
 
         .urban-input {
           width: 100%;
-          padding: 1rem;
+          padding: 0.8rem;
           background-color: rgba(162, 185, 199, 0.1);
           border: 2px solid transparent;
-          border-radius: 8px;
+          border-radius: 6px;
           color: var(--cinza-claro);
           font-family: var(--font-body);
-          font-size: 1rem;
+          font-size: 0.9rem;
           transition: all 0.3s ease;
 
           &:focus {
@@ -113,7 +129,7 @@
       }
 
       .form-options {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
 
         .accept-terms {
           display: flex;
@@ -122,10 +138,10 @@
 
           .terms-label {
             font-family: var(--font-body);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--cinza-neutro);
             cursor: pointer;
-            line-height: 1.4;
+            line-height: 1.3;
 
             .terms-link {
               color: var(--laranja-vibrante);
@@ -145,19 +161,19 @@
       .button-group {
         .custom-signup-button {
           width: 100%;
-          padding: 1rem 2rem;
+          padding: 0.9rem 2rem;
           background: linear-gradient(135deg, var(--laranja-vibrante) 0%, var(--amarelo-dourado) 100%);
           border: none;
-          border-radius: 8px;
+          border-radius: 6px;
           color: var(--azul-noite);
           font-family: var(--font-secondary);
-          font-size: 1rem;
+          font-size: 0.95rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           cursor: pointer;
           transition: all 0.3s ease;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -178,13 +194,13 @@
 
         .custom-login-button {
           width: 100%;
-          padding: 1rem 2rem;
+          padding: 0.9rem 2rem;
           background: transparent;
           border: 2px solid var(--cinza-neutro);
-          border-radius: 8px;
+          border-radius: 6px;
           color: var(--cinza-claro);
           font-family: var(--font-secondary);
-          font-size: 1rem;
+          font-size: 0.95rem;
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -205,7 +221,7 @@
 
         .divider {
           text-align: center;
-          margin: 1.5rem 0;
+          margin: 1rem 0;
           position: relative;
 
           &::before {
@@ -224,7 +240,7 @@
             padding: 0 1rem;
             color: var(--cinza-neutro);
             font-family: var(--font-body);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             position: relative;
             z-index: 1;
           }
@@ -257,34 +273,51 @@
     height: 100vh;
 
     .signup-image-section {
-      flex: 0 0 18vh;
-      height: 18vh;
+      flex: 0 0 15vh;
+      height: 15vh;
     }
 
     .signup-form-section {
       flex: 1;
-      height: 82vh;
+      height: 85vh;
       overflow-y: auto;
-      padding: 1.5rem 1.5rem;
-      align-items: flex-start;
-      padding-top: 1rem;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 0.5rem;
 
       .form-container {
         margin-top: 0;
       }
 
       .welcome-header {
-        margin-bottom: 1.5rem;
-        margin-top: 1rem;
+        margin-bottom: 1rem;
 
         .welcome-title {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
         }
       }
 
       .signup-form {
+        .form-fields {
+          gap: 0.8rem;
+        }
+
         .input-group {
-          margin-bottom: 1.2rem;
+          .input-label {
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+          }
+
+          .urban-input {
+            padding: 0.7rem;
+            font-size: 0.85rem;
+          }
+        }
+
+        .form-options {
+          margin-bottom: 0.8rem;
         }
       }
     }
@@ -294,27 +327,20 @@
 @media (max-width: 480px) {
   .signup-container {
     .signup-image-section {
-      flex: 0 0 15vh;
-      height: 15vh;
+      flex: 0 0 12vh;
+      height: 12vh;
     }
 
     .signup-form-section {
-      height: 85vh;
-      padding: 1rem 1rem;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding-top: 0.5rem;
-
-      .form-container {
-        margin-top: 0;
-      }
+      height: 88vh;
+      padding: 0.8rem;
+      padding-top: 0.3rem;
 
       .welcome-header {
-        margin-bottom: 1.2rem;
-        margin-top: 0.5rem;
+        margin-bottom: 0.8rem;
 
         .welcome-title {
-          font-size: 1.4rem;
+          font-size: 1.3rem;
           line-height: 1.2;
         }
 
@@ -324,17 +350,40 @@
       }
 
       .signup-form {
+        .form-fields {
+          gap: 0.6rem;
+        }
+
         .input-group {
-          margin-bottom: 1rem;
+          .input-label {
+            font-size: 0.7rem;
+          }
+
+          .urban-input {
+            padding: 0.6rem;
+            font-size: 0.8rem;
+          }
         }
 
         .form-options {
-          margin-bottom: 1.5rem;
+          margin-bottom: 0.6rem;
 
           .accept-terms {
             .terms-label {
-              font-size: 0.8rem;
+              font-size: 0.75rem;
             }
+          }
+        }
+
+        .button-group {
+          .custom-signup-button,
+          .custom-login-button {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.85rem;
+          }
+
+          .divider {
+            margin: 0.8rem 0;
           }
         }
       }
@@ -345,21 +394,20 @@
 @media (max-width: 360px) {
   .signup-container {
     .signup-image-section {
-      flex: 0 0 12vh;
-      height: 12vh;
+      flex: 0 0 10vh;
+      height: 10vh;
     }
 
     .signup-form-section {
-      height: 88vh;
-      padding: 0.75rem 0.75rem;
-      padding-top: 0.25rem;
+      height: 90vh;
+      padding: 0.6rem;
+      padding-top: 0.2rem;
 
       .welcome-header {
-        margin-bottom: 1rem;
-        margin-top: 0.25rem;
+        margin-bottom: 0.6rem;
 
         .welcome-title {
-          font-size: 1.2rem;
+          font-size: 1.1rem;
           line-height: 1.1;
         }
 
@@ -369,19 +417,44 @@
       }
 
       .signup-form {
+        .form-fields {
+          gap: 0.5rem;
+        }
+
         .input-group {
-          margin-bottom: 0.8rem;
+          .input-label {
+            font-size: 0.65rem;
+          }
+
+          .urban-input {
+            padding: 0.5rem;
+            font-size: 0.75rem;
+          }
+        }
+
+        .form-options {
+          margin-bottom: 0.5rem;
+
+          .accept-terms {
+            .terms-label {
+              font-size: 0.7rem;
+            }
+          }
         }
 
         .button-group {
           .custom-signup-button,
           .custom-login-button {
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem;
           }
 
           .divider {
-            margin: 1rem 0;
+            margin: 0.6rem 0;
+
+            span {
+              font-size: 0.75rem;
+            }
           }
         }
       }
@@ -393,13 +466,13 @@
 :host ::ng-deep {
   .urban-password .p-password-input {
     width: 100%;
-    padding: 1rem;
+    padding: 0.8rem;
     background-color: rgba(162, 185, 199, 0.1);
     border: 2px solid transparent;
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--cinza-claro);
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
 
     &:focus {
@@ -411,6 +484,16 @@
 
     &::placeholder {
       color: var(--cinza-neutro);
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 360px) {
+      padding: 0.5rem;
+      font-size: 0.75rem;
     }
   }
 
