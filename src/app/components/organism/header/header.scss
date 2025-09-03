@@ -32,49 +32,6 @@ p-toolbar {
     height: 7rem;
     width: auto;
   }
-
-  .p-button {
-    font-family: var(--font-secondary) !important;
-    color: var(--cinza-claro) !important;
-    background: transparent !important;
-    border: none !important;
-    text-transform: uppercase;
-
-    &:hover {
-      background: var(--roxo-urbano) !important;
-      color: var(--cinza-claro) !important;
-    }
-  }
-}
-
-/* Botões de ação do lado direito */
-.p-button[label="Cadastrar"] {
-  background: var(--azul-acento) !important;
-  border-color: var(--azul-acento) !important;
-  color: var(--cinza-claro) !important;
-  font-family: var(--font-secondary) !important;
-  text-transform: uppercase;
-
-  &:hover {
-    background: var(--ciano-eletrico) !important;
-    border-color: var(--ciano-eletrico) !important;
-    color: var(--azul-noite) !important;
-  }
-}
-
-.p-button[label="Entrar"] {
-  background: var(--laranja-vibrante) !important;
-  border-color: var(--laranja-vibrante) !important;
-  color: var(--azul-noite) !important;
-  font-family: var(--font-secondary) !important;
-  font-weight: 700 !important;
-  text-transform: uppercase;
-
-  &:hover {
-    background: var(--amarelo-dourado) !important;
-    border-color: var(--amarelo-dourado) !important;
-    color: var(--azul-noite) !important;
-  }
 }
 
 /* ===== RESPONSIVIDADE MOBILE ===== */
@@ -251,37 +208,9 @@ p-toolbar {
     align-items: center;
 
     .mobile-nav-btn {
-      width: 100% !important;
-      justify-content: center !important;
-      padding: 1rem 1.5rem !important;
-      border-radius: 8px !important;
-      font-family: var(--font-secondary) !important;
-      color: var(--cinza-claro) !important;
-      background: transparent !important;
-      border: 1px solid rgba(48, 201, 249, 0.2) !important;
-      text-transform: uppercase !important;
-      font-size: 1.1rem !important;
-      transition: all 0.3s ease !important;
-      text-align: center !important;
-
-      &:hover {
-        background: var(--roxo-urbano) !important;
-        border-color: var(--ciano-eletrico) !important;
-        color: var(--cinza-claro) !important;
-        transform: translateX(5px) !important;
-      }
-
-      p-button {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-
-        .p-button {
-          width: 100% !important;
-          justify-content: center !important;
-          text-align: center !important;
-        }
-      }
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
     }
   }
 
@@ -294,139 +223,9 @@ p-toolbar {
     align-items: center;
 
     .mobile-action-btn {
-      width: 100% !important;
-      justify-content: center !important;
-      padding: 1rem 1.5rem !important;
-      border-radius: 8px !important;
-      font-family: var(--font-secondary) !important;
-      text-transform: uppercase !important;
-      font-size: 1rem !important;
-      font-weight: 600 !important;
-      transition: all 0.3s ease !important;
-      text-align: center !important;
-
-      &.mobile-cadastrar {
-        background: transparent !important;
-        border: 1px solid rgba(48, 201, 249, 0.2) !important;
-        color: var(--cinza-claro) !important;
-
-        &:hover {
-          background: var(--roxo-urbano) !important;
-          border-color: var(--ciano-eletrico) !important;
-          color: var(--cinza-claro) !important;
-          transform: translateY(-2px) !important;
-        }
-      }
-
-      &.mobile-entrar {
-        background: transparent !important;
-        border: 1px solid rgba(48, 201, 249, 0.2) !important;
-        color: var(--cinza-claro) !important;
-        font-weight: 700 !important;
-
-        &:hover {
-          background: var(--roxo-urbano) !important;
-          border-color: var(--ciano-eletrico) !important;
-          color: var(--cinza-claro) !important;
-          transform: translateY(-2px) !important;
-        }
-      }
-
-      p-button {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-
-        .p-button {
-          width: 100% !important;
-          justify-content: center !important;
-          text-align: center !important;
-        }
-      }
-    }
-  }
-
-  /* Força centralização dos botões PrimeNG no mobile */
-  .mobile-menu-nav .mobile-nav-btn p-button .p-button,
-  .mobile-menu-actions .mobile-action-btn p-button .p-button {
-    width: 100% !important;
-    justify-content: center !important;
-    text-align: center !important;
-    display: flex !important;
-    align-items: center !important;
-    background: transparent !important;
-    border: 1px solid rgba(48, 201, 249, 0.2) !important;
-  }
-
-  .mobile-menu-nav .mobile-nav-btn p-button,
-  .mobile-menu-actions .mobile-action-btn p-button {
-    width: 100% !important;
-    display: block !important;
-    background: transparent !important;
-  }
-
-  /* Remove backgrounds específicos dos botões de ação */
-  .mobile-menu-actions .mobile-action-btn.mobile-cadastrar p-button .p-button {
-    background: transparent !important;
-    border: 1px solid rgba(48, 201, 249, 0.2) !important;
-    color: var(--cinza-claro) !important;
-    justify-content: center !important;
-    text-align: center !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  .mobile-menu-actions .mobile-action-btn.mobile-entrar p-button .p-button {
-    background: transparent !important;
-    border: 1px solid rgba(48, 201, 249, 0.2) !important;
-    color: var(--cinza-claro) !important;
-    justify-content: center !important;
-    text-align: center !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  /* Força centralização do texto nos botões de ação */
-  .mobile-menu-actions .mobile-action-btn.mobile-cadastrar p-button .p-button .p-button-label,
-  .mobile-menu-actions .mobile-action-btn.mobile-entrar p-button .p-button .p-button-label {
-    text-align: center !important;
-    width: 100% !important;
-    justify-content: center !important;
-  }
-
-  /* Hover states */
-  .mobile-menu-nav .mobile-nav-btn:hover p-button .p-button,
-  .mobile-menu-actions .mobile-action-btn:hover p-button .p-button {
-    background: var(--roxo-urbano) !important;
-    border-color: var(--ciano-eletrico) !important;
-    color: var(--cinza-claro) !important;
-  }
-
-  /* Ajustes no toolbar para mobile */
-  p-toolbar {
-    padding: 0% 2% !important;
-  }
-}
-
-/* Tablets */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .menu {
-    gap: 0.5rem;
-
-    img {
-      height: 6rem;
-    }
-
-    .p-button {
-      font-size: 0.9rem !important;
-      padding: 0.5rem 1rem !important;
-    }
-  }
-
-  .desktop-actions {
-    .p-button {
-      font-size: 0.9rem !important;
-      padding: 0.5rem 1rem !important;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
     }
   }
 }
@@ -450,8 +249,8 @@ p-toolbar {
     padding: 1.5rem 1.5rem 1rem;
 
     .mobile-nav-btn {
-      font-size: 1rem !important;
-      padding: 0.875rem 1.25rem !important;
+      font-size: 1rem;
+      padding: 0.875rem 1.25rem;
     }
   }
 
@@ -459,8 +258,71 @@ p-toolbar {
     padding: 1rem 1.5rem 1.5rem;
 
     .mobile-action-btn {
-      font-size: 0.9rem !important;
-      padding: 0.875rem 1.25rem !important;
+      font-size: 0.9rem;
+      padding: 0.875rem 1.25rem;
     }
+  }
+}
+
+.custom-header-button {
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--laranja-vibrante) 0%, var(--amarelo-dourado) 100%);
+  border: none;
+  border-radius: 8px;
+  color: var(--azul-noite);
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--amarelo-dourado) 0%, var(--laranja-vibrante) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(235, 110, 25, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(235, 110, 25, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Botões de navegação desktop - tamanho menor */
+.menu .custom-header-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+/* Responsividade para tablets */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .custom-header-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .menu .custom-header-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }

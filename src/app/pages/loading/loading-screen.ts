@@ -29,11 +29,11 @@ export class LoadingScreen implements OnInit, OnDestroy {
   ];
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
-    console.log('LoadingScreen constructor - Progress inicial:', this.loadingProgress);
+    // console.log('LoadingScreen constructor - Progress inicial:', this.loadingProgress);
   }
 
   ngOnInit(): void {
-    console.log('LoadingScreen ngOnInit - Progress:', this.loadingProgress);
+    // console.log('LoadingScreen ngOnInit - Progress:', this.loadingProgress);
     this.initParticles();
 
     // Inicia o progresso imediatamente
@@ -58,14 +58,14 @@ export class LoadingScreen implements OnInit, OnDestroy {
   }
 
   private startProgress(): void {
-    console.log('Iniciando progresso...');
+    // console.log('Iniciando progresso...');
 
     this.progressInterval = setInterval(() => {
       if (this.loadingProgress < 100) {
         this.loadingProgress += 5; // 5% por vez para ser mais rápido
         this.updateStageAndText();
         this.cdr.markForCheck();
-        console.log('Progresso:', this.loadingProgress + '%', 'Estágio:', this.currentStage);
+        // console.log('Progresso:', this.loadingProgress + '%', 'Estágio:', this.currentStage);
       } else {
         this.completeLoading();
       }
@@ -94,7 +94,7 @@ export class LoadingScreen implements OnInit, OnDestroy {
   }
 
   private completeLoading(): void {
-    console.log('Carregamento finalizado!');
+    // console.log('Carregamento finalizado!');
     this.clearProgress();
 
     setTimeout(() => {

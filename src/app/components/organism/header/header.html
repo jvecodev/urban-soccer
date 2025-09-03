@@ -3,9 +3,24 @@
     <ng-template #start>
       <div class="menu desktop-menu">
         <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
-        <app-button (onClick)="scrollToSection('hero')" label="Início" [text]="true" [plain]="true" />
-        <app-button (onClick)="scrollToSection('features')" label="Recursos" [text]="true" [plain]="true" />
-        <app-button (onClick)="scrollToSection('footer')" label="Contato" [text]="true" [plain]="true" />
+        <button
+          type="button"
+          class="custom-header-button"
+          (click)="scrollToSection('hero')">
+          <span>INÍCIO</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button"
+          (click)="scrollToSection('features')">
+          <span>RECURSOS</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button"
+          (click)="scrollToSection('footer')">
+          <span>CONTATO</span>
+        </button>
       </div>
 
       <!-- Mobile Logo -->
@@ -17,8 +32,18 @@
     <ng-template #end>
       <!-- Desktop Buttons -->
       <div class="desktop-actions flex items-center gap-2 justify-center">
-        <app-button label="Cadastrar" [text]="true" [plain]="true" routerLink="/signup" />
-        <app-button label="Entrar" [text]="true" [plain]="true" routerLink="/login"/>
+        <button
+          type="button"
+          class="custom-header-button"
+          routerLink="/signup">
+          <span>CADASTRAR</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button"
+          routerLink="/login">
+          <span>ENTRAR</span>
+        </button>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -43,14 +68,39 @@
       </div>
 
       <div class="mobile-menu-nav">
-        <app-button (onClick)="navigateAndClose('hero')" label="Início" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
-        <app-button (onClick)="navigateAndClose('features')" label="Recursos" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
-        <app-button (onClick)="navigateAndClose('footer')" label="Contato" [text]="true" [plain]="true" customClass="mobile-nav-btn" />
+        <button
+          type="button"
+          class="custom-header-button mobile-nav-btn"
+          (click)="navigateAndClose('hero')">
+          <span>INÍCIO</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button mobile-nav-btn"
+          (click)="navigateAndClose('features')">
+          <span>RECURSOS</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button mobile-nav-btn"
+          (click)="navigateAndClose('footer')">
+          <span>CONTATO</span>
+        </button>
       </div>
 
       <div class="mobile-menu-actions">
-        <app-button label="Cadastrar"  [text]="true" [plain]="true" customClass="mobile-action-btn mobile-cadastrar" routerLink="/signup"/>
-        <app-button label="Entrar" [text]="true" [plain]="true" customClass="mobile-action-btn mobile-entrar" routerLink="/login"/>
+        <button
+          type="button"
+          class="custom-header-button mobile-action-btn"
+          routerLink="/signup">
+          <span>CADASTRAR</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button mobile-action-btn"
+          routerLink="/login">
+          <span>ENTRAR</span>
+        </button>
       </div>
     </div>
   </div>

@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Toolbar } from 'primeng/toolbar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { Button } from '../../atoms/button/button';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -11,23 +10,53 @@ import { CommonModule } from '@angular/common';
     templateUrl: './header.html',
     styleUrls: ['./header.scss'],
     standalone: true,
-    imports: [Toolbar, AvatarModule, ButtonModule, Button, RouterModule, CommonModule]
+    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule]
 })
-export class Header {
+export class Header implements OnInit {
     isMobileMenuOpen = false;
 
-    scrollToSection(sectionId: string): void {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            const headerHeight = 100;
-            const targetPosition = element.offsetTop - headerHeight;
+    ngOnInit() {}
 
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-        this.closeMobileMenu();
+
+
+    scrollToSection(sectionId: string): void {
+
+        setTimeout(() => {
+            let element = document.getElementById(sectionId);
+
+
+
+            if (element) {
+
+                const headerCard = document.querySelector('.card') as HTMLElement;
+                const toolbar = document.querySelector('p-toolbar') as HTMLElement;
+
+                let headerHeight = 120; // Valor padrão
+
+                if (headerCard) {
+                    headerHeight = headerCard.offsetHeight + 20;
+                } else if (toolbar) {
+                    headerHeight = toolbar.offsetHeight + 20;
+                }
+
+                const elementRect = element.getBoundingClientRect();
+                const currentScrollY = window.scrollY;
+                const targetPosition = currentScrollY + elementRect.top - headerHeight;
+
+
+                window.scrollTo({
+                    top: Math.max(0, targetPosition), // Garantir que não seja negativo
+                    behavior: 'smooth'
+                });
+
+            } else {
+                console.error('❌ Elemento não encontrado com ID:', sectionId);
+                const allElements = document.querySelectorAll('[id]');
+                allElements.forEach(el => console.log('  -', el.id, el));
+            }
+
+            this.closeMobileMenu();
+        }, 100);
     }
 
     scrollToTop(): void {
@@ -39,7 +68,6 @@ export class Header {
 
     toggleMobileMenu(): void {
         this.isMobileMenuOpen = !this.isMobileMenuOpen;
-        // Previne scroll do body quando menu está aberto
         if (this.isMobileMenuOpen) {
             document.body.style.overflow = 'hidden';
         } else {

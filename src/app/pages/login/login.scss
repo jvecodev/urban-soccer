@@ -242,6 +242,7 @@
 @media (max-width: 1024px) {
   .login-container {
     .login-image-section {
+      
       .image-overlay {
         .brand-title {
           font-size: 2rem;
@@ -261,8 +262,9 @@
     height: 100vh;
 
     .login-image-section {
-      flex: 0 0 40vh;
-      height: 40vh;
+      flex: 0 0 20vh;
+      height: 20vh;
+
 
       .image-overlay {
         bottom: 5%;
