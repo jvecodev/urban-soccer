@@ -3,6 +3,8 @@ p-toolbar {
   width: 100%;
   border: 0px !important;
   padding: 0% 1% !important;
+  position: relative;
+  z-index: 99999 !important; /* Garantir que o toolbar também fique por cima */
 }
 
 .card {
@@ -15,8 +17,9 @@ p-toolbar {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 99999 !important; /* Aumentado para garantir que fique por cima */
   background-color: var(--azul-noite) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Adicionada sombra para destacar */
 }
 
 .menu {
@@ -167,7 +170,7 @@ p-toolbar {
     bottom: 0;
     background: rgba(20, 34, 61, 0.95);
     backdrop-filter: blur(10px);
-    z-index: 9999;
+    z-index: 999999 !important; /* Z-index ainda maior para o menu mobile */
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

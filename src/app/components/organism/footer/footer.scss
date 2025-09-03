@@ -1,3 +1,127 @@
+/* ==================== ANIMAÇÕES PARA FOOTER ==================== */
+
+@keyframes footerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes socialBounce {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes brandGlow {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+    text-shadow: none;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    text-shadow: 0 0 15px rgba(48, 201, 249, 0.4);
+  }
+}
+
+@keyframes linkSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Classes de animação para footer */
+.animate-footer-brand {
+  animation: brandGlow 1s ease-out forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.animate-footer-nav {
+  animation: footerSlideUp 0.8s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.animate-footer-social {
+  animation: socialBounce 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-footer-link {
+  animation: linkSlideIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-footer-bottom {
+  animation: footerSlideUp 0.8s ease-out forwards;
+  animation-delay: 0.8s;
+  opacity: 0;
+}
+
+/* Delays escalonados para links sociais */
+.social-delay-1 { animation-delay: 0.1s; }
+.social-delay-2 { animation-delay: 0.2s; }
+.social-delay-3 { animation-delay: 0.3s; }
+
+/* Delays escalonados para links de navegação */
+.link-delay-1 { animation-delay: 0.1s; }
+.link-delay-2 { animation-delay: 0.2s; }
+.link-delay-3 { animation-delay: 0.3s; }
+.link-delay-4 { animation-delay: 0.4s; }
+
+/* Efeitos especiais para animações */
+.social-visible {
+  transform: scale(1) !important;
+  box-shadow: 0 0 15px rgba(48, 201, 249, 0.5) !important;
+}
+
+/* Hover effects melhorados */
+.social-link {
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(48, 201, 249, 0.6);
+  }
+}
+
+.nav-link {
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    color: var(--amarelo-dourado);
+    transform: translateX(5px);
+    text-shadow: 0 0 10px rgba(244, 160, 40, 0.5);
+  }
+}
+
+/* Animação especial para o brand title */
+.brand-title {
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    text-shadow: 0 0 20px rgba(48, 201, 249, 0.6);
+    letter-spacing: 0.1em;
+  }
+}
+
 /* Urban Soccer Footer - Style Guide Compliant */
 .urban-footer {
   background: linear-gradient(180deg, var(--azul-noite) 0%, var(--roxo-urbano) 100%);

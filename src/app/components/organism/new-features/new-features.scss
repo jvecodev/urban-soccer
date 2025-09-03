@@ -1,5 +1,204 @@
 /* ===== SEÇÃO NEW FEATURES ===== */
 
+/* ==================== ANIMAÇÕES PARA FEATURES ==================== */
+
+@keyframes cardSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cardSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cardSlideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleGlow {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    text-shadow: none;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    text-shadow: 0 0 20px rgba(244, 160, 40, 0.3);
+  }
+}
+
+@keyframes iconBounce {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Classes de animação */
+.animate-features-title {
+  animation: titleGlow 1s ease-out forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.animate-features-subtitle {
+  animation: cardSlideInUp 0.8s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.animate-card-left {
+  animation: cardSlideInLeft 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-card-right {
+  animation: cardSlideInRight 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-card-up {
+  animation: cardSlideInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-icon {
+  animation: iconBounce 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Delays escalonados para cards */
+.animate-card-delay-1 { animation-delay: 0.1s; }
+.animate-card-delay-2 { animation-delay: 0.3s; }
+.animate-card-delay-3 { animation-delay: 0.5s; }
+.animate-card-delay-4 { animation-delay: 0.7s; }
+.animate-card-delay-5 { animation-delay: 0.9s; }
+.animate-card-delay-6 { animation-delay: 1.1s; }
+
+/* Efeitos especiais para animações */
+.card-visible {
+  transform: translateY(0) !important;
+  box-shadow: 0 15px 35px rgba(48, 201, 249, 0.4) !important;
+
+  /* Efeito de reanimação */
+  &.animate-in-view {
+    animation: cardSlideInUp 0.6s ease-out forwards, cardPulse 2s ease-in-out infinite;
+  }
+}
+
+/* Nova animação de pulso para cards visíveis */
+@keyframes cardPulse {
+  0%, 100% {
+    box-shadow: 0 15px 35px rgba(48, 201, 249, 0.4);
+  }
+  50% {
+    box-shadow: 0 20px 40px rgba(48, 201, 249, 0.6);
+  }
+}
+
+/* Animação de reentrada para scroll */
+@keyframes cardReenter {
+  from {
+    opacity: 0.7;
+    transform: translateY(15px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animação de pulso para ícones */
+.feature-icon {
+  &.animate-icon {
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+
+    &.card-visible {
+      animation: iconBounce 0.6s ease-out forwards, iconPulse 2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Efeito especial para testimonial */
+.testimonial-section {
+  &.animate-card-up {
+    transition: all 0.6s ease-out;
+
+    &.card-visible {
+      transform: translateY(0);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+/* Hover effects melhorados */
+.feature-card {
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    .feature-icon {
+      transform: rotate(5deg) scale(1.1);
+      transition: all 0.3s ease-out;
+    }
+
+    .feature-title {
+      color: var(--amarelo-dourado);
+      transition: color 0.3s ease-out;
+    }
+  }
+
+  /* Efeitos de scroll */
+  &.scroll-down-effect {
+    animation: cardReenter 0.6s ease-out forwards;
+  }
+
+  &.scroll-up-effect {
+    animation: cardReenter 0.6s ease-out forwards;
+  }
+
+  /* Efeito especial quando sai da viewport */
+  &.animate-out-view {
+    opacity: 0.6;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.5s ease-out;
+  }
+}
+
 /* Container principal da seção */
 #features {
   background-color: var(--azul-noite);

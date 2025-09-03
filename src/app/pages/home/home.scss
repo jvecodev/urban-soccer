@@ -5,10 +5,293 @@
   overflow-x: hidden; /* Previne scroll horizontal */
 }
 
+/* Garantir que o header sempre fique por cima */
+app-header {
+  position: relative;
+  z-index: 99999 !important;
+}
+
+/* Ajustar z-index dos outros componentes para ficarem abaixo do header */
+app-first-organism,
+app-features,
+app-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==================== ANIMAÇÕES ==================== */
+
+/* Animações de entrada instantânea */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scrollDownEffect {
+  from {
+    transform: translateY(-10px);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scrollUpEffect {
+  from {
+    transform: translateY(10px);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fastScrollPulse {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Classes de animação */
+.animate-entrance {
+  animation: slideInUp 0.8s ease-out forwards;
+}
+
+.animate-in-view {
+  opacity: 1 !important;
+  animation: fadeInScale 0.6s ease-out forwards;
+  transition: all 0.6s ease-out;
+}
+
+.animate-out-view {
+  opacity: 0.3;
+  transform: translateY(20px);
+  transition: all 0.4s ease-out;
+}
+
+/* Classes para efeitos de scroll contínuos */
+.scroll-down-effect {
+  animation: scrollDownEffect 0.6s ease-out forwards;
+  animation-fill-mode: forwards;
+}
+
+.scroll-up-effect {
+  animation: scrollUpEffect 0.6s ease-out forwards;
+  animation-fill-mode: forwards;
+}
+
+/* Efeito para scroll rápido */
+.fast-scrolling {
+  .scroll-down-effect,
+  .scroll-up-effect {
+    animation: fastScrollPulse 0.3s ease-out forwards;
+  }
+}
+
+/* Animações específicas para cada componente */
+app-header {
+  transition: all 0.8s ease-out;
+  position: relative !important;
+  z-index: 99999 !important;
+
+  &.animate-entrance {
+    animation: slideInDown 0.8s ease-out forwards;
+  }
+}
+
+app-first-organism {
+  transition: all 0.8s ease-out;
+  position: relative;
+  z-index: 1;
+
+  &.animate-entrance {
+    animation: slideInUp 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+}
+
+app-features {
+  transition: all 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+
+  &.animate-in-view {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  &.animate-out-view {
+    transform: translateX(-30px);
+  }
+}
+
+app-footer {
+  transition: all 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+
+  &.animate-in-view {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  &.animate-out-view {
+    transform: translateX(30px);
+  }
+}
+
+/* Animações baseadas na direção do scroll */
+body.scrolling-down {
+  app-header {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease-out;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .landing-wrapper > * {
+    animation-timing-function: ease-in-out;
+  }
+
+  app-first-organism {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease-out;
+  }
+
+  app-features {
+    transform: translateY(-3px);
+    transition: transform 0.3s ease-out;
+  }
+
+  app-footer {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease-out;
+  }
+}
+
+body.scrolling-up {
+  app-header {
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .landing-wrapper > * {
+    animation-timing-function: ease-out;
+  }
+
+  app-first-organism {
+    transform: translateY(2px);
+    transition: transform 0.3s ease-out;
+  }
+
+  app-features {
+    transform: translateY(3px);
+    transition: transform 0.3s ease-out;
+  }
+
+  app-footer {
+    transform: translateY(2px);
+    transition: transform 0.3s ease-out;
+  }
+}
+
+/* Efeito para scroll rápido */
+body.fast-scrolling {
+  app-first-organism,
+  app-features,
+  app-footer {
+    animation: fastScrollPulse 0.3s ease-out;
+  }
+}
+
+/* Animações suaves para elementos internos */
+.landing-wrapper > * {
+  transition: all 0.3s ease-out;
+}
+
+/* Efeitos hover para melhorar a interatividade */
+app-features:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease-out;
+}
+
+app-footer:hover {
+  transform: translateY(-3px);
+  transition: transform 0.3s ease-out;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+
 /* Responsividade geral da página home */
 @media (max-width: 1200px) {
   .home-container {
     padding: 0;
+  }
+
+  /* Ajustar animações para telas menores */
+  .animate-entrance {
+    animation-duration: 0.6s;
+  }
+
+  .animate-in-view {
+    animation-duration: 0.5s;
   }
 }
 
@@ -25,6 +308,28 @@
   #home {
     padding-top: 4rem; /* Espaço para header fixo em mobile */
   }
+
+  /* Animações mais rápidas em mobile */
+  .animate-entrance {
+    animation-duration: 0.5s;
+  }
+
+  .animate-in-view {
+    animation-duration: 0.4s;
+  }
+
+  /* Reduzir movimentos em mobile para melhor performance */
+  app-features,
+  app-footer {
+    &.animate-out-view {
+      transform: translateY(15px);
+    }
+  }
+
+  app-features:hover,
+  app-footer:hover {
+    transform: none; /* Remover hover effects em mobile */
+  }
 }
 
 @media (max-width: 480px) {
@@ -34,5 +339,39 @@
 
   #home {
     padding-top: 3.5rem; /* Espaço menor para header em telas muito pequenas */
+  }
+
+  /* Animações ainda mais simples em telas muito pequenas */
+  .animate-entrance,
+  .animate-in-view {
+    animation-duration: 0.3s;
+  }
+
+  /* Simplificar animações para melhor performance */
+  app-features,
+  app-footer {
+    &.animate-in-view {
+      animation: fadeInScale 0.4s ease-out forwards;
+    }
+
+    &.animate-out-view {
+      transform: translateY(10px);
+    }
+  }
+}
+
+/* Preferências de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-entrance,
+  .animate-in-view,
+  .animate-out-view {
+    animation: none;
+    transition: opacity 0.2s ease-out;
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,17 +10,92 @@ import { FormsModule } from '@angular/forms';
     templateUrl: './footer.html',
     styleUrl: './footer.scss'
 })
-export class Footer {
+export class Footer implements OnInit, OnDestroy, AfterViewInit {
     showModal = false;
     isSubmitting = false;
-    
+    private observer!: IntersectionObserver;
+
     formData = {
         name: '',
         email: '',
         message: ''
     };
 
-    constructor(public router: Router) {}
+    constructor(public router: Router, private elementRef: ElementRef) {}
+
+    ngOnInit() {
+        this.setupIntersectionObserver();
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.observeFooterElements();
+        }, 100);
+    }
+
+    ngOnDestroy() {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+    }
+
+    private setupIntersectionObserver() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target as HTMLElement;
+                    // Remover classes anteriores para permitir reanimação
+                    element.classList.remove('animate-out-view');
+                    element.style.animationPlayState = 'running';
+
+                    // Forçar reflow
+                    element.offsetHeight;
+
+                    // Adicionar nova animação
+                    element.classList.add('animate-in-view');
+
+                    // Adicionar classes especiais para efeitos visuais
+                    if (element.classList.contains('animate-footer-social')) {
+                        element.classList.add('social-visible');
+                        // Reativar animação dos links sociais
+                        this.reactivateSocialAnimations(element);
+                    }
+                } else {
+                    const element = entry.target as HTMLElement;
+                    element.classList.remove('animate-in-view', 'social-visible');
+                    element.offsetHeight;
+                    element.classList.add('animate-out-view');
+                }
+            });
+        }, options);
+    }
+
+    private reactivateSocialAnimations(element: HTMLElement) {
+        // Reativar animações dos elementos sociais
+        setTimeout(() => {
+            element.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }, 100);
+    }
+
+    private observeFooterElements() {
+        const elementsToObserve = this.elementRef.nativeElement.querySelectorAll(
+            '.animate-footer-brand, .animate-footer-nav, .animate-footer-social, .animate-footer-link, .animate-footer-bottom'
+        );
+
+        elementsToObserve.forEach((element: HTMLElement) => {
+            element.style.animationPlayState = 'paused';
+            this.observer.observe(element);
+        });
+    }
 
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
