@@ -1,4 +1,4 @@
-![Urban Soccer Banner](./public/urbanSoccer.png)
+![Urban Soccer Banner](./public/Logo-Transparente.png)
 
 # Urban Soccer: A Lenda do Asfalto - Trainee Wise System
 
