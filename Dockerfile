@@ -1,6 +1,6 @@
 #Build da Aplicação Angular
 
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
