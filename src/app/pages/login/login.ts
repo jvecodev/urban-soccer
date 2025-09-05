@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { MessageService } from 'primeng/api';
+import { Auth } from '../../services/auth';
 
 @Component({
     selector: 'app-login',
@@ -22,7 +23,7 @@ export class Login {
     checked: boolean = false;
     isLoading: boolean = false;
 
-    constructor(private router: Router, private messageService: MessageService) {}
+    constructor(private router: Router, private messageService: MessageService, private authService: Auth) {}
 
     onLogin() {
         // Prevenir múltiplas execuções
@@ -63,21 +64,49 @@ export class Login {
 
         this.isLoading = true;
 
-        // Simular uma chamada de API
-        setTimeout(() => {
-            this.isLoading = false;
-            // Aqui você pode adicionar a lógica de autenticação real
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Login realizado',
-                detail: 'Bem-vindo de volta! Redirecionando...',
-                life: 3000
-            });
+        // Login com API real
+        const loginData = {
+            email: this.email,
+            password: this.password
+        };
 
-            setTimeout(() => {
-                this.router.navigate(['/home']);
-            }, 1500);
-        }, 2000);
+        console.log('🔐 Tentando fazer login com API real...', { email: this.email });
+
+        this.authService.login(loginData).subscribe({
+            next: (response) => {
+                this.isLoading = false;
+                console.log('✅ Login bem-sucedido:', response);
+                
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Login realizado',
+                    detail: 'Bem-vindo de volta! Redirecionando...',
+                    life: 3000
+                });
+
+                setTimeout(() => {
+                    console.log('Redirecionando para dashboard...');
+                    this.router.navigate(['/dashboard']).then(success => {
+                        if (success) {
+                            console.log('✅ Navegação para dashboard bem-sucedida!');
+                        } else {
+                            console.error('❌ Falha na navegação para dashboard');
+                        }
+                    });
+                }, 1500);
+            },
+            error: (error) => {
+                this.isLoading = false;
+                console.error('❌ Erro no login:', error);
+                
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro no login',
+                    detail: error.error?.message || 'Email ou senha incorretos',
+                    life: 4000
+                });
+            }
+        });
     }
 
     goToSignup() {

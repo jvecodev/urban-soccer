@@ -18,9 +18,4 @@ export interface LoginRequest {
 export interface LoginResponse {
   access_token: string;
   token_type: string;
-  user: {
-    _id: number;
-    username: string;
-    email: string;
-  };
 }

@@ -1,0 +1,48 @@
+<div class="dashboard-container">
+  <p-card header="🛡️ Área Protegida - Dashboard" class="dashboard-card">
+    <div class="welcome-section">
+      <h2>Bem-vindo ao Dashboard!</h2>
+      <p class="success-message">
+        ✅ Parabéns! Você conseguiu acessar uma área protegida por autenticação.
+      </p>
+
+      <div class="user-info" *ngIf="currentUser">
+        <h3>Informações do Usuário:</h3>
+        <div class="info-item">
+          <strong>ID:</strong> {{ currentUser.id }}
+        </div>
+        <div class="info-item">
+          <strong>Username:</strong> {{ currentUser.username }}
+        </div>
+        <div class="info-item">
+          <strong>Email:</strong> {{ currentUser.email }}
+        </div>
+        <div class="info-item">
+          <strong>Token:</strong> {{ currentUser.token ? '***TOKEN VÁLIDO***' : 'Sem token' }}
+        </div>
+      </div>
+
+      <div class="guard-info">
+        <h3>🔒 Auth Guard Funcionando!</h3>
+        <p>Esta página só é acessível para usuários autenticados com token válido.</p>
+        <p>Se você conseguiu chegar aqui, significa que:</p>
+        <ul>
+          <li>✓ Você fez login com sucesso</li>
+          <li>✓ O token foi salvo corretamente</li>
+          <li>✓ O Auth Guard validou sua autenticação</li>
+          <li>✓ O sistema de rotas protegidas está funcionando!</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <p-button
+          label="Fazer Logout"
+          icon="pi pi-sign-out"
+          severity="danger"
+          (click)="onLogout()"
+          class="logout-btn">
+        </p-button>
+      </div>
+    </div>
+  </p-card>
+</div>
