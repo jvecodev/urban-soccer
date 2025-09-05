@@ -4,6 +4,7 @@ import { Signup } from './pages/signup/signup';
 import { LoadingScreen } from './pages/loading/loading-screen';
 import { Home } from './pages/home/home';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { PlayerSelection } from './pages/player-selection/player-selection';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -12,7 +13,14 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
 
-  // Rota protegida - só acessível com token válido
+  // Rota protegida - seleção de jogador só acessível com token válido
+  {
+    path: 'player-selection',
+    component: PlayerSelection,
+    canActivate: [authGuard]
+  },
+
+  // Rota protegida - dashboard só acessível com token válido
   {
     path: 'dashboard',
     component: Dashboard,

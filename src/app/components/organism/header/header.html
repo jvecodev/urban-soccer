@@ -30,8 +30,8 @@
     </ng-template>
 
     <ng-template #end>
-      <!-- Desktop Buttons -->
-      <div class="desktop-actions flex items-center gap-2 justify-center">
+      <!-- Desktop Actions - Usuário NÃO autenticado -->
+      <div class="desktop-actions flex items-center gap-2 justify-center" *ngIf="!isAuthenticated()">
         <button
           type="button"
           class="custom-header-button"
@@ -43,6 +43,29 @@
           class="custom-header-button"
           routerLink="/login">
           <span>ENTRAR</span>
+        </button>
+      </div>
+
+      <!-- Desktop Actions - Usuário autenticado -->
+      <div class="desktop-actions flex items-center gap-2 justify-center" *ngIf="isAuthenticated()">
+        <span class="welcome-text">Olá, {{ currentUser()?.username }}!</span>
+        <button
+          type="button"
+          class="custom-header-button"
+          routerLink="/dashboard">
+          <span>DASHBOARD</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button"
+          routerLink="/player-selection">
+          <span>CRIAR JOGADOR</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button logout-btn"
+          (click)="logout()">
+          <span>SAIR</span>
         </button>
       </div>
 
@@ -89,18 +112,50 @@
       </div>
 
       <div class="mobile-menu-actions">
-        <button
-          type="button"
-          class="custom-header-button mobile-action-btn"
-          routerLink="/signup">
-          <span>CADASTRAR</span>
-        </button>
-        <button
-          type="button"
-          class="custom-header-button mobile-action-btn"
-          routerLink="/login">
-          <span>ENTRAR</span>
-        </button>
+        <!-- Mobile Actions - Usuário NÃO autenticado -->
+        <div *ngIf="!isAuthenticated()">
+          <button
+            type="button"
+            class="custom-header-button mobile-action-btn"
+            routerLink="/signup"
+            (click)="closeMobileMenu()">
+            <span>CADASTRAR</span>
+          </button>
+          <button
+            type="button"
+            class="custom-header-button mobile-action-btn"
+            routerLink="/login"
+            (click)="closeMobileMenu()">
+            <span>ENTRAR</span>
+          </button>
+        </div>
+
+        <!-- Mobile Actions - Usuário autenticado -->
+        <div *ngIf="isAuthenticated()">
+          <div class="mobile-welcome">
+            <span>Olá, {{ currentUser()?.username }}!</span>
+          </div>
+          <button
+            type="button"
+            class="custom-header-button mobile-action-btn"
+            routerLink="/dashboard"
+            (click)="closeMobileMenu()">
+            <span>DASHBOARD</span>
+          </button>
+          <button
+            type="button"
+            class="custom-header-button mobile-action-btn"
+            routerLink="/player-selection"
+            (click)="closeMobileMenu()">
+            <span>CRIAR JOGADOR</span>
+          </button>
+          <button
+            type="button"
+            class="custom-header-button mobile-action-btn logout-btn"
+            (click)="logout()">
+            <span>SAIR</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

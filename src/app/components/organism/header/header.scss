@@ -326,3 +326,54 @@ p-toolbar {
     font-size: 0.8rem;
   }
 }
+
+/* ===== ESTILOS PARA USUÁRIO AUTENTICADO ===== */
+
+/* Texto de boas-vindas desktop */
+.welcome-text {
+  color: white;
+  font-weight: 600;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Botão de logout - estilo diferenciado */
+.logout-btn {
+  background-color: #e74c3c !important;
+  border-color: #e74c3c !important;
+
+  &:hover {
+    background-color: #c0392b !important;
+    border-color: #c0392b !important;
+  }
+}
+
+/* Boas-vindas mobile */
+.mobile-welcome {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+
+  span {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+/* Responsividade para desktop actions autenticado */
+@media (max-width: 1200px) {
+  .desktop-actions {
+    .welcome-text {
+      display: none; /* Ocultar texto em telas menores */
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-text {
+    display: none;
+  }
+}

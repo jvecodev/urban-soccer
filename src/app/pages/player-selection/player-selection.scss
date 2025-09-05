@@ -1,0 +1,698 @@
+// ==========================================
+// PLAYER SELECTION PAGE STYLES
+// ==========================================
+
+// Variables
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius: 12px;
+}
+
+// ==========================================
+// LOADING SCREEN
+// ==========================================
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease-in-out;
+
+  .loading-content {
+    text-align: center;
+    color: white;
+
+    .loading-spinner {
+      margin-bottom: 2rem;
+      animation: pulse 2s infinite;
+    }
+
+    .loading-text {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin: 0;
+      opacity: 0;
+      animation: slideUp 0.8s ease-out 0.5s forwards;
+    }
+  }
+}
+
+// ==========================================
+// MAIN CONTAINER
+// ==========================================
+.player-selection-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem 1rem;
+  animation: fadeInUp 0.8s ease-out;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+  }
+}
+
+// ==========================================
+// HEADER SECTION
+// ==========================================
+.header-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: slideDown 0.8s ease-out 0.2s both;
+
+  .title-container {
+    .main-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 2rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+    }
+  }
+}
+
+// ==========================================
+// CAROUSEL SECTION
+// ==========================================
+.carousel-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+
+  ::ng-deep .custom-carousel {
+    .p-carousel-content {
+      .p-carousel-container {
+        .p-carousel-items-content {
+          .p-carousel-items-container {
+            padding: 1rem 0;
+          }
+        }
+      }
+    }
+
+    .p-carousel-indicators {
+      display: none;
+    }
+
+    .p-carousel-prev,
+    .p-carousel-next {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition-smooth);
+      border: none;
+
+      &:hover {
+        background: white;
+        transform: scale(1.1);
+        box-shadow: var(--card-hover-shadow);
+      }
+
+      .p-carousel-prev-icon,
+      .p-carousel-next-icon {
+        color: #333;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// ==========================================
+// ARCHETYPE CARDS
+// ==========================================
+.archetype-card-container {
+  padding: 1rem;
+  height: 100%;
+
+  .archetype-card {
+    height: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-smooth);
+    overflow: hidden;
+    background: white;
+    border: none;
+    position: relative;
+
+    &:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--card-hover-shadow);
+
+      .card-header .archetype-image {
+        .placeholder-image {
+          .archetype-icon {
+            transform: scale(1.2) rotate(10deg);
+          }
+        }
+      }
+    }
+
+    ::ng-deep {
+      .p-card-header {
+        padding: 0;
+        border-bottom: none;
+      }
+
+      .p-card-content {
+        padding: 1.5rem;
+      }
+
+      .p-card-footer {
+        padding: 1rem 1.5rem 1.5rem;
+        border-top: none;
+      }
+    }
+
+    // Card Header
+    .card-header {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+
+      .archetype-image {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+
+        .placeholder-image {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          transition: var(--transition-smooth);
+
+          .archetype-icon {
+            font-size: 4rem;
+            color: white;
+            transition: var(--transition-smooth);
+          }
+        }
+      }
+
+      // Cores específicas para cada arquétipo
+      &[data-archetype="speedster"] .placeholder-image {
+        background: linear-gradient(135deg, #FF6B35, #FFE66D);
+      }
+
+      &[data-archetype="striker"] .placeholder-image {
+        background: linear-gradient(135deg, #E74C3C, #F39C12);
+      }
+
+      &[data-archetype="maestro"] .placeholder-image {
+        background: linear-gradient(135deg, #3498DB, #9B59B6);
+      }
+
+      &[data-archetype="defender"] .placeholder-image {
+        background: linear-gradient(135deg, #27AE60, #2ECC71);
+      }
+
+      &[data-archetype="leader"] .placeholder-image {
+        background: linear-gradient(135deg, #8E44AD, #D35400);
+      }
+    }
+
+    // Card Content
+    .card-content {
+      .archetype-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 0.5rem 0;
+        text-align: center;
+      }
+
+      .archetype-tag {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .archetype-description {
+        color: #666;
+        line-height: 1.6;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      // Attributes Section
+      .attributes-section {
+        .attributes-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #333;
+          margin: 0 0 1rem 0;
+          text-align: center;
+        }
+
+        .attributes-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+
+          .attribute-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .attribute-header {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              min-width: 100px;
+              font-size: 0.85rem;
+              font-weight: 600;
+              color: #555;
+
+              i {
+                font-size: 1rem;
+              }
+
+              .attribute-name {
+                white-space: nowrap;
+              }
+            }
+
+            ::ng-deep .custom-progress {
+              flex: 1;
+              height: 8px;
+              border-radius: 4px;
+
+              .p-progressbar-value {
+                background-color: var(--progress-color);
+                border-radius: 4px;
+                transition: var(--transition-smooth);
+              }
+            }
+
+            .attribute-value {
+              min-width: 35px;
+              text-align: right;
+              font-weight: 700;
+              color: #333;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+
+    // Card Footer
+    .card-footer {
+      text-align: center;
+
+      .select-button {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: var(--transition-smooth);
+        border: none;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        ::ng-deep {
+          .p-button-label {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// PLAYER NAME DIALOG
+// ==========================================
+::ng-deep .player-name-dialog {
+  .p-dialog {
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    max-width: 500px;
+    width: 90vw;
+
+    .p-dialog-header {
+      background: var(--primary-gradient);
+      color: white;
+      border-bottom: none;
+      padding: 1.5rem;
+
+      .p-dialog-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+      }
+
+      .p-dialog-header-icon {
+        color: white;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .p-dialog-content {
+      padding: 2rem;
+
+      .dialog-content {
+        .selected-archetype-info {
+          margin-bottom: 2rem;
+          text-align: center;
+
+          .archetype-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            .preview-image {
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 3px solid #e0e0e0;
+              overflow: hidden;
+
+              i {
+                font-size: 2rem;
+                color: white;
+              }
+
+              // Cores específicas para cada arquétipo
+              &[data-archetype="speedster"] {
+                background: linear-gradient(135deg, #FF6B35, #FFE66D);
+              }
+
+              &[data-archetype="striker"] {
+                background: linear-gradient(135deg, #E74C3C, #F39C12);
+              }
+
+              &[data-archetype="maestro"] {
+                background: linear-gradient(135deg, #3498DB, #9B59B6);
+              }
+
+              &[data-archetype="defender"] {
+                background: linear-gradient(135deg, #27AE60, #2ECC71);
+              }
+
+              &[data-archetype="leader"] {
+                background: linear-gradient(135deg, #8E44AD, #D35400);
+              }
+            }
+
+            .archetype-details {
+              text-align: left;
+
+              h3 {
+                margin: 0 0 0.5rem 0;
+                color: #333;
+                font-size: 1.25rem;
+              }
+
+              ::ng-deep .p-tag {
+                border-radius: 15px;
+              }
+            }
+
+            @media (max-width: 480px) {
+              flex-direction: column;
+              text-align: center;
+
+              .archetype-details {
+                text-align: center;
+              }
+            }
+          }
+        }
+
+        .name-input-section {
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+          }
+
+          .player-name-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+
+            &:focus {
+              outline: none;
+              border-color: var(--primary-color, #667eea);
+              box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+          }
+
+          .input-help {
+            display: block;
+            margin-top: 0.5rem;
+            color: #888;
+            font-size: 0.85rem;
+          }
+        }
+      }
+    }
+
+    .p-dialog-footer {
+      padding: 1rem 2rem 2rem;
+      border-top: 1px solid #e0e0e0;
+
+      .dialog-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+
+        ::ng-deep .p-button {
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+          transition: var(--transition-smooth);
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+
+        @media (max-width: 480px) {
+          flex-direction: column-reverse;
+          gap: 0.5rem;
+
+          ::ng-deep .p-button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// ANIMATIONS
+// ==========================================
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+@media (max-width: 1200px) {
+  .archetype-card-container {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .player-selection-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .header-section {
+    margin-bottom: 2rem;
+  }
+
+  .archetype-card-container {
+    padding: 0.5rem;
+
+    .archetype-card {
+      .card-content {
+        .attributes-section {
+          .attributes-grid {
+            .attribute-item {
+              .attribute-header {
+                min-width: 80px;
+                font-size: 0.8rem;
+
+                .attribute-name {
+                  display: none;
+                }
+              }
+
+              .attribute-value {
+                min-width: 30px;
+                font-size: 0.85rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header-section {
+    .title-container {
+      .main-title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .archetype-card-container {
+    .archetype-card {
+      .card-header {
+        height: 150px;
+      }
+
+      .card-content {
+        padding: 1rem;
+
+        .archetype-name {
+          font-size: 1.25rem;
+        }
+
+        .archetype-description {
+          font-size: 0.9rem;
+        }
+
+        .attributes-section {
+          .attributes-grid {
+            .attribute-item {
+              .attribute-header {
+                min-width: 20px;
+
+                .attribute-name {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .card-footer {
+        padding: 1rem;
+      }
+    }
+  }
+}

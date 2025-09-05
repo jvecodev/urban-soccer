@@ -1,21 +1,79 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, computed, signal, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Toolbar } from 'primeng/toolbar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { Auth } from '../../../services/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.html',
     styleUrls: ['./header.scss'],
     standalone: true,
-    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule]
+    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule]
 })
-export class Header implements OnInit {
+export class Header implements OnInit, OnDestroy {
     isMobileMenuOpen = false;
+    private userSubscription?: Subscription;
 
-    ngOnInit() {}
+    // Signals para gerenciar estado de autenticação
+    private userSignal = signal<any>(null);
+    isAuthenticated = computed(() => !!this.userSignal() && this.authService.isAuthenticated());
+    currentUser = computed(() => this.userSignal());
+
+    // Items do menu do usuário
+    userMenuItems: MenuItem[] = [
+        {
+            label: 'Dashboard',
+            icon: 'pi pi-home',
+            command: () => this.router.navigate(['/dashboard'])
+        },
+        {
+            label: 'Criar Jogador',
+            icon: 'pi pi-user-plus',
+            command: () => this.router.navigate(['/player-selection'])
+        },
+        {
+            separator: true
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-sign-out',
+            command: () => this.logout()
+        }
+    ];
+
+    constructor(
+        private authService: Auth,
+        private router: Router
+    ) {}
+
+    ngOnInit() {
+        // Inicializa o signal com o usuário atual
+        this.userSignal.set(this.authService.getCurrentUser());
+
+        // Assina mudanças no estado do usuário
+        this.userSubscription = this.authService.currentUser$.subscribe(user => {
+            this.userSignal.set(user);
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+    }
+
+    logout(): void {
+        this.authService.logout();
+        this.router.navigate(['/home']);
+        this.closeMobileMenu();
+    }
 
 
 

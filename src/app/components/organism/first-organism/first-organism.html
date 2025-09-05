@@ -32,8 +32,9 @@
     <button
       type="button"
       class="custom-header-button"
+      (click)="navigateToPlayerSelection()"
     >
-      <span>Começar</span>
+      <span>{{ buttonText() }}</span>
     </button>
   </div>
   <div class="flex justify-center md:justify-end">
