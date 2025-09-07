@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { Api } from './api';
 import { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from '../models/auth.types';
-import { User } from '../models/user';
+import { User, UserUpdate, UserProfile } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,6 @@ export class Auth {
     return this.api.post<SignupResponse>('/users/register', userData)
       .pipe(
         tap((response) => {
-          console.log('Usuário registrado com sucesso:', response);
         }),
         catchError((error) => {
           console.error('Erro no registro:', error);
@@ -40,7 +39,6 @@ export class Auth {
     return this.api.post<LoginResponse>('/users/login', credentials)
       .pipe(
         tap((response) => {
-          console.log('Login response:', response);
           this.setSession(response, credentials.email);
         }),
         catchError((error) => {
@@ -62,6 +60,75 @@ export class Auth {
   }
 
   /**
+   * Obtém o perfil completo do usuário atual
+   */
+  getUserProfile(): Observable<UserProfile> {
+    return this.api.get<UserProfile>('/users/me')
+      .pipe(
+        tap((profile) => {
+          // Atualiza o usuário atual com as informações mais recentes
+          const currentUser = this.getCurrentUser();
+          if (currentUser) {
+            const updatedUser: User = {
+              ...currentUser,
+              username: profile.username,
+              email: profile.email
+            };
+            this.currentUserSubject.next(updatedUser);
+            localStorage.setItem('current_user', JSON.stringify(updatedUser));
+          }
+        }),
+        catchError((error) => {
+          console.error('Erro ao obter perfil:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Atualiza dados do usuário
+   */
+  updateUserProfile(userId: number, updateData: UserUpdate): Observable<UserProfile> {
+    return this.api.patch<UserProfile>(`/users/${userId}`, updateData)
+      .pipe(
+        tap((updatedProfile) => {
+          // Atualiza o usuário atual com os novos dados
+          const currentUser = this.getCurrentUser();
+          if (currentUser) {
+            const updatedUser: User = {
+              ...currentUser,
+              username: updatedProfile.username,
+              email: updatedProfile.email
+            };
+            this.currentUserSubject.next(updatedUser);
+            localStorage.setItem('current_user', JSON.stringify(updatedUser));
+          }
+        }),
+        catchError((error) => {
+          console.error('Erro ao atualizar perfil:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Deleta a conta do usuário
+   */
+  deleteUserAccount(userId: number): Observable<void> {
+    return this.api.delete<void>(`/users/${userId}`)
+      .pipe(
+        tap(() => {
+          // Faz logout após deletar a conta
+          this.logout();
+        }),
+        catchError((error) => {
+          console.error('Erro ao deletar conta:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
    * Verifica se o usuário está autenticado
    */
   isAuthenticated(): boolean {
@@ -69,12 +136,7 @@ export class Auth {
     const tokenNotExpired = !this.isTokenExpired();
     const isAuth = hasToken && tokenNotExpired;
 
-    console.log('Verificando autenticação:', {
-      hasToken,
-      tokenNotExpired,
-      isAuthenticated: isAuth,
-      currentUser: this.currentUserSubject.value
-    });
+
 
     return isAuth;
   }
@@ -114,7 +176,6 @@ export class Auth {
     localStorage.setItem('auth_token', this.token);
     localStorage.setItem('current_user', JSON.stringify(user));
 
-    console.log('Sessão configurada:', { token: !!this.token, user });
   }
 
   /**
@@ -124,7 +185,6 @@ export class Auth {
     const token = localStorage.getItem('auth_token');
     const userJson = localStorage.getItem('current_user');
 
-    console.log('Carregando dados do localStorage...', { token: !!token, userJson: !!userJson });
 
     if (token && userJson) {
       try {
@@ -132,13 +192,10 @@ export class Auth {
         const user = JSON.parse(userJson);
         this.currentUserSubject.next(user);
         this.api.setAuthToken(token);
-        console.log('Usuário carregado do localStorage:', user);
       } catch (error) {
         console.error('Erro ao carregar usuário do localStorage:', error);
         this.logout();
       }
-    } else {
-      console.log('Nenhum token ou usuário encontrado no localStorage');
     }
   }
 
@@ -148,14 +205,12 @@ export class Auth {
    */
   private isTokenExpired(): boolean {
     if (!this.token) {
-      console.log('Token não existe');
       return true;
     }
 
     try {
       // Para fins de teste, considerar token sempre válido
       // Em produção, você pode decodificar o JWT real
-      console.log('Token considerado válido para teste');
       return false;
 
       /* Implementação real para JWT:

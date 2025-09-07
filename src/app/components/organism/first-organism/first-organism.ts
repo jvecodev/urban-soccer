@@ -30,11 +30,9 @@ export class FirstOrganism {
     // Verifica se o usuário está autenticado
     if (this.authService.isAuthenticated()) {
       // Se estiver autenticado, vai para a seleção de jogador
-      console.log('Usuário autenticado - navegando para seleção de jogador');
       this.router.navigate(['/player-selection']);
     } else {
       // Se não estiver autenticado, vai para o login
-      console.log('Usuário não autenticado - redirecionando para login');
       this.router.navigate(['/login']);
     }
   }

@@ -1,0 +1,97 @@
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: #30C9F9;
+    box-shadow: 0 0 12px rgba(48, 201, 249, 0.3);
+  }
+
+  .avatar-initial {
+    font-family: 'Russo One', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #14223D;
+    user-select: none;
+    line-height: 1;
+  }
+
+  // Variações de tamanho
+  &.size-small {
+    width: 32px;
+    height: 32px;
+
+    .avatar-initial {
+      font-size: 14px;
+    }
+  }
+
+  &.size-large {
+    width: 56px;
+    height: 56px;
+
+    .avatar-initial {
+      font-size: 20px;
+    }
+  }
+
+  &.size-extra-large {
+    width: 80px;
+    height: 80px;
+
+    .avatar-initial {
+      font-size: 28px;
+    }
+  }
+
+  // Estado não clicável
+  &.not-clickable {
+    cursor: default;
+
+    &:hover {
+      transform: none;
+      border-color: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+
+    .avatar-initial {
+      font-size: 14px;
+    }
+
+    &.size-large {
+      width: 48px;
+      height: 48px;
+
+      .avatar-initial {
+        font-size: 18px;
+      }
+    }
+
+    &.size-extra-large {
+      width: 64px;
+      height: 64px;
+
+      .avatar-initial {
+        font-size: 24px;
+      }
+    }
+  }
+}

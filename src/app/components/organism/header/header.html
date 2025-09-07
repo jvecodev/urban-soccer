@@ -47,26 +47,21 @@
       </div>
 
       <!-- Desktop Actions - Usuário autenticado -->
-      <div class="desktop-actions flex items-center gap-2 justify-center" *ngIf="isAuthenticated()">
-        <span class="welcome-text">Olá, {{ currentUser()?.username }}!</span>
-        <button
-          type="button"
-          class="custom-header-button"
-          routerLink="/dashboard">
-          <span>DASHBOARD</span>
-        </button>
+      <div class="desktop-actions flex items-center gap-3 justify-center" *ngIf="isAuthenticated()">
         <button
           type="button"
           class="custom-header-button"
           routerLink="/player-selection">
           <span>CRIAR JOGADOR</span>
         </button>
-        <button
-          type="button"
-          class="custom-header-button logout-btn"
-          (click)="logout()">
-          <span>SAIR</span>
-        </button>
+
+        <div class="user-profile-section">
+          <span class="welcome-text">Olá, {{ currentUser()?.username }}!</span>
+          <app-user-avatar
+            [username]="currentUser()?.username || ''"
+            [clickable]="true">
+          </app-user-avatar>
+        </div>
       </div>
 
       <!-- Mobile Menu Button -->

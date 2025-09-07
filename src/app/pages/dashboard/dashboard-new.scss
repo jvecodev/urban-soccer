@@ -91,7 +91,7 @@
 
 /* ===== CARDS DO DASHBOARD ===== */
 ::ng-deep .dashboard-container {
-  
+
   .p-card {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -249,7 +249,7 @@
 
 /* ===== CUSTOMIZAÇÃO DOS BOTÕES ===== */
 ::ng-deep .dashboard-container {
-  
+
   .p-button {
     font-family: 'Russo One', sans-serif;
     border-radius: 8px;
@@ -333,7 +333,7 @@
 
 /* ===== MODAL DE EDIÇÃO ===== */
 ::ng-deep .edit-profile-dialog {
-  
+
   .p-dialog {
     background: var(--azul-noite);
     border: 1px solid var(--ciano-eletrico);
@@ -418,7 +418,7 @@
 
   @media (max-width: 480px) {
     flex-direction: column;
-    
+
     .p-button {
       width: 100%;
     }
@@ -441,7 +441,7 @@
     background: var(--azul-noite);
     border: 1px solid var(--ciano-eletrico);
     border-radius: 8px;
-    
+
     .p-toast-message-content {
       color: var(--cinza-claro);
       font-family: 'Inter', sans-serif;
@@ -449,7 +449,7 @@
 
     &.p-toast-message-success {
       border-color: var(--ciano-eletrico);
-      
+
       .p-toast-message-icon {
         color: var(--ciano-eletrico);
       }
@@ -457,7 +457,7 @@
 
     &.p-toast-message-error {
       border-color: #e74c3c;
-      
+
       .p-toast-message-icon {
         color: #e74c3c;
       }
@@ -470,7 +470,7 @@
   .p-dialog {
     background: var(--azul-noite);
     border: 1px solid #e74c3c;
-    
+
     .p-dialog-header {
       background: var(--azul-noite);
       color: var(--cinza-claro);

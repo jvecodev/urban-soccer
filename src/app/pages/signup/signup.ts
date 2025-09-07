@@ -107,7 +107,6 @@ export class Signup {
 
         this.auth.signup(userData).subscribe({
             next: (response) => {
-                console.log('✅ Sucesso - Resposta da API:', response);
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Conta criada com sucesso!',

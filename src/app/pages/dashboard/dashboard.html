@@ -1,48 +1,210 @@
 <div class="dashboard-container">
-  <p-card header="🛡️ Área Protegida - Dashboard" class="dashboard-card">
-    <div class="welcome-section">
-      <h2>Bem-vindo ao Dashboard!</h2>
-      <p class="success-message">
-        ✅ Parabéns! Você conseguiu acessar uma área protegida por autenticação.
-      </p>
+  <!-- Toast para notificações -->
+  <p-toast position="top-right"></p-toast>
 
-      <div class="user-info" *ngIf="currentUser">
-        <h3>Informações do Usuário:</h3>
-        <div class="info-item">
-          <strong>ID:</strong> {{ currentUser.id }}
-        </div>
-        <div class="info-item">
-          <strong>Username:</strong> {{ currentUser.username }}
-        </div>
-        <div class="info-item">
-          <strong>Email:</strong> {{ currentUser.email }}
-        </div>
-        <div class="info-item">
-          <strong>Token:</strong> {{ currentUser.token ? '***TOKEN VÁLIDO***' : 'Sem token' }}
-        </div>
-      </div>
+  <!-- Dialog de confirmação -->
+  <p-confirmDialog></p-confirmDialog>
 
-      <div class="guard-info">
-        <h3>🔒 Auth Guard Funcionando!</h3>
-        <p>Esta página só é acessível para usuários autenticados com token válido.</p>
-        <p>Se você conseguiu chegar aqui, significa que:</p>
-        <ul>
-          <li>✓ Você fez login com sucesso</li>
-          <li>✓ O token foi salvo corretamente</li>
-          <li>✓ O Auth Guard validou sua autenticação</li>
-          <li>✓ O sistema de rotas protegidas está funcionando!</li>
-        </ul>
-      </div>
-
-      <div class="actions">
-        <p-button
-          label="Fazer Logout"
-          icon="pi pi-sign-out"
-          severity="danger"
-          (click)="onLogout()"
-          class="logout-btn">
-        </p-button>
+  <!-- Header do Dashboard -->
+  <div class="dashboard-header">
+    <div class="user-profile-header">
+      <app-user-avatar
+        [username]="currentUser()?.username || ''"
+        [clickable]="false"
+        size="extra-large">
+      </app-user-avatar>
+      <div class="user-info-header">
+        <h1>{{ currentUser()?.username }}</h1>
+        <p>{{ currentUser()?.email }}</p>
       </div>
     </div>
-  </p-card>
+  </div>
+
+  <!-- Cards do Dashboard -->
+  <div class="dashboard-grid">
+
+    <!-- Card de Informações Pessoais -->
+    <p-card header="👤 Informações Pessoais" class="info-card">
+      <div class="user-details">
+        <div class="detail-row">
+          <label>ID:</label>
+          <span>{{ currentUser()?.id }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Nome de Usuário:</label>
+          <span>{{ currentUser()?.username }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Email:</label>
+          <span>{{ currentUser()?.email }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Status da Conta:</label>
+          <span class="status-active">✅ Ativa</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <p-button
+          label="Editar Perfil"
+          icon="pi pi-user-edit"
+          class="p-button-primary edit-btn"
+          (click)="onEditProfile()">
+        </p-button>
+      </div>
+    </p-card>
+
+    <!-- Card de Autenticação -->
+    <p-card header="🔐 Status de Autenticação" class="auth-card">
+      <div class="auth-info">
+        <div class="auth-status">
+          <i class="pi pi-check-circle success-icon"></i>
+          <div>
+            <h3>Autenticado com Sucesso</h3>
+            <p>Você está logado e pode acessar todas as funcionalidades.</p>
+          </div>
+        </div>
+
+        <div class="security-features">
+          <h4>Recursos de Segurança:</h4>
+          <ul>
+            <li>✓ Token de autenticação válido</li>
+            <li>✓ Sessão segura ativa</li>
+            <li>✓ Auth Guard funcionando</li>
+            <li>✓ Acesso a rotas protegidas</li>
+          </ul>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Card de Ações da Conta -->
+    <p-card header="⚙️ Gerenciar Conta" class="actions-card">
+      <div class="account-actions">
+        <div class="action-section">
+          <h4>Navegação</h4>
+          <div class="action-buttons">
+            <p-button
+              label="Criar Jogador"
+              icon="pi pi-user-plus"
+              class="p-button-secondary"
+              routerLink="/player-selection">
+            </p-button>
+            <p-button
+              label="Voltar ao Início"
+              icon="pi pi-home"
+              class="p-button-info"
+              routerLink="/home">
+            </p-button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <h4>Conta</h4>
+          <div class="action-buttons">
+            <p-button
+              label="Fazer Logout"
+              icon="pi pi-sign-out"
+              class="p-button-warning logout-btn"
+              (click)="onLogout()">
+            </p-button>
+            <p-button
+              label="Deletar Conta"
+              icon="pi pi-trash"
+              class="p-button-danger delete-btn"
+              (click)="onDeleteAccount()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </p-card>
+
+  </div>
+
+  <!-- Modal de Edição -->
+  <p-dialog
+    header="✏️ Editar Perfil"
+    [visible]="isEditModalVisible()"
+    (visibleChange)="isEditModalVisible.set($event)"
+    [modal]="true"
+    [closable]="true"
+    [resizable]="false"
+    [draggable]="false"
+    styleClass="edit-profile-dialog">
+
+    <form [formGroup]="editForm" (ngSubmit)="onSaveProfile()">
+
+      <!-- Campo Username -->
+      <div class="form-group">
+        <label for="username">Nome de Usuário *</label>
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            id="username"
+            formControlName="username"
+            placeholder="Seu nome de usuário"
+            [class.p-invalid]="editForm.get('username')?.touched && editForm.get('username')?.errors">
+        </p-inputGroup>
+        <small class="p-error" *ngIf="usernameErrors">{{ usernameErrors }}</small>
+      </div>
+
+      <!-- Campo Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-envelope"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            id="email"
+            formControlName="email"
+            placeholder="seu@email.com"
+            [class.p-invalid]="editForm.get('email')?.touched && editForm.get('email')?.errors">
+        </p-inputGroup>
+        <small class="p-error" *ngIf="emailErrors">{{ emailErrors }}</small>
+      </div>
+
+      <!-- Campo Password -->
+      <div class="form-group">
+        <label for="password">Nova Senha (opcional)</label>
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-lock"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Deixe em branco para manter a atual"
+            [class.p-invalid]="editForm.get('password')?.touched && editForm.get('password')?.errors">
+        </p-inputGroup>
+        <small class="p-error" *ngIf="passwordErrors">{{ passwordErrors }}</small>
+      </div>
+
+      <!-- Botões do Modal -->
+      <div class="modal-actions">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-secondary"
+          type="button"
+          (click)="onCancelEdit()">
+        </p-button>
+        <p-button
+          label="Salvar Alterações"
+          icon="pi pi-check"
+          class="p-button-primary"
+          type="submit"
+          [loading]="isLoading()">
+        </p-button>
+      </div>
+
+    </form>
+
+  </p-dialog>
+
 </div>

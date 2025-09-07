@@ -70,13 +70,11 @@ export class Login {
             password: this.password
         };
 
-        console.log('🔐 Tentando fazer login com API real...', { email: this.email });
 
         this.authService.login(loginData).subscribe({
             next: (response) => {
                 this.isLoading = false;
-                console.log('✅ Login bem-sucedido:', response);
-                
+
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Login realizado',
@@ -85,12 +83,10 @@ export class Login {
                 });
 
                 setTimeout(() => {
-                    console.log('Redirecionando para dashboard...');
-                    this.router.navigate(['/dashboard']).then(success => {
+                    this.router.navigate(['/home']).then(success => {
                         if (success) {
-                            console.log('✅ Navegação para dashboard bem-sucedida!');
                         } else {
-                            console.error('❌ Falha na navegação para dashboard');
+                            console.error('❌ Falha na navegação para home');
                         }
                     });
                 }, 1500);
@@ -98,7 +94,7 @@ export class Login {
             error: (error) => {
                 this.isLoading = false;
                 console.error('❌ Erro no login:', error);
-                
+
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Erro no login',

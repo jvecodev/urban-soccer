@@ -9,13 +9,14 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { Auth } from '../../../services/auth';
 import { Subscription } from 'rxjs';
+import { UserAvatar } from '../../atoms/user-avatar/user-avatar';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.html',
     styleUrls: ['./header.scss'],
     standalone: true,
-    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule]
+    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule, UserAvatar]
 })
 export class Header implements OnInit, OnDestroy {
     isMobileMenuOpen = false;

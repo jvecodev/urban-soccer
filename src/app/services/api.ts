@@ -26,9 +26,6 @@ export class Api {
       ...options?.headers
     });
 
-    console.log('🚀 Enviando POST para:', url);
-    console.log('📦 Dados:', data);
-    console.log('🔧 Headers:', headers);
 
     return this.http.post<T>(url, data, { headers })
       .pipe(
@@ -70,6 +67,22 @@ export class Api {
   }
 
   /**
+   * Realiza uma requisição PATCH
+   */
+  patch<T>(endpoint: string, data: any, options?: any): Observable<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = new HttpHeaders({
+      ...this.defaultHeaders,
+      ...options?.headers
+    });
+
+    return this.http.patch<T>(url, data, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
    * Realiza uma requisição DELETE
    */
   delete<T>(endpoint: string, options?: any): Observable<T> {
@@ -104,7 +117,6 @@ export class Api {
    */
   testConnection(): Observable<any> {
     const url = `${this.baseUrl}/health`; // ou qualquer endpoint simples
-    console.log('🔍 Testando conectividade com:', url);
 
     return this.http.get(url)
       .pipe(

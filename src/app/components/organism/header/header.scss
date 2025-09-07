@@ -329,12 +329,20 @@ p-toolbar {
 
 /* ===== ESTILOS PARA USUÁRIO AUTENTICADO ===== */
 
+/* Seção do perfil do usuário */
+.user-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 /* Texto de boas-vindas desktop */
 .welcome-text {
-  color: white;
-  font-weight: 600;
-  margin-right: 1rem;
+  color: var(--cinza-claro, #C9CBCA);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 /* Botão de logout - estilo diferenciado */
