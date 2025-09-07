@@ -2,71 +2,90 @@
   <p-toolbar>
     <ng-template #start>
       <div class="menu desktop-menu">
-        <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
+        <img
+          src="/Logo-Transparente.png"
+          alt=""
+          (click)="scrollToTop()"
+          style="cursor: pointer"
+        />
         <button
           type="button"
           class="custom-header-button"
-          (click)="scrollToSection('hero')">
+          (click)="scrollToSection('hero')"
+        >
           <span>INÍCIO</span>
         </button>
         <button
           type="button"
           class="custom-header-button"
-          (click)="scrollToSection('features')">
+          (click)="scrollToSection('features')"
+        >
           <span>RECURSOS</span>
         </button>
         <button
           type="button"
           class="custom-header-button"
-          (click)="scrollToSection('footer')">
+          (click)="scrollToSection('footer')"
+        >
           <span>CONTATO</span>
         </button>
       </div>
 
       <!-- Mobile Logo -->
       <div class="mobile-logo">
-        <img src="/Logo-Transparente.png" alt="" (click)="scrollToTop()" style="cursor: pointer;">
+        <img
+          src="/Logo-Transparente.png"
+          alt=""
+          (click)="scrollToTop()"
+          style="cursor: pointer"
+        />
       </div>
     </ng-template>
 
     <ng-template #end>
       <!-- Desktop Actions - Usuário NÃO autenticado -->
-      <div class="desktop-actions flex items-center gap-2 justify-center" *ngIf="!isAuthenticated()">
-        <button
-          type="button"
-          class="custom-header-button"
-          routerLink="/signup">
+      <div
+        class="desktop-actions flex items-center gap-2 justify-center"
+        *ngIf="!isAuthenticated()"
+      >
+        <button type="button" class="custom-header-button" routerLink="/signup">
           <span>CADASTRAR</span>
         </button>
-        <button
-          type="button"
-          class="custom-header-button"
-          routerLink="/login">
+        <button type="button" class="custom-header-button" routerLink="/login">
           <span>ENTRAR</span>
         </button>
       </div>
 
       <!-- Desktop Actions - Usuário autenticado -->
-      <div class="desktop-actions flex items-center gap-3 justify-center" *ngIf="isAuthenticated()">
+      <div
+        class="desktop-actions flex items-center gap-3 justify-center"
+        *ngIf="isAuthenticated()"
+      >
         <button
           type="button"
           class="custom-header-button"
-          routerLink="/player-selection">
+          routerLink="/player-selection"
+        >
           <span>CRIAR JOGADOR</span>
         </button>
 
         <div class="user-profile-section">
-          <span class="welcome-text">Olá, {{ currentUser()?.username }}!</span>
+
           <app-user-avatar
-            [username]="currentUser()?.username || ''"
-            [clickable]="true">
+            [username]="currentUser()?.username || 'Usuario'"
+            [clickable]="true"
+          >
           </app-user-avatar>
         </div>
       </div>
 
       <!-- Mobile Menu Button -->
       <div class="mobile-menu-button">
-        <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <button
+          class="hamburger-btn"
+          (click)="toggleMobileMenu()"
+          [class.active]="isMobileMenuOpen"
+        >
           <span class="hamburger-line"></span>
           <span class="hamburger-line"></span>
           <span class="hamburger-line"></span>
@@ -76,32 +95,78 @@
   </p-toolbar>
 
   <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()">
+  <div
+    class="mobile-menu-overlay"
+    [class.active]="isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+  >
     <div class="mobile-menu-content" (click)="$event.stopPropagation()">
       <div class="mobile-menu-header">
-        <img src="/Logo-Transparente.png" alt="Urban Soccer" class="mobile-menu-logo">
+        <img
+          src="/Logo-Transparente.png"
+          alt="Urban Soccer"
+          class="mobile-menu-logo"
+        />
         <button class="mobile-close-btn" (click)="closeMobileMenu()">
           <i class="pi pi-times"></i>
         </button>
       </div>
+<!-- Mobile Actions - Usuário autenticado -->
+        <div *ngIf="isAuthenticated()">
+          <div>
+            <div class="mobile-user-profile">
+              <app-user-avatar
+                [username]="currentUser()?.username || 'Usuario'"
+                 [clickable]="true"
+                size="large"
+              >
+              </app-user-avatar>
+              <div class="mobile-user-info">
+                <span class="mobile-username">{{
+                  currentUser()?.username || "Usuario"
+                }}</span>
+                <span class="mobile-email">{{ currentUser()?.email }}</span>
+              </div>
+            </div>
 
+          <div class="mobile-menu-nav">
+            <button
+              type="button"
+              class="custom-header-button mobile-nav-btn"
+              routerLink="/player-selection"
+              (click)="closeMobileMenu()"
+            >
+              <span>CRIAR JOGADOR</span>
+            </button>
+            <button
+              type="button"
+              class="custom-header-button mobile-nav-btn"
+              (click)="logout()"
+            >
+              <span>SAIR</span>
+            </button>
+          </div>
+        </div>
       <div class="mobile-menu-nav">
         <button
           type="button"
           class="custom-header-button mobile-nav-btn"
-          (click)="navigateAndClose('hero')">
+          (click)="navigateAndClose('hero')"
+        >
           <span>INÍCIO</span>
         </button>
         <button
           type="button"
           class="custom-header-button mobile-nav-btn"
-          (click)="navigateAndClose('features')">
+          (click)="navigateAndClose('features')"
+        >
           <span>RECURSOS</span>
         </button>
         <button
           type="button"
           class="custom-header-button mobile-nav-btn"
-          (click)="navigateAndClose('footer')">
+          (click)="navigateAndClose('footer')"
+        >
           <span>CONTATO</span>
         </button>
       </div>
@@ -113,44 +178,21 @@
             type="button"
             class="custom-header-button mobile-action-btn"
             routerLink="/signup"
-            (click)="closeMobileMenu()">
+            (click)="closeMobileMenu()"
+          >
             <span>CADASTRAR</span>
           </button>
           <button
             type="button"
             class="custom-header-button mobile-action-btn"
             routerLink="/login"
-            (click)="closeMobileMenu()">
+            (click)="closeMobileMenu()"
+          >
             <span>ENTRAR</span>
           </button>
         </div>
 
-        <!-- Mobile Actions - Usuário autenticado -->
-        <div *ngIf="isAuthenticated()">
-          <div class="mobile-welcome">
-            <span>Olá, {{ currentUser()?.username }}!</span>
-          </div>
-          <button
-            type="button"
-            class="custom-header-button mobile-action-btn"
-            routerLink="/dashboard"
-            (click)="closeMobileMenu()">
-            <span>DASHBOARD</span>
-          </button>
-          <button
-            type="button"
-            class="custom-header-button mobile-action-btn"
-            routerLink="/player-selection"
-            (click)="closeMobileMenu()">
-            <span>CRIAR JOGADOR</span>
-          </button>
-          <button
-            type="button"
-            class="custom-header-button mobile-action-btn logout-btn"
-            (click)="logout()">
-            <span>SAIR</span>
-          </button>
-        </div>
+
       </div>
     </div>
   </div>

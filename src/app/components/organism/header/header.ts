@@ -22,32 +22,10 @@ export class Header implements OnInit, OnDestroy {
     isMobileMenuOpen = false;
     private userSubscription?: Subscription;
 
-    // Signals para gerenciar estado de autenticação
     private userSignal = signal<any>(null);
     isAuthenticated = computed(() => !!this.userSignal() && this.authService.isAuthenticated());
     currentUser = computed(() => this.userSignal());
 
-    // Items do menu do usuário
-    userMenuItems: MenuItem[] = [
-        {
-            label: 'Dashboard',
-            icon: 'pi pi-home',
-            command: () => this.router.navigate(['/dashboard'])
-        },
-        {
-            label: 'Criar Jogador',
-            icon: 'pi pi-user-plus',
-            command: () => this.router.navigate(['/player-selection'])
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Sair',
-            icon: 'pi pi-sign-out',
-            command: () => this.logout()
-        }
-    ];
 
     constructor(
         private authService: Auth,
@@ -55,13 +33,22 @@ export class Header implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        // Inicializa o signal com o usuário atual
-        this.userSignal.set(this.authService.getCurrentUser());
+        const currentUser = this.authService.getCurrentUser();
+        this.userSignal.set(currentUser);
 
-        // Assina mudanças no estado do usuário
         this.userSubscription = this.authService.currentUser$.subscribe(user => {
             this.userSignal.set(user);
         });
+
+        if (currentUser && this.authService.isAuthenticated() && (!currentUser.username || !currentUser.id)) {
+            this.authService.getUserProfile().subscribe({
+                next: (profile) => {
+                },
+                error: (error) => {
+                    console.warn('Não foi possível carregar dados completos do usuário:', error);
+                }
+            });
+        }
     }
 
     ngOnDestroy() {
@@ -104,7 +91,7 @@ export class Header implements OnInit, OnDestroy {
 
 
                 window.scrollTo({
-                    top: Math.max(0, targetPosition), // Garantir que não seja negativo
+                    top: Math.max(0, targetPosition), 
                     behavior: 'smooth'
                 });
 

@@ -1,18 +1,18 @@
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
-  token: string;
+  token?: string;
 }
 
 export interface UserUpdate {
-  username?: string;
+  name?: string;
   email?: string;
   password?: string;
 }
 
 export interface UserProfile {
-  id: number;
-  username: string;
+  _id: string;
+  name: string;
   email: string;
 }

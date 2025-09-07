@@ -1,20 +1,14 @@
 <div class="dashboard-container">
-  <!-- Toast para notificações -->
-  <p-toast position="top-right"></p-toast>
-
-  <!-- Dialog de confirmação -->
-  <p-confirmDialog></p-confirmDialog>
-
   <!-- Header do Dashboard -->
   <div class="dashboard-header">
     <div class="user-profile-header">
       <app-user-avatar
-        [username]="currentUser()?.username || ''"
+        [username]="currentUser()?.username || 'Usuario'"
         [clickable]="false"
         size="extra-large">
       </app-user-avatar>
       <div class="user-info-header">
-        <h1>{{ currentUser()?.username }}</h1>
+        <h1>{{ currentUser()?.username || 'Usuario' }}</h1>
         <p>{{ currentUser()?.email }}</p>
       </div>
     </div>
@@ -24,7 +18,13 @@
   <div class="dashboard-grid">
 
     <!-- Card de Informações Pessoais -->
-    <p-card header="👤 Informações Pessoais" class="info-card">
+    <p-card class="info-card">
+      <ng-template pTemplate="header">
+        <div class="card-header-content">
+          <i class="pi pi-user"></i>
+          <span>Informações Pessoais</span>
+        </div>
+      </ng-template>
       <div class="user-details">
         <div class="detail-row">
           <label>ID:</label>
@@ -32,30 +32,38 @@
         </div>
         <div class="detail-row">
           <label>Nome de Usuário:</label>
-          <span>{{ currentUser()?.username }}</span>
+          <span>{{ currentUser()?.username || 'Não informado' }}</span>
         </div>
         <div class="detail-row">
           <label>Email:</label>
-          <span>{{ currentUser()?.email }}</span>
+          <span>{{ currentUser()?.email || 'Não informado' }}</span>
         </div>
         <div class="detail-row">
           <label>Status da Conta:</label>
-          <span class="status-active">✅ Ativa</span>
+          <span class="status-active"><i class="pi pi-check-circle"></i> Ativa</span>
         </div>
       </div>
 
       <div class="card-actions">
-        <p-button
-          label="Editar Perfil"
-          icon="pi pi-user-edit"
-          class="p-button-primary edit-btn"
-          (click)="onEditProfile()">
-        </p-button>
+        <button
+          type="button"
+          class="custom-header-button"
+          (click)="onEditProfile()"
+        >
+          <span>Editar Perfil</span>
+        </button>
+
       </div>
     </p-card>
 
     <!-- Card de Autenticação -->
-    <p-card header="🔐 Status de Autenticação" class="auth-card">
+    <p-card class="auth-card">
+      <ng-template pTemplate="header">
+        <div class="card-header-content">
+          <i class="pi pi-shield"></i>
+          <span>Status de Autenticação</span>
+        </div>
+      </ng-template>
       <div class="auth-info">
         <div class="auth-status">
           <i class="pi pi-check-circle success-icon"></i>
@@ -68,51 +76,68 @@
         <div class="security-features">
           <h4>Recursos de Segurança:</h4>
           <ul>
-            <li>✓ Token de autenticação válido</li>
-            <li>✓ Sessão segura ativa</li>
-            <li>✓ Auth Guard funcionando</li>
-            <li>✓ Acesso a rotas protegidas</li>
+            <li><i class="pi pi-check"></i> Token de autenticação válido</li>
+            <li><i class="pi pi-check"></i> Sessão segura ativa</li>
+            <li><i class="pi pi-check"></i> Auth Guard funcionando</li>
+            <li><i class="pi pi-check"></i> Acesso a rotas protegidas</li>
           </ul>
         </div>
       </div>
     </p-card>
 
     <!-- Card de Ações da Conta -->
-    <p-card header="⚙️ Gerenciar Conta" class="actions-card">
+    <p-card class="actions-card">
+      <ng-template pTemplate="header">
+        <div class="card-header-content">
+          <i class="pi pi-cog"></i>
+          <span>Gerenciar Conta</span>
+        </div>
+      </ng-template>
       <div class="account-actions">
         <div class="action-section">
           <h4>Navegação</h4>
           <div class="action-buttons">
-            <p-button
-              label="Criar Jogador"
-              icon="pi pi-user-plus"
-              class="p-button-secondary"
-              routerLink="/player-selection">
-            </p-button>
-            <p-button
-              label="Voltar ao Início"
-              icon="pi pi-home"
-              class="p-button-info"
-              routerLink="/home">
-            </p-button>
+            <button
+          type="button"
+          class="custom-header-button"
+          (click)="onEditProfile()"
+        >
+          <span style="gap: 0.5rem" >  <i class="pi pi-user-edit"></i>  Editar Perfil</span>
+        </button>
+        <button
+          type="button"
+          class="custom-header-button"
+          (click)="onLegend()"
+        >
+          <span style="gap: 0.5rem">  <i class="pi pi-user-plus"></i>  Criar Jogador</span>
+        </button>
+            <button
+              type="button"
+              class="custom-header-button"
+              (click)="onHome()"
+            >
+              <span style="gap: 0.5rem">  <i class="pi pi-home"></i>  Voltar ao Início</span>
+            </button>
           </div>
         </div>
 
         <div class="action-section">
           <h4>Conta</h4>
           <div class="action-buttons">
-            <p-button
-              label="Fazer Logout"
-              icon="pi pi-sign-out"
-              class="p-button-warning logout-btn"
-              (click)="onLogout()">
-            </p-button>
-            <p-button
-              label="Deletar Conta"
-              icon="pi pi-trash"
-              class="p-button-danger delete-btn"
-              (click)="onDeleteAccount()">
-            </p-button>
+            <button
+              type="button"
+              class="custom-header-button"
+              (click)="onLogout()"
+            >
+              <span style="gap: 0.5rem"> <i class="pi pi-sign-out"></i>  Fazer Logout</span>
+            </button>
+            <button
+              type="button"
+              class="custom-header-button"
+              (click)="onDeleteAccount()"
+            >
+              <span style="gap: 0.5rem"> <i class="pi pi-trash"></i>  Deletar Conta</span>
+            </button>
           </div>
         </div>
       </div>
@@ -122,7 +147,6 @@
 
   <!-- Modal de Edição -->
   <p-dialog
-    header="✏️ Editar Perfil"
     [visible]="isEditModalVisible()"
     (visibleChange)="isEditModalVisible.set($event)"
     [modal]="true"
@@ -130,6 +154,13 @@
     [resizable]="false"
     [draggable]="false"
     styleClass="edit-profile-dialog">
+
+    <ng-template pTemplate="header" >
+      <div class="dialog-header-content">
+        <i class="pi pi-user-edit"></i>
+        <span>Editar Perfil</span>
+      </div>
+    </ng-template>
 
     <form [formGroup]="editForm" (ngSubmit)="onSaveProfile()">
 

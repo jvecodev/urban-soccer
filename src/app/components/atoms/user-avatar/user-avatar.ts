@@ -27,7 +27,8 @@ export class UserAvatar {
 
   // Computed para pegar a inicial do nome
   userInitial = computed(() => {
-    return this.username?.charAt(0)?.toUpperCase() || '?';
+    const initial = this.username?.charAt(0)?.toUpperCase() || '?';
+    return initial;
   });
 
   // Computed para gerar cor baseada no nome

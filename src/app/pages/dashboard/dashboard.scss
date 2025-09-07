@@ -13,20 +13,15 @@
 .dashboard-container {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--azul-noite) 0%, var(--roxo-urbano) 100%);
-  padding: 2rem 1rem;
-  margin-top: 120px; // Compensar header fixo
-
-  // Responsividade mobile
-  @media (max-width: 768px) {
-    padding: 1rem 0.5rem;
-    margin-top: 100px;
-  }
 }
+
+
 
 /* ===== HEADER DO DASHBOARD ===== */
 .dashboard-header {
   margin-bottom: 2rem;
   text-align: center;
+
 
   .user-profile-header {
     display: flex;
@@ -79,6 +74,7 @@
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
+  overflow: scroll;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -91,7 +87,7 @@
 
 /* ===== CARDS DO DASHBOARD ===== */
 ::ng-deep .dashboard-container {
-  
+
   .p-card {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -123,6 +119,34 @@
       font-family: 'Inter', sans-serif;
     }
   }
+
+  .card-header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--cinza-claro);
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.1rem;
+
+    i {
+      font-size: 1.2rem;
+      color: var(--ciano-eletrico);
+    }
+  }
+
+  .dialog-header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--cinza-claro);
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.1rem;
+
+    i {
+      font-size: 1.2rem;
+      color: var(--ciano-eletrico);
+    }
+  }
 }
 
 /* ===== CARD DE INFORMAÇÕES ===== */
@@ -151,6 +175,13 @@
       &.status-active {
         color: var(--ciano-eletrico);
         font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          color: var(--ciano-eletrico);
+        }
       }
     }
   }
@@ -206,8 +237,59 @@
         color: var(--cinza-neutro);
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          color: var(--ciano-eletrico);
+          font-size: 0.8rem;
+        }
       }
     }
+  }
+}
+.custom-header-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--laranja-vibrante) 0%, var(--amarelo-dourado) 100%);
+  border: none;
+  border-radius: 8px;
+  color: var(--azul-noite);
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--amarelo-dourado) 0%, var(--laranja-vibrante) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(235, 110, 25, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(235, 110, 25, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -230,6 +312,8 @@
     .action-buttons {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       gap: 0.75rem;
 
       @media (min-width: 480px) {
@@ -242,14 +326,15 @@
 
 /* ===== AÇÕES DOS CARDS ===== */
 .card-actions {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 /* ===== CUSTOMIZAÇÃO DOS BOTÕES ===== */
 ::ng-deep .dashboard-container {
-  
+
   .p-button {
     font-family: 'Russo One', sans-serif;
     border-radius: 8px;
@@ -331,14 +416,22 @@
   }
 }
 
-/* ===== MODAL DE EDIÇÃO ===== */
+
+
 ::ng-deep .edit-profile-dialog {
-  
+  .edit-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+
   .p-dialog {
     background: var(--azul-noite);
     border: 1px solid var(--ciano-eletrico);
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+
 
     .p-dialog-header {
       background: var(--azul-noite);
@@ -418,7 +511,7 @@
 
   @media (max-width: 480px) {
     flex-direction: column;
-    
+
     .p-button {
       width: 100%;
     }
@@ -441,7 +534,7 @@
     background: var(--azul-noite);
     border: 1px solid var(--ciano-eletrico);
     border-radius: 8px;
-    
+
     .p-toast-message-content {
       color: var(--cinza-claro);
       font-family: 'Inter', sans-serif;
@@ -449,7 +542,7 @@
 
     &.p-toast-message-success {
       border-color: var(--ciano-eletrico);
-      
+
       .p-toast-message-icon {
         color: var(--ciano-eletrico);
       }
@@ -457,7 +550,7 @@
 
     &.p-toast-message-error {
       border-color: #e74c3c;
-      
+
       .p-toast-message-icon {
         color: #e74c3c;
       }
@@ -470,7 +563,7 @@
   .p-dialog {
     background: var(--azul-noite);
     border: 1px solid #e74c3c;
-    
+
     .p-dialog-header {
       background: var(--azul-noite);
       color: var(--cinza-claro);

@@ -1,3 +1,27 @@
+// Modelos para a API do backend
+export interface PlayerStats {
+  health: number;
+  attack: number;
+  defense: number;
+  specialAbility: string;
+}
+
+export interface ApiPlayer {
+  _id: string;
+  name: string;
+  description: string;
+  rarity: 'default' | 'unique';
+  stats: PlayerStats;
+  imageUrl: string;
+  modelUrl: string;
+  isAvailable: boolean;
+}
+
+export interface PlayerListResponse {
+  players: ApiPlayer[];
+}
+
+// Modelos para o frontend (mantidos para compatibilidade)
 export interface PlayerAttributes {
   speed: number;
   shooting: number;
@@ -15,6 +39,8 @@ export interface PlayerArchetype {
   attributes: PlayerAttributes;
   primaryColor: string;
   secondaryColor: string;
+  rarity?: 'default' | 'unique';
+  stats?: PlayerStats;
 }
 
 export interface Player {

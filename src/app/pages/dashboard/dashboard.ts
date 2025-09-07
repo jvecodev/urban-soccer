@@ -69,20 +69,43 @@ export class Dashboard implements OnInit {
   }
 
   private loadUserData(): void {
-    this.currentUser.set(this.authService.getCurrentUser());
+    // Primeiro, carrega do estado atual do serviço
+    const user = this.authService.getCurrentUser();
+    this.currentUser.set(user);
 
-    // Carrega dados mais recentes do servidor
-    this.authService.getUserProfile().subscribe({
-      next: (profile) => {
-        const user = this.authService.getCurrentUser();
-        if (user) {
-          this.currentUser.set({ ...user, ...profile });
+    // Se não há usuário ou os dados estão incompletos, busca do servidor
+    if (!user || !user.username || !user.id) {
+      this.authService.getUserProfile().subscribe({
+        next: (profile) => {
+          const updatedUser = user ? { ...user, id: profile._id, username: profile.name, email: profile.email } : {
+            id: profile._id,
+            username: profile.name,
+            email: profile.email,
+            token: this.authService.getToken()
+          };
+          this.currentUser.set(updatedUser);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar perfil:', error);
+          // Se falhar e não há usuário, redireciona para login
+          if (!user) {
+            this.router.navigate(['/login']);
+          }
         }
-      },
-      error: (error) => {
-        console.error('Erro ao carregar perfil:', error);
-      }
-    });
+      });
+    } else {
+      // Mesmo com dados, tenta atualizar em background
+      this.authService.getUserProfile().subscribe({
+        next: (profile) => {
+          const updatedUser = { ...user, id: profile._id, username: profile.name, email: profile.email };
+          this.currentUser.set(updatedUser);
+        },
+        error: (error) => {
+          console.warn('Não foi possível atualizar dados do usuário:', error);
+          // Mantém os dados atuais se falhar
+        }
+      });
+    }
   }
 
   onEditProfile(): void {
@@ -109,7 +132,7 @@ export class Dashboard implements OnInit {
 
       // Só inclui campos que foram modificados
       if (formValue.username !== user.username) {
-        updateData.username = formValue.username;
+        updateData.name = formValue.username;  // Mapeia username para name
       }
       if (formValue.email !== user.email) {
         updateData.email = formValue.email;
@@ -134,7 +157,8 @@ export class Dashboard implements OnInit {
         next: (updatedProfile) => {
           this.currentUser.set({
             ...user,
-            username: updatedProfile.username,
+            id: updatedProfile._id,
+            username: updatedProfile.name,
             email: updatedProfile.email
           });
           this.isEditModalVisible.set(false);
@@ -194,6 +218,14 @@ export class Dashboard implements OnInit {
         }
       }
     });
+  }
+
+  onLegend(): void {
+    this.router.navigate(['/player-selection']);
+  }
+
+  onHome(): void{
+    this.router.navigate(['/home']);
   }
 
   onLogout(): void {

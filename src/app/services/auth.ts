@@ -13,7 +13,6 @@ export class Auth {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private api: Api) {
-    // Carrega token e usuário do localStorage se existirem
     this.loadUserFromStorage();
   }
 
@@ -39,7 +38,27 @@ export class Auth {
     return this.api.post<LoginResponse>('/users/login', credentials)
       .pipe(
         tap((response) => {
-          this.setSession(response, credentials.email);
+          this.token = response.access_token;
+          this.api.setAuthToken(this.token);
+          localStorage.setItem('auth_token', this.token);
+
+          this.getUserProfile().subscribe({
+            next: (profile) => {
+              const user: User = {
+                id: profile._id,
+                username: profile.name,
+                email: profile.email,
+                token: this.token
+              };
+              this.currentUserSubject.next(user);
+              localStorage.setItem('current_user', JSON.stringify(user));
+            },
+            error: (error) => {
+              console.error('Erro ao carregar perfil após login:', error);
+              // Se não conseguir carregar o perfil, usa dados básicos
+              this.setBasicSession(response, credentials.email);
+            }
+          });
         }),
         catchError((error) => {
           console.error('Erro no login:', error);
@@ -71,7 +90,8 @@ export class Auth {
           if (currentUser) {
             const updatedUser: User = {
               ...currentUser,
-              username: profile.username,
+              id: profile._id,
+              username: profile.name,
               email: profile.email
             };
             this.currentUserSubject.next(updatedUser);
@@ -88,7 +108,7 @@ export class Auth {
   /**
    * Atualiza dados do usuário
    */
-  updateUserProfile(userId: number, updateData: UserUpdate): Observable<UserProfile> {
+  updateUserProfile(userId: string, updateData: UserUpdate): Observable<UserProfile> {
     return this.api.patch<UserProfile>(`/users/${userId}`, updateData)
       .pipe(
         tap((updatedProfile) => {
@@ -97,7 +117,8 @@ export class Auth {
           if (currentUser) {
             const updatedUser: User = {
               ...currentUser,
-              username: updatedProfile.username,
+              id: updatedProfile._id,
+              username: updatedProfile.name,
               email: updatedProfile.email
             };
             this.currentUserSubject.next(updatedUser);
@@ -114,7 +135,7 @@ export class Auth {
   /**
    * Deleta a conta do usuário
    */
-  deleteUserAccount(userId: number): Observable<void> {
+  deleteUserAccount(userId: string): Observable<void> {
     return this.api.delete<void>(`/users/${userId}`)
       .pipe(
         tap(() => {
@@ -161,30 +182,38 @@ export class Auth {
   private setSession(authResponse: LoginResponse, email: string): void {
     this.token = authResponse.access_token;
 
-    // Como a API não retorna dados do usuário, criamos um objeto básico
     const user: User = {
-      id: Date.now(), // ID temporário
-      username: email.split('@')[0], // Usar parte antes do @ como username
+      id: authResponse.user?.id?.toString() ?? Date.now().toString(),
+      username: authResponse.user?.username ?? email.split('@')[0],
       email: email,
-      token: authResponse.access_token
+      token: this.token
     };
 
     this.currentUserSubject.next(user);
     this.api.setAuthToken(this.token);
 
-    // Salva no localStorage
     localStorage.setItem('auth_token', this.token);
     localStorage.setItem('current_user', JSON.stringify(user));
-
   }
 
   /**
-   * Carrega dados do usuário do localStorage
+   * Define sessão básica quando não consegue carregar perfil completo
    */
+  private setBasicSession(authResponse: LoginResponse, email: string): void {
+    const user: User = {
+      id: authResponse.user?.id?.toString() ?? Date.now().toString(),
+      username: authResponse.user?.username ?? email.split('@')[0],
+      email: email,
+      token: this.token
+    };
+
+    this.currentUserSubject.next(user);
+    localStorage.setItem('current_user', JSON.stringify(user));
+  }
+
   private loadUserFromStorage(): void {
     const token = localStorage.getItem('auth_token');
     const userJson = localStorage.getItem('current_user');
-
 
     if (token && userJson) {
       try {
@@ -192,6 +221,22 @@ export class Auth {
         const user = JSON.parse(userJson);
         this.currentUserSubject.next(user);
         this.api.setAuthToken(token);
+
+        this.getUserProfile().subscribe({
+          next: (profile) => {
+            const updatedUser: User = {
+              ...user,
+              id: profile._id,
+              username: profile.name,
+              email: profile.email
+            };
+            this.currentUserSubject.next(updatedUser);
+            localStorage.setItem('current_user', JSON.stringify(updatedUser));
+          },
+          error: (error) => {
+            console.warn('Não foi possível atualizar dados do usuário:', error);
+          }
+        });
       } catch (error) {
         console.error('Erro ao carregar usuário do localStorage:', error);
         this.logout();

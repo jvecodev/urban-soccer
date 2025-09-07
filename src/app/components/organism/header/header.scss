@@ -1,3 +1,15 @@
+// Importa as variáveis CSS do style guide
+:host {
+  --azul-noite: #14223D;
+  --roxo-urbano: #7C2C78;
+  --laranja-vibrante: #EB6E19;
+  --amarelo-dourado: #F4A028;
+  --ciano-eletrico: #30C9F9;
+  --azul-acento: #1095CF;
+  --cinza-claro: #C9CBCA;
+  --cinza-neutro: #A2B9C7;
+}
+
 p-toolbar {
   background-color: var(--azul-noite) !important;
   width: 100%;
@@ -213,21 +225,6 @@ p-toolbar {
       font-size: 1.1rem;
     }
   }
-
-  /* Ações Mobile */
-  .mobile-menu-actions {
-    padding: 1rem 2rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-
-    .mobile-action-btn {
-      width: 100%;
-      padding: 1rem 1.5rem;
-      font-size: 1rem;
-    }
-  }
 }
 
 /* Mobile pequeno */
@@ -247,19 +244,35 @@ p-toolbar {
 
   .mobile-menu-nav {
     padding: 1.5rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
     .mobile-nav-btn {
       font-size: 1rem;
       padding: 0.875rem 1.25rem;
+      width: 100%;
     }
   }
 
   .mobile-menu-actions {
     padding: 1rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    // Seção específica para usuários não autenticados
+    > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+    }
 
     .mobile-action-btn {
       font-size: 0.9rem;
       padding: 0.875rem 1.25rem;
+      width: 100%;
     }
   }
 }
@@ -357,14 +370,43 @@ p-toolbar {
 }
 
 /* Boas-vindas mobile */
-.mobile-welcome {
-  text-align: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
 
-  span {
+  .mobile-user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .mobile-user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+
+      .mobile-username {
+        color: var(--cinza-claro);
+        font-family: 'Russo One', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .mobile-email {
+        color: var(--cinza-neutro);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 400;
+      }
+    }
+
+
+  // Fallback para quando não há perfil estruturado
+  > span {
     color: white;
     font-weight: 600;
     font-size: 1rem;

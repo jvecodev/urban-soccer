@@ -2,7 +2,7 @@
 <div class="loading-container" *ngIf="isLoading()">
   <div class="loading-content">
     <div class="loading-spinner">
-      <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color);"></i>
+      <i class="pi pi-spin pi-spinner"></i>
     </div>
     <h2 class="loading-text">Preparando sua experiência...</h2>
   </div>
@@ -11,153 +11,176 @@
 <!-- Main Content -->
 <div class="player-selection-container" *ngIf="!isLoading()">
   <!-- Header Section -->
-  <div class="header-section">
-    <div class="title-container">
-      <h1 class="main-title">Escolha seu Estilo de Jogo</h1>
-      <p class="subtitle">Selecione o arquétipo que mais combina com você e comece sua jornada no Urban Soccer</p>
+  <div class="player-selection-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="main-title">ESCOLHA SEU ESTILO DE JOGO</h1>
+        <p class="main-subtitle">Selecione o arquétipo que mais combina com você</p>
+      </div>
+
+      <!-- Error Message and Reload Button -->
+      <div class="error-section" *ngIf="loadingError()">
+        <div class="error-message">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span>{{ loadingError() }}</span>
+        </div>
+        <p-button
+          label="Recarregar"
+          icon="pi pi-refresh"
+          (onClick)="reloadPlayers()"
+          severity="info"
+          size="small">
+        </p-button>
+      </div>
     </div>
   </div>
 
-  <!-- Player Selection Carousel -->
-  <div class="carousel-section">
-    <p-carousel
-      [value]="playerArchetypes()"
-      [numVisible]="carouselOptions.numVisible"
-      [numScroll]="carouselOptions.numScroll"
-      [circular]="carouselOptions.circular"
-      [responsiveOptions]="responsiveOptions"
-      class="custom-carousel">
+  <!-- Players Grid -->
+  <div class="players-grid" *ngIf="playerArchetypes().length > 0">
+    <div class="player-card-wrapper" *ngFor="let archetype of playerArchetypes()">
+      <p-card class="player-card">
+        <!-- Card Header -->
+        <ng-template pTemplate="header">
+          <div class="card-header-content">
+            <i [class]="getArchetypeIcon(archetype.id)"></i>
+            <span>{{ archetype.name }}</span>
+          </div>
+        </ng-template>
 
-      <ng-template pTemplate="item" let-archetype>
-        <div class="archetype-card-container">
-          <p-card
-            class="archetype-card"
-            [style]="{'--primary-color': archetype.primaryColor, '--secondary-color': archetype.secondaryColor}">
+        <!-- Card Content -->
+        <div class="player-info">
+          <div class="player-image-section">
+            <div class="player-avatar" [attr.data-archetype]="archetype.id">
+              <i [class]="getArchetypeIcon(archetype.id)" class="avatar-icon"></i>
+            </div>
+            <p-tag
+              [value]="archetype.title"
+              [style]="{'background-color': archetype.primaryColor}"
+              class="player-tag">
+            </p-tag>
+          </div>
 
-            <!-- Card Header -->
-            <ng-template pTemplate="header">
-              <div class="card-header">
-                <div class="archetype-image" [attr.data-archetype]="archetype.id">
-                  <div class="placeholder-image">
-                    <i class="archetype-icon" [class]="getArchetypeIcon(archetype.id)"></i>
-                  </div>
+          <p class="player-description">{{ archetype.description }}</p>
+
+          <!-- Attributes Grid -->
+          <div class="attributes-section">
+            <h4 class="attributes-title">ATRIBUTOS</h4>
+            <div class="attributes-list">
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-bolt" [style.color]="getAttributeColor(archetype.attributes.speed)"></i>
+                  <span>Velocidade</span>
+                </div>
+                <div class="attribute-value">
+                  <p-progressBar
+                    [value]="archetype.attributes.speed"
+                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.speed)}">
+                  </p-progressBar>
+                  <span class="value-text">{{ archetype.attributes.speed }}</span>
                 </div>
               </div>
-            </ng-template>
 
-            <!-- Card Content -->
-            <ng-template pTemplate="content">
-              <div class="card-content">
-                <h3 class="archetype-name">{{ archetype.name }}</h3>
-                <p-tag
-                  [value]="archetype.title"
-                  [style]="{'background-color': archetype.primaryColor}"
-                  class="archetype-tag">
-                </p-tag>
-
-                <p class="archetype-description">{{ archetype.description }}</p>
-
-                <!-- Attributes Section -->
-                <div class="attributes-section">
-                  <h4 class="attributes-title">Atributos</h4>
-                  <div class="attributes-grid">
-
-                    <div class="attribute-item">
-                      <div class="attribute-header">
-                        <i [class]="getAttributeIcon('speed')" [style.color]="getAttributeColor(archetype.attributes.speed)"></i>
-                        <span class="attribute-name">Velocidade</span>
-                      </div>
-                      <p-progressBar
-                        [value]="archetype.attributes.speed"
-                        [style]="{'background-color': '#f0f0f0'}"
-                        [styleClass]="'custom-progress'"
-                        [ngStyle]="{'--progress-color': getAttributeColor(archetype.attributes.speed)}">
-                      </p-progressBar>
-                      <span class="attribute-value">{{ archetype.attributes.speed }}</span>
-                    </div>
-
-                    <div class="attribute-item">
-                      <div class="attribute-header">
-                        <i [class]="getAttributeIcon('shooting')" [style.color]="getAttributeColor(archetype.attributes.shooting)"></i>
-                        <span class="attribute-name">Chute</span>
-                      </div>
-                      <p-progressBar
-                        [value]="archetype.attributes.shooting"
-                        [style]="{'background-color': '#f0f0f0'}"
-                        [styleClass]="'custom-progress'"
-                        [ngStyle]="{'--progress-color': getAttributeColor(archetype.attributes.shooting)}">
-                      </p-progressBar>
-                      <span class="attribute-value">{{ archetype.attributes.shooting }}</span>
-                    </div>
-
-                    <div class="attribute-item">
-                      <div class="attribute-header">
-                        <i [class]="getAttributeIcon('passing')" [style.color]="getAttributeColor(archetype.attributes.passing)"></i>
-                        <span class="attribute-name">Passe</span>
-                      </div>
-                      <p-progressBar
-                        [value]="archetype.attributes.passing"
-                        [style]="{'background-color': '#f0f0f0'}"
-                        [styleClass]="'custom-progress'"
-                        [ngStyle]="{'--progress-color': getAttributeColor(archetype.attributes.passing)}">
-                      </p-progressBar>
-                      <span class="attribute-value">{{ archetype.attributes.passing }}</span>
-                    </div>
-
-                    <div class="attribute-item">
-                      <div class="attribute-header">
-                        <i [class]="getAttributeIcon('defense')" [style.color]="getAttributeColor(archetype.attributes.defense)"></i>
-                        <span class="attribute-name">Defesa</span>
-                      </div>
-                      <p-progressBar
-                        [value]="archetype.attributes.defense"
-                        [style]="{'background-color': '#f0f0f0'}"
-                        [styleClass]="'custom-progress'"
-                        [ngStyle]="{'--progress-color': getAttributeColor(archetype.attributes.defense)}">
-                      </p-progressBar>
-                      <span class="attribute-value">{{ archetype.attributes.defense }}</span>
-                    </div>
-
-                    <div class="attribute-item">
-                      <div class="attribute-header">
-                        <i [class]="getAttributeIcon('leadership')" [style.color]="getAttributeColor(archetype.attributes.leadership)"></i>
-                        <span class="attribute-name">Liderança</span>
-                      </div>
-                      <p-progressBar
-                        [value]="archetype.attributes.leadership"
-                        [style]="{'background-color': '#f0f0f0'}"
-                        [styleClass]="'custom-progress'"
-                        [ngStyle]="{'--progress-color': getAttributeColor(archetype.attributes.leadership)}">
-                      </p-progressBar>
-                      <span class="attribute-value">{{ archetype.attributes.leadership }}</span>
-                    </div>
-                  </div>
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-target" [style.color]="getAttributeColor(archetype.attributes.shooting)"></i>
+                  <span>Chute</span>
+                </div>
+                <div class="attribute-value">
+                  <p-progressBar
+                    [value]="archetype.attributes.shooting"
+                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.shooting)}">
+                  </p-progressBar>
+                  <span class="value-text">{{ archetype.attributes.shooting }}</span>
                 </div>
               </div>
-            </ng-template>
 
-            <!-- Card Footer -->
-            <ng-template pTemplate="footer">
-              <div class="card-footer">
-                <p-button
-                  label="Escolher"
-                  icon="pi pi-check"
-                  (onClick)="selectArchetype(archetype)"
-                  [style]="{'background-color': archetype.primaryColor, 'border-color': archetype.primaryColor}"
-                  class="select-button">
-                </p-button>
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-send" [style.color]="getAttributeColor(archetype.attributes.passing)"></i>
+                  <span>Passe</span>
+                </div>
+                <div class="attribute-value">
+                  <p-progressBar
+                    [value]="archetype.attributes.passing"
+                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.passing)}">
+                  </p-progressBar>
+                  <span class="value-text">{{ archetype.attributes.passing }}</span>
+                </div>
               </div>
-            </ng-template>
-          </p-card>
+
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-shield" [style.color]="getAttributeColor(archetype.attributes.defense)"></i>
+                  <span>Defesa</span>
+                </div>
+                <div class="attribute-value">
+                  <p-progressBar
+                    [value]="archetype.attributes.defense"
+                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.defense)}">
+                  </p-progressBar>
+                  <span class="value-text">{{ archetype.attributes.defense }}</span>
+                </div>
+              </div>
+
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-star" [style.color]="getAttributeColor(archetype.attributes.leadership)"></i>
+                  <span>Liderança</span>
+                </div>
+                <div class="attribute-value">
+                  <p-progressBar
+                    [value]="archetype.attributes.leadership"
+                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.leadership)}">
+                  </p-progressBar>
+                  <span class="value-text">{{ archetype.attributes.leadership }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Footer -->
+        <ng-template pTemplate="footer">
+          <div class="card-actions">
+            <p-button
+              label="ESCOLHER"
+              icon="pi pi-check"
+              (onClick)="selectArchetype(archetype)"
+              [style]="{'background-color': archetype.primaryColor, 'border-color': archetype.primaryColor}"
+              styleClass="select-button">
+            </p-button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="playerArchetypes().length === 0">
+    <p-card class="empty-card">
+      <ng-template pTemplate="header">
+        <div class="card-header-content">
+          <i class="pi pi-users"></i>
+          <span>Nenhum Personagem Disponível</span>
         </div>
       </ng-template>
-    </p-carousel>
+
+      <div class="empty-content">
+        <p>Não há personagens disponíveis para seleção no momento.</p>
+        <p-button
+          label="TENTAR NOVAMENTE"
+          icon="pi pi-refresh"
+          (onClick)="reloadPlayers()"
+          severity="info"
+          styleClass="reload-button">
+        </p-button>
+      </div>
+    </p-card>
   </div>
 </div>
 
 <!-- Player Name Dialog -->
 <p-dialog
-  header="Nomeie seu Jogador"
   [(visible)]="showNameDialog"
   [modal]="true"
   [closable]="true"
@@ -166,13 +189,20 @@
   styleClass="player-name-dialog"
   (onHide)="cancelSelection()">
 
+  <ng-template pTemplate="header">
+    <div class="dialog-header-content">
+      <i class="pi pi-user-plus"></i>
+      <span>NOMEIE SEU JOGADOR</span>
+    </div>
+  </ng-template>
+
   <div class="dialog-content" *ngIf="selectedArchetype()">
-    <div class="selected-archetype-info">
-      <div class="archetype-preview">
-        <div class="preview-image" [attr.data-archetype]="selectedArchetype()!.id">
+    <div class="selected-player-info">
+      <div class="player-preview">
+        <div class="preview-avatar" [attr.data-archetype]="selectedArchetype()!.id">
           <i [class]="getArchetypeIcon(selectedArchetype()!.id)"></i>
         </div>
-        <div class="archetype-details">
+        <div class="player-details">
           <h3>{{ selectedArchetype()!.name }}</h3>
           <p-tag
             [value]="selectedArchetype()!.title"
@@ -183,7 +213,7 @@
     </div>
 
     <div class="name-input-section">
-      <label for="playerName">Nome do Jogador:</label>
+      <label for="playerName" class="input-label">NOME DO JOGADOR</label>
       <input
         pInputText
         id="playerName"
@@ -191,27 +221,28 @@
         [(ngModel)]="playerName"
         placeholder="Digite o nome do seu jogador"
         maxlength="20"
-        class="player-name-input"
+        class="urban-input"
         #nameInput />
       <small class="input-help">Máximo 20 caracteres</small>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="dialog-buttons">
+    <div class="dialog-actions">
       <p-button
-        label="Cancelar"
+        label="CANCELAR"
         icon="pi pi-times"
         (onClick)="cancelSelection()"
         severity="secondary"
-        [text]="true">
+        styleClass="cancel-button">
       </p-button>
       <p-button
-        label="Criar Jogador"
+        label="CRIAR JOGADOR"
         icon="pi pi-check"
         (onClick)="confirmPlayerCreation()"
         [disabled]="!playerName().trim()"
-        [style]="selectedArchetype() ? {'background-color': selectedArchetype()!.primaryColor, 'border-color': selectedArchetype()!.primaryColor} : {}">
+        [style]="selectedArchetype() ? {'background-color': selectedArchetype()!.primaryColor, 'border-color': selectedArchetype()!.primaryColor} : {}"
+        styleClass="create-button">
       </p-button>
     </div>
   </ng-template>

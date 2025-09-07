@@ -16,8 +16,9 @@ import { InputTextModule } from 'primeng/inputtext';
 // PrimeNG Services
 import { MessageService } from 'primeng/api';
 
-// Models
+// Models and Services
 import { PlayerArchetype, Player } from '../../models/player';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-player-selection',
@@ -35,7 +36,7 @@ import { PlayerArchetype, Player } from '../../models/player';
     InputTextModule
   ],
   templateUrl: './player-selection.html',
-  styleUrls: ['./player-selection.scss'],
+  styleUrls: ['./player-selection-new.scss'],
   providers: [MessageService]
 })
 export class PlayerSelection implements OnInit {
@@ -44,90 +45,10 @@ export class PlayerSelection implements OnInit {
   showNameDialog = signal(false);
   selectedArchetype = signal<PlayerArchetype | null>(null);
   playerName = signal('');
+  loadingError = signal<string | null>(null);
 
-  // Dados dos arquétipos de jogadores
-  playerArchetypes = signal<PlayerArchetype[]>([
-    {
-      id: 'speedster',
-      name: 'O Velocista',
-      title: 'Rápido como o Vento',
-      description: 'Especialista em velocidade e dribles. Perfeito para quem gosta de correr pelos flancos e superar defensores.',
-      image: 'placeholder-speedster',
-      attributes: {
-        speed: 95,
-        shooting: 70,
-        passing: 75,
-        defense: 40,
-        leadership: 60
-      },
-      primaryColor: '#FF6B35',
-      secondaryColor: '#FFE66D'
-    },
-    {
-      id: 'striker',
-      name: 'O Artilheiro',
-      title: 'Máquina de Gols',
-      description: 'Especialista em finalização. Tem o faro de gol e a precisão necessária para decidir partidas.',
-      image: 'placeholder-striker',
-      attributes: {
-        speed: 75,
-        shooting: 95,
-        passing: 70,
-        defense: 35,
-        leadership: 70
-      },
-      primaryColor: '#E74C3C',
-      secondaryColor: '#F39C12'
-    },
-    {
-      id: 'maestro',
-      name: 'O Maestro',
-      title: 'Cérebro do Time',
-      description: 'Mestre dos passes e da visão de jogo. Controla o ritmo da partida e cria as melhores oportunidades.',
-      image: 'placeholder-maestro',
-      attributes: {
-        speed: 65,
-        shooting: 70,
-        passing: 95,
-        defense: 60,
-        leadership: 85
-      },
-      primaryColor: '#3498DB',
-      secondaryColor: '#9B59B6'
-    },
-    {
-      id: 'defender',
-      name: 'O Defensor',
-      title: 'Muralha Impenetrável',
-      description: 'Especialista em marcação e interceptações. A última linha de defesa e o primeiro passo para o ataque.',
-      image: 'placeholder-defender',
-      attributes: {
-        speed: 60,
-        shooting: 45,
-        passing: 80,
-        defense: 95,
-        leadership: 80
-      },
-      primaryColor: '#27AE60',
-      secondaryColor: '#2ECC71'
-    },
-    {
-      id: 'leader',
-      name: 'O Líder',
-      title: 'Capitão Natural',
-      description: 'Jogador completo e inspirador. Equilibra todas as habilidades e motiva o time nos momentos decisivos.',
-      image: 'placeholder-leader',
-      attributes: {
-        speed: 80,
-        shooting: 80,
-        passing: 85,
-        defense: 75,
-        leadership: 95
-      },
-      primaryColor: '#8E44AD',
-      secondaryColor: '#D35400'
-    }
-  ]);
+  // Dados dos arquétipos de jogadores (carregados da API)
+  playerArchetypes = signal<PlayerArchetype[]>([]);
 
   // Opções do carousel
   carouselOptions = {
@@ -152,14 +73,44 @@ export class PlayerSelection implements OnInit {
 
   constructor(
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private playerService: PlayerService
   ) {}
 
   ngOnInit() {
-    // Simula carregamento inicial com animação
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 1500);
+    this.loadPlayers();
+  }
+
+  // Carrega os players da API
+  private loadPlayers() {
+    this.isLoading.set(true);
+    this.loadingError.set(null);
+
+    this.playerService.getPlayersWithFallback().subscribe({
+      next: (players) => {
+        this.playerArchetypes.set(players);
+        this.isLoading.set(false);
+
+        if (players.length === 0) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Aviso',
+            detail: 'Nenhum personagem disponível no momento.'
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao carregar players:', error);
+        this.loadingError.set('Erro ao carregar personagens. Usando dados locais.');
+        this.isLoading.set(false);
+
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Conectividade',
+          detail: 'Usando personagens offline. Verifique sua conexão.'
+        });
+      }
+    });
   }
 
   // Seleciona um arquétipo de jogador
@@ -191,8 +142,9 @@ export class PlayerSelection implements OnInit {
       return;
     }
 
-    // Cria o objeto do jogador
+    // Cria o objeto do jogador com dados da API
     const newPlayer: Player = {
+      id: archetype.id,
       name: name,
       archetype: archetype,
       level: 1,
@@ -201,6 +153,11 @@ export class PlayerSelection implements OnInit {
 
     // Salva no localStorage (em uma implementação real, seria enviado para o backend)
     localStorage.setItem('selectedPlayer', JSON.stringify(newPlayer));
+
+    // Salva também dados extras da API
+    if (archetype.stats) {
+      localStorage.setItem('playerStats', JSON.stringify(archetype.stats));
+    }
 
     // Mostra mensagem de sucesso
     this.messageService.add({
@@ -220,6 +177,11 @@ export class PlayerSelection implements OnInit {
     this.showNameDialog.set(false);
     this.selectedArchetype.set(null);
     this.playerName.set('');
+  }
+
+  // Recarrega os players da API
+  reloadPlayers() {
+    this.loadPlayers();
   }
 
   // Retorna a cor do atributo baseado no valor
@@ -249,8 +211,21 @@ export class PlayerSelection implements OnInit {
       striker: 'pi pi-target',
       maestro: 'pi pi-send',
       defender: 'pi pi-shield',
-      leader: 'pi pi-star'
+      leader: 'pi pi-star',
+      // IDs da API
+      'cavaleiro-sombrio': 'pi pi-shield',
+      'arqueiro-elfico': 'pi pi-target',
+      'paladino-dourado': 'pi pi-shield',
+      'mago-das-chamas': 'pi pi-bolt',
+      'ladino-sombrio': 'pi pi-eye'
     };
     return icons[archetypeId] || 'pi pi-user';
+  }
+
+  // Trata erro de carregamento de imagem
+  onImageError(event: any, archetype: PlayerArchetype) {
+    console.warn(`Erro ao carregar imagem para ${archetype.name}: ${archetype.image}`);
+    // Esconde a imagem e mostra o placeholder
+    event.target.style.display = 'none';
   }
 }
