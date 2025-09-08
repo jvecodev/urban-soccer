@@ -17,13 +17,7 @@
   <div class="player-selection-header">
     <div class="header-content">
       <div class="header-nav">
-        <button
-          class="back-button"
-          (click)="navigateToHome()"
-          title="Voltar para Home">
-          <i class="pi pi-arrow-left"></i>
-          <span>Voltar</span>
-        </button>
+        <app-button text="Voltar" (onClick)="navigateToHome()"><i class='pi pi-arrow-left'></i></app-button>
 
         <div class="header-title-section">
           <h1 class="header-title">Seleção de Jogadores</h1>
@@ -38,14 +32,8 @@
   </div>
 
   <div class="players-carousel-container" *ngIf="playerArchetypes().length > 0">
-    <p-carousel
-      [value]="playerArchetypes()"
-      [numVisible]="3"
-      [numScroll]="1"
-      [circular]="true"
-      [responsiveOptions]="responsiveOptions"
-      [autoplayInterval]="5000"
-      styleClass="urban-carousel">
+    <p-carousel [value]="playerArchetypes()" [numVisible]="3" [numScroll]="1" [circular]="true"
+      [responsiveOptions]="responsiveOptions" [autoplayInterval]="5000" styleClass="urban-carousel">
 
       <ng-template pTemplate="item" let-archetype>
         <div class="player-card-wrapper">
@@ -53,12 +41,8 @@
 
             <!-- Player Image (Top of card) -->
             <div class="player-image-top">
-              <img
-                [src]="archetype.image"
-                [alt]="archetype.name"
-                class="player-image"
-                (error)="onImageError($event, archetype)"
-                loading="lazy" />
+              <img [src]="archetype.image" [alt]="archetype.name" class="player-image"
+                (error)="onImageError($event, archetype)" loading="lazy" />
               <div class="image-overlay" *ngIf="!archetype.image || archetype.image.includes('placeholder')">
                 <i [class]="getArchetypeIcon(archetype.id)" class="overlay-icon"></i>
               </div>
@@ -88,15 +72,8 @@
                       <i class="pi pi-bolt" [style.color]="getAttributeColor(archetype.attributes.speed)"></i>
                       <span>Velocidade</span>
                     </div>
-                    <div class="attribute-value">
-                      <p-progressBar
-                        [value]="archetype.attributes.speed"
-                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.speed)}"
-                        class="speed-progress"
-                        >
-
-                      </p-progressBar>
-                      <span class="value-text">{{ archetype.attributes.speed }}</span>
+                    <div class="attribute-value-simple">
+                      <span class="value-number">{{ archetype.attributes.speed }}</span>
                     </div>
                   </div>
 
@@ -105,12 +82,8 @@
                       <i class="pi pi-target" [style.color]="getAttributeColor(archetype.attributes.shooting)"></i>
                       <span>Chute</span>
                     </div>
-                    <div class="attribute-value">
-                      <p-progressBar
-                        [value]="archetype.attributes.shooting"
-                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.shooting)}" class="speed-progress">
-                      </p-progressBar>
-                      <span class="value-text">{{ archetype.attributes.shooting }}</span>
+                    <div class="attribute-value-simple">
+                      <span class="value-number">{{ archetype.attributes.shooting }}</span>
                     </div>
                   </div>
 
@@ -119,26 +92,18 @@
                       <i class="pi pi-send" [style.color]="getAttributeColor(archetype.attributes.passing)"></i>
                       <span>Passe</span>
                     </div>
-                    <div class="attribute-value">
-                      <p-progressBar
-                        [value]="archetype.attributes.passing"
-                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.passing)}" class="speed-progress">
-                      </p-progressBar>
-                      <span class="value-text">{{ archetype.attributes.passing }}</span>
+                    <div class="attribute-value-simple">
+                      <span class="value-number">{{ archetype.attributes.passing }}</span>
                     </div>
                   </div>
 
                   <div class="attribute-item">
                     <div class="attribute-header">
-                      <i class="pi pi-shield" [style.color]="getAttributeColor(archetype.attributes.defense)" ></i>
+                      <i class="pi pi-shield" [style.color]="getAttributeColor(archetype.attributes.defense)"></i>
                       <span>Defesa</span>
                     </div>
-                    <div class="attribute-value">
-                      <p-progressBar
-                        [value]="archetype.attributes.defense"
-                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.defense)}" class="speed-progress">
-                      </p-progressBar>
-                      <span class="value-text">{{ archetype.attributes.defense }}</span>
+                    <div class="attribute-value-simple">
+                      <span class="value-number">{{ archetype.attributes.defense }}</span>
                     </div>
                   </div>
 
@@ -147,12 +112,8 @@
                       <i class="pi pi-star" [style.color]="getAttributeColor(archetype.attributes.leadership)"></i>
                       <span>Liderança</span>
                     </div>
-                    <div class="attribute-value">
-                      <p-progressBar
-                        [value]="archetype.attributes.leadership"
-                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.leadership)}"  class="speed-progress">
-                      </p-progressBar>
-                      <span class="value-text">{{ archetype.attributes.leadership }}</span>
+                    <div class="attribute-value-simple">
+                      <span class="value-number">{{ archetype.attributes.leadership }}</span>
                     </div>
                   </div>
                 </div>
@@ -160,13 +121,9 @@
 
               <!-- Card Footer -->
               <div class="card-actions">
-                <p-button
-                  label="ESCOLHER JOGADOR"
-                  icon="pi pi-user-plus"
-                  (onClick)="selectArchetype(archetype)"
-                  [style]="{'background-color': archetype.primaryColor, 'border-color': archetype.primaryColor}"
-                  styleClass="select-button">
-                </p-button>
+
+                <app-button text="Escolher" (onClick)="selectArchetype(archetype)"></app-button>
+
               </div>
             </div>
           </div>
@@ -187,11 +144,7 @@
 
       <div class="empty-content">
         <p>Não há personagens disponíveis para seleção no momento.</p>
-        <p-button
-          label="TENTAR NOVAMENTE"
-          icon="pi pi-refresh"
-          (onClick)="reloadPlayers()"
-          severity="info"
+        <p-button label="TENTAR NOVAMENTE" icon="pi pi-refresh" (onClick)="reloadPlayers()" severity="info"
           styleClass="reload-button">
         </p-button>
       </div>
@@ -200,14 +153,8 @@
 </div>
 
 <!-- Player Name Dialog -->
-<p-dialog
-  [(visible)]="showNameDialog"
-  [modal]="true"
-  [closable]="true"
-  [resizable]="false"
-  [draggable]="false"
-  styleClass="player-name-dialog"
-  (onHide)="cancelSelection()">
+<p-dialog [(visible)]="showNameDialog" [modal]="true" [closable]="true" [resizable]="false" [draggable]="false"
+  styleClass="player-name-dialog" (onHide)="cancelSelection()">
 
   <ng-template pTemplate="header">
     <div class="dialog-header-content">
@@ -224,9 +171,7 @@
         </div>
         <div class="player-details">
           <h3>{{ selectedArchetype()!.name }}</h3>
-          <p-tag
-            [value]="selectedArchetype()!.title"
-            [style]="{'background-color': selectedArchetype()!.primaryColor}">
+          <p-tag [value]="selectedArchetype()!.title" [style]="{'background-color': selectedArchetype()!.primaryColor}">
           </p-tag>
         </div>
       </div>
@@ -234,32 +179,18 @@
 
     <div class="name-input-section">
       <label for="playerName" class="input-label">NOME DO JOGADOR</label>
-      <input
-        pInputText
-        id="playerName"
-        type="text"
-        [(ngModel)]="playerName"
-        placeholder="Digite o nome do seu jogador"
-        maxlength="20"
-        class="urban-input"
-        #nameInput />
+      <input pInputText id="playerName" type="text" [(ngModel)]="playerName" placeholder="Digite o nome do seu jogador"
+        maxlength="20" class="urban-input" #nameInput />
       <small class="input-help">Máximo 20 caracteres</small>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
     <div class="dialog-actions">
-      <p-button
-        label="CANCELAR"
-        icon="pi pi-times"
-        (onClick)="cancelSelection()"
-        severity="secondary"
+      <p-button label="CANCELAR" icon="pi pi-times" (onClick)="cancelSelection()" severity="secondary"
         styleClass="cancel-button">
       </p-button>
-      <p-button
-        label="CRIAR JOGADOR"
-        icon="pi pi-check"
-        (onClick)="confirmPlayerCreation()"
+      <p-button label="CRIAR JOGADOR" icon="pi pi-check" (onClick)="confirmPlayerCreation()"
         [disabled]="!playerName().trim()"
         [style]="selectedArchetype() ? {'background-color': selectedArchetype()!.primaryColor, 'border-color': selectedArchetype()!.primaryColor} : {}"
         styleClass="create-button">

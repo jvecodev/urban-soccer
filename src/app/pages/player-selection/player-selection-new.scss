@@ -370,8 +370,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.6rem;
+    font-family: 'Inter', sans-serif;
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
     font-weight: 600;
@@ -498,8 +497,7 @@
   }
 
   .ability-value {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.65rem;
+    font-family: 'Russo One', monospace;
     color: var(--cinza-claro);
     text-align: center;
     padding: 0.5rem;
@@ -509,12 +507,16 @@
   }
 }
 
+
 // ==========================================
 // CARD ACTIONS
 // ==========================================
 .card-actions {
   text-align: center;
   margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .select-button {
     width: 100%;
@@ -635,6 +637,23 @@
           min-width: 25px;
           text-align: right;
           font-weight: 600;
+        }
+      }
+
+      // Novo layout simples para valores sem progress bar
+      .attribute-value-simple {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem;
+
+
+        .value-number {
+          font-family: 'Press Start 2P', monospace;
+          font-size: 1rem;
+          color: var(--ciano-eletrico);
+          font-weight: 600;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
       }
     }

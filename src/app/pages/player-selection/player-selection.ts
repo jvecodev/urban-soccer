@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-// PrimeNG Imports
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
@@ -12,11 +11,10 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Button } from '../../components/atoms/button/button';
 
-// PrimeNG Services
 import { MessageService } from 'primeng/api';
 
-// Models and Services
 import { PlayerArchetype, Player } from '../../models/player';
 import { PlayerService } from '../../services/player.service';
 
@@ -33,31 +31,27 @@ import { PlayerService } from '../../services/player.service';
     ProgressBarModule,
     ToastModule,
     DialogModule,
-    InputTextModule
-],
+    InputTextModule,
+    Button
+  ],
   templateUrl: './player-selection.html',
   styleUrls: ['./player-selection-new.scss'],
   providers: [MessageService]
 })
 export class PlayerSelection implements OnInit {
-  // Signals para gerenciar o estado
   isLoading = signal(true);
   showNameDialog = signal(false);
   selectedArchetype = signal<PlayerArchetype | null>(null);
   playerName = signal('');
   loadingError = signal<string | null>(null);
-
-  // Dados dos arquétipos de jogadores (carregados da API)
   playerArchetypes = signal<PlayerArchetype[]>([]);
 
-  // Opções do carousel
   carouselOptions = {
     numVisible: 3,
     numScroll: 1,
     circular: true
   };
 
-  // Responsive options para o carousel
   responsiveOptions = [
     {
       breakpoint: '1024px',
@@ -113,13 +107,11 @@ export class PlayerSelection implements OnInit {
     });
   }
 
-  // Seleciona um arquétipo de jogador
   selectArchetype(archetype: PlayerArchetype) {
     this.selectedArchetype.set(archetype);
     this.showNameDialog.set(true);
   }
 
-  // Confirma a criação do jogador
   confirmPlayerCreation() {
     const name = this.playerName().trim();
     const archetype = this.selectedArchetype();
@@ -142,7 +134,6 @@ export class PlayerSelection implements OnInit {
       return;
     }
 
-    // Cria o objeto do jogador com dados da API
     const newPlayer: Player = {
       id: archetype.id,
       name: name,
@@ -151,40 +142,32 @@ export class PlayerSelection implements OnInit {
       experience: 0
     };
 
-    // Salva no localStorage (em uma implementação real, seria enviado para o backend)
     localStorage.setItem('selectedPlayer', JSON.stringify(newPlayer));
 
-    // Salva também dados extras da API
     if (archetype.stats) {
       localStorage.setItem('playerStats', JSON.stringify(archetype.stats));
     }
-
-    // Mostra mensagem de sucesso
     this.messageService.add({
       severity: 'success',
       summary: 'Jogador Criado!',
       detail: `${name}, o ${archetype.name}, foi criado com sucesso!`
     });
 
-    // Redireciona para o dashboard após um delay
     setTimeout(() => {
       this.router.navigate(['/dashboard']);
     }, 2000);
   }
 
-  // Cancela a seleção
   cancelSelection() {
     this.showNameDialog.set(false);
     this.selectedArchetype.set(null);
     this.playerName.set('');
   }
 
-  // Recarrega os players da API
   reloadPlayers() {
     this.loadPlayers();
   }
 
-  // Retorna a cor do atributo baseado no valor
   getAttributeColor(value: number): string {
     if (value >= 90) return '#27AE60'; // Verde
     if (value >= 75) return '#F39C12'; // Laranja
@@ -192,7 +175,6 @@ export class PlayerSelection implements OnInit {
     return '#95A5A6'; // Cinza
   }
 
-  // Retorna o ícone do atributo
   getAttributeIcon(attributeName: string): string {
     const icons: { [key: string]: string } = {
       speed: 'pi pi-bolt',
@@ -204,17 +186,14 @@ export class PlayerSelection implements OnInit {
     return icons[attributeName] || 'pi pi-circle';
   }
 
-  // Retorna o ícone do arquétipo
   getArchetypeIcon(archetypeId: string): string {
     const icons: { [key: string]: string } = {
-      // Novos players da API MongoDB
       'velocista': 'pi pi-bolt',
       'maestro': 'pi pi-send',
       'artilheiro': 'pi pi-target',
       'o artilheiro': 'pi pi-target',
       'defensor': 'pi pi-shield',
       'lider': 'pi pi-star',
-      // Players antigos (fallback)
       'speedster': 'pi pi-bolt',
       'striker': 'pi pi-target',
       'defender': 'pi pi-shield',
@@ -226,19 +205,15 @@ export class PlayerSelection implements OnInit {
       'ladino-sombrio': 'pi pi-eye'
     };
 
-    // Tenta encontrar por ID, se não encontrar, tenta por nome em lowercase
     const lowercaseId = archetypeId.toLowerCase();
     return icons[archetypeId] || icons[lowercaseId] || 'pi pi-user';
   }
 
-  // Trata erro de carregamento de imagem
   onImageError(event: any, archetype: PlayerArchetype) {
     console.warn(`Erro ao carregar imagem para ${archetype.name}: ${archetype.image}`);
-    // Esconde a imagem e mostra o placeholder
     event.target.style.display = 'none';
   }
 
-  // Navega de volta para a tela home
   navigateToHome() {
     this.router.navigate(['/home']);
   }

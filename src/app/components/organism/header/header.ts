@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
+import { Button } from '../../atoms/button/button';
 import { Auth } from '../../../services/auth';
 import { Subscription } from 'rxjs';
 import { UserAvatar } from '../../atoms/user-avatar/user-avatar';
@@ -16,7 +16,7 @@ import { UserAvatar } from '../../atoms/user-avatar/user-avatar';
     templateUrl: './header.html',
     styleUrls: ['./header.scss'],
     standalone: true,
-    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule, UserAvatar]
+    imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule, UserAvatar, Button]
 })
 export class Header implements OnInit, OnDestroy {
     isMobileMenuOpen = false;
@@ -91,7 +91,7 @@ export class Header implements OnInit, OnDestroy {
 
 
                 window.scrollTo({
-                    top: Math.max(0, targetPosition), 
+                    top: Math.max(0, targetPosition),
                     behavior: 'smooth'
                 });
 
@@ -128,6 +128,34 @@ export class Header implements OnInit, OnDestroy {
 
     navigateAndClose(sectionId: string): void {
         this.scrollToSection(sectionId);
+        this.closeMobileMenu();
+    }
+
+    navigateToSignup(): void {
+        this.router.navigate(['/signup']);
+    }
+
+    navigateToLogin(): void {
+        this.router.navigate(['/login']);
+    }
+
+    navigateToPlayerSelection(): void {
+        this.router.navigate(['/player-selection']);
+    }
+
+    navigateToPlayerSelectionAndClose(): void {
+        this.router.navigate(['/player-selection']);
+        this.closeMobileMenu();
+    }
+    
+
+    navigateToSignupAndClose(): void {
+        this.router.navigate(['/signup']);
+        this.closeMobileMenu();
+    }
+
+    navigateToLoginAndClose(): void {
+        this.router.navigate(['/login']);
         this.closeMobileMenu();
     }
 }

@@ -8,27 +8,18 @@
           (click)="scrollToTop()"
           style="cursor: pointer"
         />
-        <button
-          type="button"
-          class="custom-header-button"
-          (click)="scrollToSection('hero')"
-        >
-          <span>INÍCIO</span>
-        </button>
-        <button
-          type="button"
-          class="custom-header-button"
-          (click)="scrollToSection('features')"
-        >
-          <span>RECURSOS</span>
-        </button>
-        <button
-          type="button"
-          class="custom-header-button"
-          (click)="scrollToSection('footer')"
-        >
-          <span>CONTATO</span>
-        </button>
+        <app-button
+          text="INÍCIO"
+          (onClick)="scrollToSection('hero')"
+        ></app-button>
+        <app-button
+          text="RECURSOS"
+          (onClick)="scrollToSection('features')"
+        ></app-button>
+        <app-button
+          text="CONTATO"
+          (onClick)="scrollToSection('footer')"
+        ></app-button>
       </div>
 
       <!-- Mobile Logo -->
@@ -61,13 +52,10 @@
         class="desktop-actions flex items-center gap-3 justify-center"
         *ngIf="isAuthenticated()"
       >
-        <button
-          type="button"
-          class="custom-header-button"
-          routerLink="/player-selection"
-        >
-          <span>CRIAR JOGADOR</span>
-        </button>
+        <app-button
+          text="CRIAR JOGADOR"
+          (onClick)="navigateToPlayerSelection()"
+        ></app-button>
 
         <div class="user-profile-section">
 

@@ -1,8 +1,9 @@
 // Modelos para a API do backend
 export interface PlayerStats {
-  health: number;
+  speed: number;
   attack: number;
   defense: number;
+  leadership: number;
   specialAbility: string;
 }
 

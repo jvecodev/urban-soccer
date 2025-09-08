@@ -75,57 +75,17 @@ export class PlayerService {
 
   /**
    * Mapeia stats da API para attributes do frontend
-   * Converte valores absolutos em porcentagens para as barras de progresso
+   * Usa os valores reais da API sem normalização
    */
   private mapStatsToAttributes(stats: any, rarity: string): any {
-    // Bases diferentes para raridades - ajustadas para os novos dados
-    const attackBase = rarity === 'unique' ? 25 : 25;
-    const defenseBase = rarity === 'unique' ? 20 : 20;
-    const healthBase = rarity === 'unique' ? 150 : 150;
-
-    // Normaliza os valores para porcentagem (0-100)
-    const normalizeValue = (value: number, max: number) =>
-      Math.min(Math.round((value / max) * 100), 100);
-
-    // Mapeamento mais inteligente baseado nas características dos players
+    // Mapeia diretamente os valores da API para o frontend
     return {
-      speed: this.calculateSpeedAttribute(stats),
-      shooting: normalizeValue(stats.attack, attackBase),
-      passing: this.calculatePassingAttribute(stats),
-      defense: normalizeValue(stats.defense, defenseBase),
-      leadership: normalizeValue(stats.health, healthBase)
+      speed: stats.speed,
+      shooting: stats.attack, // attack -> shooting
+      passing: Math.round((stats.attack + stats.leadership) / 2), // Média simples
+      defense: stats.defense,
+      leadership: stats.leadership
     };
-  }
-
-  /**
-   * Calcula atributo de velocidade baseado nas características do player
-   */
-  private calculateSpeedAttribute(stats: any): number {
-    // Players com mais ataque tendem a ser mais rápidos
-    const baseSpeed = (stats.attack / 25) * 100;
-
-    // Ajustes baseados na habilidade especial
-    if (stats.specialAbility === 'Corrida Relâmpago') {
-      return Math.min(baseSpeed + 20, 100);
-    }
-
-    return Math.min(Math.round(baseSpeed), 100);
-  }
-
-  /**
-   * Calcula atributo de passe baseado nas características do player
-   */
-  private calculatePassingAttribute(stats: any): number {
-    // Equilibrio entre ataque e defesa indica boa visão de jogo
-    const balance = Math.min(stats.attack, stats.defense);
-    const basePass = (balance / 20) * 100;
-
-    // Ajustes baseados na habilidade especial
-    if (stats.specialAbility === 'Passe Mágico') {
-      return Math.min(basePass + 25, 100);
-    }
-
-    return Math.min(Math.round(basePass), 100);
   }
 
   /**
