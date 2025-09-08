@@ -5,6 +5,7 @@ import { LoadingScreen } from './pages/loading/loading-screen';
 import { Home } from './pages/home/home';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { PlayerSelection } from './pages/player-selection/player-selection';
+import { MyCharacters } from './pages/my-characters/my-characters';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -17,6 +18,13 @@ export const routes: Routes = [
   {
     path: 'player-selection',
     component: PlayerSelection,
+    canActivate: [authGuard]
+  },
+
+  // Rota protegida - meus personagens só acessível com token válido
+  {
+    path: 'my-characters',
+    component: MyCharacters,
     canActivate: [authGuard]
   },
 

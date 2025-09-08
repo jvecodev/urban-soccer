@@ -1,0 +1,185 @@
+<!-- Loading Screen -->
+<div class="loading-container" *ngIf="isLoading()">
+  <div class="loading-content">
+    <div class="loading-spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <h2 class="loading-text">Carregando seus personagens...</h2>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="my-characters-container" *ngIf="!isLoading()">
+
+  <!-- Header Section -->
+  <div class="my-characters-header">
+    <div class="header-content">
+      <div class="header-nav">
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Voltar"
+          (onClick)="navigateToHome()"
+          severity="secondary"
+          size="small">
+        </p-button>
+
+        <div class="header-title-section">
+          <h1 class="header-title">Meus Personagens</h1>
+          <p class="header-subtitle">Gerencie seus jogadores salvos</p>
+        </div>
+
+        <p-button
+          icon="pi pi-plus"
+          label="Novo Personagem"
+          (onClick)="createNewCharacter()"
+          severity="info"
+          size="small">
+        </p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Characters Grid -->
+  <div class="characters-grid" *ngIf="myCharacters().length > 0">
+    <div class="character-card" *ngFor="let character of myCharacters()">
+      <p-card styleClass="character-card-content">
+
+        <!-- Character Avatar -->
+        <div class="character-avatar" [attr.data-player-id]="character.playerId">
+          <i [class]="getArchetypeIcon(character.playerId)"></i>
+        </div>
+
+        <!-- Character Info -->
+        <div class="character-info">
+          <h3 class="character-name">{{ character.characterName }}</h3>
+          <p-tag
+            [value]="getArchetypeName(character.playerId)"
+            severity="info"
+            styleClass="archetype-tag">
+          </p-tag>
+          <p class="created-date" *ngIf="character.createdAt">
+            Criado em {{ character.createdAt | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="character-actions">
+          <p-button
+            icon="pi pi-play"
+            label="Jogar"
+            (onClick)="selectCharacter(character)"
+            severity="success"
+            size="small"
+            styleClass="action-button">
+          </p-button>
+
+          <p-button
+            icon="pi pi-pencil"
+            label="Editar"
+            (onClick)="editCharacter(character)"
+            size="small"
+            styleClass="action-button"
+            [text]="true">
+          </p-button>
+
+          <p-button
+            icon="pi pi-trash"
+            (onClick)="deleteCharacter(character)"
+            severity="danger"
+            size="small"
+            styleClass="action-button"
+            [text]="true">
+          </p-button>
+        </div>
+
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="myCharacters().length === 0">
+    <p-card styleClass="empty-card">
+      <div class="empty-content">
+        <i class="pi pi-users empty-icon"></i>
+        <h3>Nenhum personagem encontrado</h3>
+        <p>Você ainda não criou nenhum personagem. Que tal criar o primeiro?</p>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<!-- Edit Character Dialog -->
+<p-dialog
+  [(visible)]="showEditDialog"
+  [modal]="true"
+  [closable]="true"
+  [resizable]="false"
+  [draggable]="false"
+  styleClass="edit-character-dialog"
+  (onHide)="closeEditDialog()">
+
+  <ng-template pTemplate="header">
+    <div class="dialog-header-content">
+      <i class="pi pi-pencil"></i>
+      <span>EDITAR PERSONAGEM</span>
+    </div>
+  </ng-template>
+
+  <div class="dialog-content" *ngIf="editingCharacter()">
+    <div class="editing-character-info">
+      <div class="character-preview">
+        <div class="preview-avatar" [attr.data-player-id]="editingCharacter()!.playerId">
+          <i [class]="getArchetypeIcon(editingCharacter()!.playerId)"></i>
+        </div>
+        <div class="character-details">
+          <h3>{{ editingCharacter()!.characterName }}</h3>
+          <p-tag
+            [value]="getArchetypeName(editingCharacter()!.playerId)"
+            severity="info">
+          </p-tag>
+        </div>
+      </div>
+    </div>
+
+    <div class="name-input-section">
+      <label for="editCharacterName" class="input-label">NOVO NOME</label>
+      <input
+        pInputText
+        id="editCharacterName"
+        type="text"
+        [ngModel]="newCharacterName()"
+        (ngModelChange)="newCharacterName.set($event)"
+        placeholder="Digite o novo nome"
+        maxlength="20"
+        class="urban-input" 
+        autocomplete="off" />
+      <small class="input-help">Máximo 20 caracteres (mínimo 2)</small>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-actions">
+      <p-button
+        label="CANCELAR"
+        icon="pi pi-times"
+        (onClick)="closeEditDialog()"
+        severity="secondary"
+        styleClass="cancel-button">
+      </p-button>
+      <p-button
+        label="SALVAR"
+        icon="pi pi-check"
+        (onClick)="confirmEdit()"
+        [disabled]="!newCharacterName().trim() || newCharacterName().trim().length < 2"
+        severity="success"
+        styleClass="save-button">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Toast Messages -->
+<p-toast position="top-right"></p-toast>
+
+<!-- Confirm Dialog -->
+<p-confirmDialog></p-confirmDialog>

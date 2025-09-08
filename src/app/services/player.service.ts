@@ -95,13 +95,13 @@ export class PlayerService {
     switch (rarity) {
       case 'unique':
         return {
-          primary: '#7C2C78', // Roxo urbano para únicos
+          primary: '#7C2C78',
           secondary: '#EB6E19'
         };
       case 'default':
       default:
         return {
-          primary: '#1095CF', // Azul acento para padrão
+          primary: '#1095CF',
           secondary: '#30C9F9'
         };
     }
@@ -112,18 +112,12 @@ export class PlayerService {
    */
   private getTitleFromSpecialAbility(specialAbility: string): string {
     const titleMap: { [key: string]: string } = {
-      // Novas habilidades dos players do MongoDB
       'Corrida Relâmpago': 'Velocista Supremo',
       'Passe Mágico': 'Maestro dos Passes',
       'Chute Poderoso': 'Artilheiro Nato',
       'Bloqueio Imbatível': 'Muralha Defensiva',
       'Comando de Equipe': 'Líder Inspirador',
-      // Habilidades antigas (fallback)
-      'Golpe Fantasma': 'Assassino das Sombras',
-      'Tiro Certeiro': 'Atirador de Elite',
-      'Escudo Sagrado': 'Guardião Divino',
-      'Bola de Fogo': 'Mestre das Chamas',
-      'Ataque Furtivo': 'Sombra Veloz'
+
     };
 
     return titleMap[specialAbility] || 'Guerreiro Urbano';

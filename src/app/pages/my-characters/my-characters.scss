@@ -1,0 +1,486 @@
+// ==========================================
+// MY CHARACTERS - STYLE GUIDE COMPLIANT
+// ==========================================
+
+// Variáveis CSS do style guide
+:host {
+  --azul-noite: #14223D;
+  --roxo-urbano: #7C2C78;
+  --laranja-vibrante: #EB6E19;
+  --amarelo-dourado: #F4A028;
+  --ciano-eletrico: #30C9F9;
+  --azul-acento: #1095CF;
+  --cinza-claro: #C9CBCA;
+  --cinza-neutro: #A2B9C7;
+}
+
+// ==========================================
+// LOADING SCREEN
+// ==========================================
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--azul-noite) 0%, var(--roxo-urbano) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+
+  .loading-content {
+    text-align: center;
+    color: var(--cinza-claro);
+
+    .loading-spinner {
+      margin-bottom: 2rem;
+
+      i {
+        font-size: 3rem;
+        color: var(--ciano-eletrico);
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .loading-text {
+      font-family: 'Teko', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--cinza-claro);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// ==========================================
+// MAIN CONTAINER
+// ==========================================
+.my-characters-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--azul-noite) 0%, var(--roxo-urbano) 100%);
+  padding: 2rem 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+  }
+}
+
+// ==========================================
+// HEADER SECTION
+// ==========================================
+.my-characters-header {
+  margin-bottom: 2rem;
+
+  .header-content {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .header-title-section {
+        text-align: center;
+
+        .header-title {
+          font-family: 'Russo One', sans-serif;
+          font-size: 2rem;
+          font-weight: 600;
+          color: var(--cinza-claro);
+          margin: 0;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+
+          @media (max-width: 768px) {
+            font-size: 1.5rem;
+          }
+        }
+
+        .header-subtitle {
+          font-family: 'Inter', sans-serif;
+          font-size: 1rem;
+          color: var(--cinza-neutro);
+          margin: 0.5rem 0 0 0;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// CHARACTERS GRID
+// ==========================================
+.characters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .character-card {
+    ::ng-deep .character-card-content {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      height: 100%;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(48, 201, 249, 0.15);
+        border-color: var(--ciano-eletrico);
+      }
+
+      .p-card-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        height: 100%;
+      }
+    }
+  }
+}
+
+// ==========================================
+// CHARACTER AVATAR
+// ==========================================
+.character-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ciano-eletrico), var(--azul-acento));
+  margin: 0 auto 1rem auto;
+  box-shadow: 0 4px 16px rgba(48, 201, 249, 0.3);
+
+  i {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  &[data-player-id*="unique"] {
+    background: linear-gradient(135deg, var(--roxo-urbano), var(--laranja-vibrante));
+    box-shadow: 0 4px 16px rgba(124, 44, 120, 0.3);
+  }
+}
+
+// ==========================================
+// CHARACTER INFO
+// ==========================================
+.character-info {
+  text-align: center;
+  flex: 1;
+
+  .character-name {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--cinza-claro);
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .archetype-tag {
+    margin-bottom: 0.75rem;
+
+    ::ng-deep .p-tag {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+    }
+  }
+
+  .created-date {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--cinza-neutro);
+    margin: 0;
+  }
+}
+
+// ==========================================
+// CHARACTER ACTIONS
+// ==========================================
+.character-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+
+  .action-button {
+    ::ng-deep .p-button {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// ==========================================
+// EMPTY STATE
+// ==========================================
+.empty-state {
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+
+  .empty-card {
+    width: 100%;
+
+    ::ng-deep .p-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+
+      .p-card-body {
+        padding: 3rem;
+        text-align: center;
+      }
+    }
+
+    .empty-content {
+      .empty-icon {
+        font-size: 4rem;
+        color: var(--cinza-neutro);
+        margin-bottom: 1.5rem;
+      }
+
+      h3 {
+        font-family: 'Russo One', sans-serif;
+        font-size: 1.5rem;
+        color: var(--cinza-claro);
+        margin: 0 0 1rem 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      p {
+        font-family: 'Inter', sans-serif;
+        color: var(--cinza-neutro);
+        margin: 0 0 2rem 0;
+        line-height: 1.6;
+      }
+
+      .create-button {
+        ::ng-deep .p-button {
+          font-family: 'Russo One', sans-serif;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          padding: 0.75rem 2rem;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// DIALOG STYLES
+// ==========================================
+::ng-deep .edit-character-dialog {
+  .p-dialog {
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    max-width: 500px;
+    width: 90vw;
+    background: rgba(20, 34, 61, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .p-dialog-header {
+      background: rgba(48, 201, 249, 0.1);
+      border-bottom: 1px solid rgba(48, 201, 249, 0.3);
+      padding: 1.5rem;
+
+      .dialog-header-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--ciano-eletrico);
+        font-family: 'Russo One', sans-serif;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        i {
+          font-size: 1.25rem;
+        }
+      }
+    }
+
+    .p-dialog-content {
+      padding: 2rem;
+      background: transparent;
+
+      .editing-character-info {
+        margin-bottom: 2rem;
+
+        .character-preview {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 12px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+
+          .preview-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ciano-eletrico), var(--azul-acento));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            i {
+              font-size: 1.75rem;
+              color: white;
+            }
+
+            &[data-player-id*="unique"] {
+              background: linear-gradient(135deg, var(--roxo-urbano), var(--laranja-vibrante));
+            }
+          }
+
+          .character-details {
+            h3 {
+              font-family: 'Russo One', sans-serif;
+              color: var(--cinza-claro);
+              margin: 0 0 0.5rem 0;
+              font-size: 1.1rem;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+          }
+        }
+      }
+
+      .name-input-section {
+        .input-label {
+          display: block;
+          font-family: 'Inter', sans-serif;
+          font-weight: 600;
+          color: var(--cinza-claro);
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .urban-input {
+          width: 100%;
+          padding: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+          color: var(--cinza-claro);
+          font-family: 'Inter', sans-serif;
+          transition: all 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: var(--ciano-eletrico);
+            box-shadow: 0 0 0 2px rgba(48, 201, 249, 0.2);
+          }
+
+          &::placeholder {
+            color: var(--cinza-neutro);
+          }
+        }
+
+        .input-help {
+          display: block;
+          color: var(--cinza-neutro);
+          font-size: 0.8rem;
+          margin-top: 0.5rem;
+          font-family: 'Inter', sans-serif;
+        }
+      }
+    }
+
+    .p-dialog-footer {
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+
+      .dialog-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+
+        .cancel-button,
+        .save-button {
+          ::ng-deep .p-button {
+            font-family: 'Russo One', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+@media (max-width: 768px) {
+  .my-characters-header .header-content {
+    padding: 1rem;
+  }
+
+  .characters-grid {
+    padding: 0 0.5rem;
+  }
+
+  .character-actions {
+    flex-wrap: wrap;
+  }
+}
