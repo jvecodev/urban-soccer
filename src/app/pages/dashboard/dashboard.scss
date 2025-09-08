@@ -1,4 +1,3 @@
-// Importa as variáveis CSS do style guide
 :host {
   --azul-noite: #14223D;
   --roxo-urbano: #7C2C78;
@@ -13,11 +12,11 @@
 .dashboard-container {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--azul-noite) 0%, var(--roxo-urbano) 100%);
+  overflow-y: hidden;
 }
 
 
 
-/* ===== HEADER DO DASHBOARD ===== */
 .dashboard-header {
   margin-bottom: 2rem;
   text-align: center;
@@ -67,14 +66,14 @@
   }
 }
 
-/* ===== GRID DO DASHBOARD ===== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
-  overflow: scroll;
+  padding: 0 1rem 2rem 1rem;
+
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);

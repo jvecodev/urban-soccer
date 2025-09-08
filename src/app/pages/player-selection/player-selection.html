@@ -8,151 +8,171 @@
   </div>
 </div>
 
+
+
 <!-- Main Content -->
 <div class="player-selection-container" *ngIf="!isLoading()">
-  <!-- Header Section -->
+
+  <!-- Custom Header Section -->
   <div class="player-selection-header">
     <div class="header-content">
-      <div class="title-section">
-        <h1 class="main-title">ESCOLHA SEU ESTILO DE JOGO</h1>
-        <p class="main-subtitle">Selecione o arquétipo que mais combina com você</p>
-      </div>
+      <div class="header-nav">
+        <button
+          class="back-button"
+          (click)="navigateToHome()"
+          title="Voltar para Home">
+          <i class="pi pi-arrow-left"></i>
+          <span>Voltar</span>
+        </button>
 
-      <!-- Error Message and Reload Button -->
-      <div class="error-section" *ngIf="loadingError()">
-        <div class="error-message">
-          <i class="pi pi-exclamation-triangle"></i>
-          <span>{{ loadingError() }}</span>
+        <div class="header-title-section">
+          <h1 class="header-title">Seleção de Jogadores</h1>
+          <p class="header-subtitle">Escolha seu arquétipo ideal</p>
         </div>
-        <p-button
-          label="Recarregar"
-          icon="pi pi-refresh"
-          (onClick)="reloadPlayers()"
-          severity="info"
-          size="small">
-        </p-button>
+
+        <div class="header-actions">
+          <!-- Espaço para futuras ações -->
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Players Grid -->
-  <div class="players-grid" *ngIf="playerArchetypes().length > 0">
-    <div class="player-card-wrapper" *ngFor="let archetype of playerArchetypes()">
-      <p-card class="player-card">
-        <!-- Card Header -->
-        <ng-template pTemplate="header">
-          <div class="card-header-content">
-            <i [class]="getArchetypeIcon(archetype.id)"></i>
-            <span>{{ archetype.name }}</span>
-          </div>
-        </ng-template>
+  <div class="players-carousel-container" *ngIf="playerArchetypes().length > 0">
+    <p-carousel
+      [value]="playerArchetypes()"
+      [numVisible]="3"
+      [numScroll]="1"
+      [circular]="true"
+      [responsiveOptions]="responsiveOptions"
+      [autoplayInterval]="5000"
+      styleClass="urban-carousel">
 
-        <!-- Card Content -->
-        <div class="player-info">
-          <div class="player-image-section">
-            <div class="player-avatar" [attr.data-archetype]="archetype.id">
-              <i [class]="getArchetypeIcon(archetype.id)" class="avatar-icon"></i>
+      <ng-template pTemplate="item" let-archetype>
+        <div class="player-card-wrapper">
+          <div class="player-card" [attr.data-rarity]="archetype.rarity">
+
+            <!-- Player Image (Top of card) -->
+            <div class="player-image-top">
+              <img
+                [src]="archetype.image"
+                [alt]="archetype.name"
+                class="player-image"
+                (error)="onImageError($event, archetype)"
+                loading="lazy" />
+              <div class="image-overlay" *ngIf="!archetype.image || archetype.image.includes('placeholder')">
+                <i [class]="getArchetypeIcon(archetype.id)" class="overlay-icon"></i>
+              </div>
+              <!-- Badge de raridade no canto da imagem -->
+              <div class="rarity-badge" [attr.data-rarity]="archetype.rarity">
+                <span>{{ archetype.name }}</span>
+              </div>
             </div>
-            <p-tag
-              [value]="archetype.title"
-              [style]="{'background-color': archetype.primaryColor}"
-              class="player-tag">
-            </p-tag>
-          </div>
 
-          <p class="player-description">{{ archetype.description }}</p>
+            <!-- Card Content -->
+            <div class="player-content">
 
-          <!-- Attributes Grid -->
-          <div class="attributes-section">
-            <h4 class="attributes-title">ATRIBUTOS</h4>
-            <div class="attributes-list">
-              <div class="attribute-item">
-                <div class="attribute-header">
-                  <i class="pi pi-bolt" [style.color]="getAttributeColor(archetype.attributes.speed)"></i>
-                  <span>Velocidade</span>
+              <!-- Special Ability -->
+              <div class="special-ability" *ngIf="archetype.stats?.specialAbility">
+                <div class="ability-header">
+                  <i class="pi pi-flash"></i>
+                  <span>HABILIDADE ESPECIAL</span>
                 </div>
-                <div class="attribute-value">
-                  <p-progressBar
-                    [value]="archetype.attributes.speed"
-                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.speed)}">
-                  </p-progressBar>
-                  <span class="value-text">{{ archetype.attributes.speed }}</span>
+                <div class="ability-value">{{ archetype.stats.specialAbility }}</div>
+              </div>
+
+              <!-- Attributes Grid -->
+              <div class="attributes-section">
+                <div class="attributes-grid">
+                  <div class="attribute-item">
+                    <div class="attribute-header">
+                      <i class="pi pi-bolt" [style.color]="getAttributeColor(archetype.attributes.speed)"></i>
+                      <span>Velocidade</span>
+                    </div>
+                    <div class="attribute-value">
+                      <p-progressBar
+                        [value]="archetype.attributes.speed"
+                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.speed)}"
+                        class="speed-progress"
+                        >
+
+                      </p-progressBar>
+                      <span class="value-text">{{ archetype.attributes.speed }}</span>
+                    </div>
+                  </div>
+
+                  <div class="attribute-item">
+                    <div class="attribute-header">
+                      <i class="pi pi-target" [style.color]="getAttributeColor(archetype.attributes.shooting)"></i>
+                      <span>Chute</span>
+                    </div>
+                    <div class="attribute-value">
+                      <p-progressBar
+                        [value]="archetype.attributes.shooting"
+                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.shooting)}" class="speed-progress">
+                      </p-progressBar>
+                      <span class="value-text">{{ archetype.attributes.shooting }}</span>
+                    </div>
+                  </div>
+
+                  <div class="attribute-item">
+                    <div class="attribute-header">
+                      <i class="pi pi-send" [style.color]="getAttributeColor(archetype.attributes.passing)"></i>
+                      <span>Passe</span>
+                    </div>
+                    <div class="attribute-value">
+                      <p-progressBar
+                        [value]="archetype.attributes.passing"
+                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.passing)}" class="speed-progress">
+                      </p-progressBar>
+                      <span class="value-text">{{ archetype.attributes.passing }}</span>
+                    </div>
+                  </div>
+
+                  <div class="attribute-item">
+                    <div class="attribute-header">
+                      <i class="pi pi-shield" [style.color]="getAttributeColor(archetype.attributes.defense)" ></i>
+                      <span>Defesa</span>
+                    </div>
+                    <div class="attribute-value">
+                      <p-progressBar
+                        [value]="archetype.attributes.defense"
+                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.defense)}" class="speed-progress">
+                      </p-progressBar>
+                      <span class="value-text">{{ archetype.attributes.defense }}</span>
+                    </div>
+                  </div>
+
+                  <div class="attribute-item">
+                    <div class="attribute-header">
+                      <i class="pi pi-star" [style.color]="getAttributeColor(archetype.attributes.leadership)"></i>
+                      <span>Liderança</span>
+                    </div>
+                    <div class="attribute-value">
+                      <p-progressBar
+                        [value]="archetype.attributes.leadership"
+                        [style]="{'--progress-color': getAttributeColor(archetype.attributes.leadership)}"  class="speed-progress">
+                      </p-progressBar>
+                      <span class="value-text">{{ archetype.attributes.leadership }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="attribute-item">
-                <div class="attribute-header">
-                  <i class="pi pi-target" [style.color]="getAttributeColor(archetype.attributes.shooting)"></i>
-                  <span>Chute</span>
-                </div>
-                <div class="attribute-value">
-                  <p-progressBar
-                    [value]="archetype.attributes.shooting"
-                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.shooting)}">
-                  </p-progressBar>
-                  <span class="value-text">{{ archetype.attributes.shooting }}</span>
-                </div>
-              </div>
-
-              <div class="attribute-item">
-                <div class="attribute-header">
-                  <i class="pi pi-send" [style.color]="getAttributeColor(archetype.attributes.passing)"></i>
-                  <span>Passe</span>
-                </div>
-                <div class="attribute-value">
-                  <p-progressBar
-                    [value]="archetype.attributes.passing"
-                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.passing)}">
-                  </p-progressBar>
-                  <span class="value-text">{{ archetype.attributes.passing }}</span>
-                </div>
-              </div>
-
-              <div class="attribute-item">
-                <div class="attribute-header">
-                  <i class="pi pi-shield" [style.color]="getAttributeColor(archetype.attributes.defense)"></i>
-                  <span>Defesa</span>
-                </div>
-                <div class="attribute-value">
-                  <p-progressBar
-                    [value]="archetype.attributes.defense"
-                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.defense)}">
-                  </p-progressBar>
-                  <span class="value-text">{{ archetype.attributes.defense }}</span>
-                </div>
-              </div>
-
-              <div class="attribute-item">
-                <div class="attribute-header">
-                  <i class="pi pi-star" [style.color]="getAttributeColor(archetype.attributes.leadership)"></i>
-                  <span>Liderança</span>
-                </div>
-                <div class="attribute-value">
-                  <p-progressBar
-                    [value]="archetype.attributes.leadership"
-                    [style]="{'--progress-color': getAttributeColor(archetype.attributes.leadership)}">
-                  </p-progressBar>
-                  <span class="value-text">{{ archetype.attributes.leadership }}</span>
-                </div>
+              <!-- Card Footer -->
+              <div class="card-actions">
+                <p-button
+                  label="ESCOLHER JOGADOR"
+                  icon="pi pi-user-plus"
+                  (onClick)="selectArchetype(archetype)"
+                  [style]="{'background-color': archetype.primaryColor, 'border-color': archetype.primaryColor}"
+                  styleClass="select-button">
+                </p-button>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Card Footer -->
-        <ng-template pTemplate="footer">
-          <div class="card-actions">
-            <p-button
-              label="ESCOLHER"
-              icon="pi pi-check"
-              (onClick)="selectArchetype(archetype)"
-              [style]="{'background-color': archetype.primaryColor, 'border-color': archetype.primaryColor}"
-              styleClass="select-button">
-            </p-button>
-          </div>
-        </ng-template>
-      </p-card>
-    </div>
+      </ng-template>
+    </p-carousel>
   </div>
 
   <!-- Empty State -->

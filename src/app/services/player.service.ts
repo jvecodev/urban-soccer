@@ -78,21 +78,54 @@ export class PlayerService {
    * Converte valores absolutos em porcentagens para as barras de progresso
    */
   private mapStatsToAttributes(stats: any, rarity: string): any {
-    // Bases diferentes para raridades
-    const maxBase = rarity === 'unique' ? 25 : 20;
-    const healthBase = rarity === 'unique' ? 150 : 120;
+    // Bases diferentes para raridades - ajustadas para os novos dados
+    const attackBase = rarity === 'unique' ? 25 : 25;
+    const defenseBase = rarity === 'unique' ? 20 : 20;
+    const healthBase = rarity === 'unique' ? 150 : 150;
 
     // Normaliza os valores para porcentagem (0-100)
     const normalizeValue = (value: number, max: number) =>
       Math.min(Math.round((value / max) * 100), 100);
 
+    // Mapeamento mais inteligente baseado nas características dos players
     return {
-      speed: normalizeValue(stats.attack, maxBase), // Ataque -> Velocidade
-      shooting: normalizeValue(stats.attack, maxBase), // Ataque -> Chute
-      passing: normalizeValue(stats.defense, maxBase), // Defesa -> Passe (estratégia)
-      defense: normalizeValue(stats.defense, maxBase), // Defesa -> Defesa
-      leadership: normalizeValue(stats.health, healthBase) // Vida -> Liderança (resistência)
+      speed: this.calculateSpeedAttribute(stats),
+      shooting: normalizeValue(stats.attack, attackBase),
+      passing: this.calculatePassingAttribute(stats),
+      defense: normalizeValue(stats.defense, defenseBase),
+      leadership: normalizeValue(stats.health, healthBase)
     };
+  }
+
+  /**
+   * Calcula atributo de velocidade baseado nas características do player
+   */
+  private calculateSpeedAttribute(stats: any): number {
+    // Players com mais ataque tendem a ser mais rápidos
+    const baseSpeed = (stats.attack / 25) * 100;
+
+    // Ajustes baseados na habilidade especial
+    if (stats.specialAbility === 'Corrida Relâmpago') {
+      return Math.min(baseSpeed + 20, 100);
+    }
+
+    return Math.min(Math.round(baseSpeed), 100);
+  }
+
+  /**
+   * Calcula atributo de passe baseado nas características do player
+   */
+  private calculatePassingAttribute(stats: any): number {
+    // Equilibrio entre ataque e defesa indica boa visão de jogo
+    const balance = Math.min(stats.attack, stats.defense);
+    const basePass = (balance / 20) * 100;
+
+    // Ajustes baseados na habilidade especial
+    if (stats.specialAbility === 'Passe Mágico') {
+      return Math.min(basePass + 25, 100);
+    }
+
+    return Math.min(Math.round(basePass), 100);
   }
 
   /**
@@ -102,14 +135,14 @@ export class PlayerService {
     switch (rarity) {
       case 'unique':
         return {
-          primary: '#8E44AD', // Roxo para únicos
-          secondary: '#D35400'
+          primary: '#7C2C78', // Roxo urbano para únicos
+          secondary: '#EB6E19'
         };
       case 'default':
       default:
         return {
-          primary: '#3498DB', // Azul para padrão
-          secondary: '#2ECC71'
+          primary: '#1095CF', // Azul acento para padrão
+          secondary: '#30C9F9'
         };
     }
   }
@@ -119,6 +152,13 @@ export class PlayerService {
    */
   private getTitleFromSpecialAbility(specialAbility: string): string {
     const titleMap: { [key: string]: string } = {
+      // Novas habilidades dos players do MongoDB
+      'Corrida Relâmpago': 'Velocista Supremo',
+      'Passe Mágico': 'Maestro dos Passes',
+      'Chute Poderoso': 'Artilheiro Nato',
+      'Bloqueio Imbatível': 'Muralha Defensiva',
+      'Comando de Equipe': 'Líder Inspirador',
+      // Habilidades antigas (fallback)
       'Golpe Fantasma': 'Assassino das Sombras',
       'Tiro Certeiro': 'Atirador de Elite',
       'Escudo Sagrado': 'Guardião Divino',

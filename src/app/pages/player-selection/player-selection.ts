@@ -34,7 +34,7 @@ import { PlayerService } from '../../services/player.service';
     ToastModule,
     DialogModule,
     InputTextModule
-  ],
+],
   templateUrl: './player-selection.html',
   styleUrls: ['./player-selection-new.scss'],
   providers: [MessageService]
@@ -207,19 +207,28 @@ export class PlayerSelection implements OnInit {
   // Retorna o ícone do arquétipo
   getArchetypeIcon(archetypeId: string): string {
     const icons: { [key: string]: string } = {
-      speedster: 'pi pi-bolt',
-      striker: 'pi pi-target',
-      maestro: 'pi pi-send',
-      defender: 'pi pi-shield',
-      leader: 'pi pi-star',
-      // IDs da API
+      // Novos players da API MongoDB
+      'velocista': 'pi pi-bolt',
+      'maestro': 'pi pi-send',
+      'artilheiro': 'pi pi-target',
+      'o artilheiro': 'pi pi-target',
+      'defensor': 'pi pi-shield',
+      'lider': 'pi pi-star',
+      // Players antigos (fallback)
+      'speedster': 'pi pi-bolt',
+      'striker': 'pi pi-target',
+      'defender': 'pi pi-shield',
+      'leader': 'pi pi-star',
       'cavaleiro-sombrio': 'pi pi-shield',
       'arqueiro-elfico': 'pi pi-target',
       'paladino-dourado': 'pi pi-shield',
       'mago-das-chamas': 'pi pi-bolt',
       'ladino-sombrio': 'pi pi-eye'
     };
-    return icons[archetypeId] || 'pi pi-user';
+
+    // Tenta encontrar por ID, se não encontrar, tenta por nome em lowercase
+    const lowercaseId = archetypeId.toLowerCase();
+    return icons[archetypeId] || icons[lowercaseId] || 'pi pi-user';
   }
 
   // Trata erro de carregamento de imagem
@@ -227,5 +236,10 @@ export class PlayerSelection implements OnInit {
     console.warn(`Erro ao carregar imagem para ${archetype.name}: ${archetype.image}`);
     // Esconde a imagem e mostra o placeholder
     event.target.style.display = 'none';
+  }
+
+  // Navega de volta para a tela home
+  navigateToHome() {
+    this.router.navigate(['/home']);
   }
 }
