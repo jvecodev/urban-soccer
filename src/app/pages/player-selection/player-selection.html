@@ -24,8 +24,11 @@
           <p class="header-subtitle">Escolha seu arquétipo ideal</p>
         </div>
 
-        <div class="header-actions">
-          <!-- Espaço para futuras ações -->
+
+        <app-button
+            text="MEUS PERSONAGENS"
+            (onClick)="navigateToMyCharacters()"
+          ></app-button>
         </div>
       </div>
     </div>
@@ -150,18 +153,11 @@
       </div>
     </p-card>
   </div>
-</div>
 
 <!-- Player Name Dialog -->
 <p-dialog [(visible)]="showNameDialog" [modal]="true" [closable]="true" [resizable]="false" [draggable]="false"
-  styleClass="player-name-dialog" (onHide)="cancelSelection()">
+  styleClass="player-name-dialog edit-profile-dialog" (onHide)="cancelSelection()">
 
-  <ng-template pTemplate="header">
-    <div class="dialog-header-content">
-      <i class="pi pi-user-plus"></i>
-      <span>NOMEIE SEU JOGADOR</span>
-    </div>
-  </ng-template>
 
   <div class="dialog-content" *ngIf="selectedArchetype()">
     <div class="selected-player-info">
@@ -178,22 +174,42 @@
     </div>
 
     <div class="name-input-section">
-      <label for="playerName" class="input-label">NOME DO JOGADOR</label>
-      <input pInputText id="playerName" type="text" [(ngModel)]="playerName" placeholder="Digite o nome do seu jogador"
-        maxlength="20" class="urban-input" #nameInput />
-      <small class="input-help">Máximo 20 caracteres</small>
+      <!-- Campo Nome do Jogador -->
+      <div class="form-group">
+        <label for="playerName">Nome do Jogador *</label>
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            id="playerName"
+            type="text"
+            [(ngModel)]="playerName"
+            placeholder="Digite o nome do seu jogador"
+            maxlength="20"
+            class="p-inputtext">
+        </p-inputGroup>
+        <small class="input-help">Máximo 20 caracteres</small>
+      </div>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="dialog-actions">
-      <p-button label="CANCELAR" icon="pi pi-times" (onClick)="cancelSelection()" severity="secondary"
-        styleClass="cancel-button">
+    <div class="modal-actions">
+      <p-button
+        label="CANCELAR"
+        icon="pi pi-times"
+        (onClick)="cancelSelection()"
+        class="p-button-secondary"
+        type="button">
       </p-button>
-      <p-button label="CRIAR JOGADOR" icon="pi pi-check" (onClick)="confirmPlayerCreation()"
+      <p-button
+        label="CRIAR JOGADOR"
+        icon="pi pi-check"
+        (onClick)="confirmPlayerCreation()"
         [disabled]="!playerName().trim()"
-        [style]="selectedArchetype() ? {'background-color': selectedArchetype()!.primaryColor, 'border-color': selectedArchetype()!.primaryColor} : {}"
-        styleClass="create-button">
+        class="p-button-primary">
       </p-button>
     </div>
   </ng-template>

@@ -36,15 +36,12 @@ import { UserAvatar } from '../../components/atoms/user-avatar/user-avatar';
   styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
-  // Signals para gerenciar estado
   currentUser = signal<User | null>(null);
   isEditModalVisible = signal<boolean>(false);
   isLoading = signal<boolean>(false);
 
-  // Form para edição
   editForm: FormGroup;
 
-  // Computeds
   userInitial = computed(() => {
     const user = this.currentUser();
     return user?.username?.charAt(0)?.toUpperCase() || '?';
@@ -69,11 +66,9 @@ export class Dashboard implements OnInit {
   }
 
   private loadUserData(): void {
-    // Primeiro, carrega do estado atual do serviço
     const user = this.authService.getCurrentUser();
     this.currentUser.set(user);
 
-    // Se não há usuário ou os dados estão incompletos, busca do servidor
     if (!user || !user.username || !user.id) {
       this.authService.getUserProfile().subscribe({
         next: (profile) => {
@@ -87,14 +82,12 @@ export class Dashboard implements OnInit {
         },
         error: (error) => {
           console.error('Erro ao carregar perfil:', error);
-          // Se falhar e não há usuário, redireciona para login
           if (!user) {
             this.router.navigate(['/login']);
           }
         }
       });
     } else {
-      // Mesmo com dados, tenta atualizar em background
       this.authService.getUserProfile().subscribe({
         next: (profile) => {
           const updatedUser = { ...user, id: profile._id, username: profile.name, email: profile.email };
@@ -102,7 +95,6 @@ export class Dashboard implements OnInit {
         },
         error: (error) => {
           console.warn('Não foi possível atualizar dados do usuário:', error);
-          // Mantém os dados atuais se falhar
         }
       });
     }
@@ -130,9 +122,8 @@ export class Dashboard implements OnInit {
       const updateData: UserUpdate = {};
       const formValue = this.editForm.value;
 
-      // Só inclui campos que foram modificados
       if (formValue.username !== user.username) {
-        updateData.name = formValue.username;  // Mapeia username para name
+        updateData.name = formValue.username;
       }
       if (formValue.email !== user.email) {
         updateData.email = formValue.email;
@@ -141,7 +132,6 @@ export class Dashboard implements OnInit {
         updateData.password = formValue.password;
       }
 
-      // Se não há mudanças, fecha o modal
       if (Object.keys(updateData).length === 0) {
         this.isEditModalVisible.set(false);
         this.isLoading.set(false);

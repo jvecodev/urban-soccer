@@ -1,7 +1,7 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { Button } from '../../components/atoms/button/button';
 
 import { MessageService } from 'primeng/api';
@@ -18,6 +20,7 @@ import { MessageService } from 'primeng/api';
 import { PlayerArchetype, Player } from '../../models/player';
 import { PlayerService } from '../../services/player.service';
 import { UserCharacterService } from '../../services/userCharacter.service';
+import { Auth } from '../../services/auth';
 import { UserCharacterCreate } from '../../models/userCharacter';
 
 @Component({
@@ -26,6 +29,7 @@ import { UserCharacterCreate } from '../../models/userCharacter';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     CardModule,
     ButtonModule,
     CarouselModule,
@@ -34,6 +38,8 @@ import { UserCharacterCreate } from '../../models/userCharacter';
     ToastModule,
     DialogModule,
     InputTextModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     Button
   ],
   templateUrl: './player-selection.html',
@@ -47,6 +53,9 @@ export class PlayerSelection implements OnInit {
   playerName = signal('');
   loadingError = signal<string | null>(null);
   playerArchetypes = signal<PlayerArchetype[]>([]);
+
+
+  editForm: FormGroup;
 
   carouselOptions = {
     numVisible: 3,
@@ -71,8 +80,16 @@ export class PlayerSelection implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private playerService: PlayerService,
-    private userCharacterService: UserCharacterService
-  ) {}
+    private userCharacterService: UserCharacterService,
+    private authService: Auth,
+    private formBuilder: FormBuilder
+  ) {
+    this.editForm = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.minLength(6)]]
+    });
+  }
 
   ngOnInit() {
     this.loadPlayers();
@@ -114,6 +131,9 @@ export class PlayerSelection implements OnInit {
     this.selectedArchetype.set(archetype);
     this.showNameDialog.set(true);
   }
+    navigateToMyCharacters(): void {
+        this.router.navigate(['/my-characters']);
+    }
 
   confirmPlayerCreation() {
     const name = this.playerName().trim();

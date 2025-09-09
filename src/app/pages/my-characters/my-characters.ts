@@ -1,16 +1,19 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Button } from '../../components/atoms/button/button';
 import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { Location } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 
@@ -26,18 +29,22 @@ import { Auth } from '../../services/auth';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     CardModule,
-    ButtonModule,
     ToastModule,
+    Button,
+    ButtonModule,
     DialogModule,
     InputTextModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     ConfirmDialogModule,
     TagModule,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './my-characters.html',
   styleUrls: ['./my-characters.scss'],
-  providers: [MessageService, ConfirmationService]
+  providers: [MessageService, ConfirmationService],
 })
 export class MyCharacters implements OnInit {
   isLoading = signal(true);
@@ -53,8 +60,13 @@ export class MyCharacters implements OnInit {
     private confirmationService: ConfirmationService,
     private userCharacterService: UserCharacterService,
     private playerService: PlayerService,
-    private auth: Auth
+    private auth: Auth,
+    private location: Location
   ) {}
+
+    goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit() {
     this.loadMyCharacters();
@@ -68,8 +80,6 @@ export class MyCharacters implements OnInit {
         console.log('✅ Personagens carregados:', characters);
         this.myCharacters.set(characters);
         this.isLoading.set(false);
-
-
       },
       error: (error) => {
         console.error('❌ Erro ao carregar personagens:', error);
@@ -83,15 +93,16 @@ export class MyCharacters implements OnInit {
             this.router.navigate(['/login']);
           }, 2000);
         } else if (error.status === 0) {
-          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+          errorMessage =
+            'Problema de conectividade. Verifique se a API está rodando.';
         }
 
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: errorMessage
+          detail: errorMessage,
         });
-      }
+      },
     });
   }
 
@@ -100,14 +111,12 @@ export class MyCharacters implements OnInit {
     this.loadMyCharacters();
   }
 
-
-
   selectCharacter(character: UserCharacter) {
     if (!character.player) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Dados incompletos',
-        detail: 'Os dados do personagem não foram carregados completamente.'
+        detail: 'Os dados do personagem não foram carregados completamente.',
       });
       return;
     }
@@ -127,28 +136,33 @@ export class MyCharacters implements OnInit {
           shooting: character.player.stats.attack,
           passing: character.player.stats.leadership,
           defense: character.player.stats.defense,
-          leadership: character.player.stats.leadership
+          leadership: character.player.stats.leadership,
         },
-        primaryColor: character.player.rarity === 'unique' ? '#7C2C78' : '#1095CF',
-        secondaryColor: character.player.rarity === 'unique' ? '#EB6E19' : '#30C9F9',
+        primaryColor:
+          character.player.rarity === 'unique' ? '#7C2C78' : '#1095CF',
+        secondaryColor:
+          character.player.rarity === 'unique' ? '#EB6E19' : '#30C9F9',
         rarity: character.player.rarity,
-        stats: character.player.stats
+        stats: character.player.stats,
       },
       level: 1,
-      experience: 0
+      experience: 0,
     };
 
     localStorage.setItem('selectedPlayer', JSON.stringify(playerData));
     localStorage.setItem('selectedUserCharacter', JSON.stringify(character));
 
     if (character.player.stats) {
-      localStorage.setItem('playerStats', JSON.stringify(character.player.stats));
+      localStorage.setItem(
+        'playerStats',
+        JSON.stringify(character.player.stats)
+      );
     }
 
     this.messageService.add({
       severity: 'success',
       summary: 'Personagem Selecionado',
-      detail: `${character.characterName} foi selecionado!`
+      detail: `${character.characterName} foi selecionado!`,
     });
 
     setTimeout(() => {
@@ -170,7 +184,7 @@ export class MyCharacters implements OnInit {
       this.messageService.add({
         severity: 'warn',
         summary: 'Nome Obrigatório',
-        detail: 'Por favor, insira um nome válido.'
+        detail: 'Por favor, insira um nome válido.',
       });
       return;
     }
@@ -179,7 +193,7 @@ export class MyCharacters implements OnInit {
       this.messageService.add({
         severity: 'warn',
         summary: 'Nome muito curto',
-        detail: 'O nome deve ter pelo menos 2 caracteres.'
+        detail: 'O nome deve ter pelo menos 2 caracteres.',
       });
       return;
     }
@@ -188,52 +202,53 @@ export class MyCharacters implements OnInit {
       this.messageService.add({
         severity: 'info',
         summary: 'Sem alterações',
-        detail: 'O nome não foi alterado.'
+        detail: 'O nome não foi alterado.',
       });
       this.closeEditDialog();
       return;
     }
 
     const updateData: UserCharacterUpdate = {
-      characterName: newName
+      characterName: newName,
     };
 
     console.log('✏️ Atualizando personagem:', character._id, updateData);
 
-    this.userCharacterService.updateUserCharacter(character._id!, updateData).subscribe({
-      next: (updatedCharacter) => {
+    this.userCharacterService
+      .updateUserCharacter(character._id!, updateData)
+      .subscribe({
+        next: (updatedCharacter) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Personagem Atualizado',
+            detail: `Nome alterado para ${newName}!`,
+          });
 
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Personagem Atualizado',
-          detail: `Nome alterado para ${newName}!`
-        });
+          this.closeEditDialog();
 
-        this.closeEditDialog();
+          setTimeout(() => {
+            this.loadMyCharacters();
+          }, 500);
+        },
+        error: (error) => {
+          console.error('❌ Erro ao atualizar personagem:', error);
 
-        setTimeout(() => {
-          this.loadMyCharacters();
-        }, 500);
-      },
-      error: (error) => {
-        console.error('❌ Erro ao atualizar personagem:', error);
+          let errorMessage = 'Erro ao atualizar personagem.';
+          if (error.status === 400) {
+            errorMessage = 'Este nome já está em uso ou é inválido.';
+          } else if (error.status === 404) {
+            errorMessage = 'Personagem não encontrado.';
+          } else if (error.status === 401) {
+            errorMessage = 'Você precisa estar logado para editar personagens.';
+          }
 
-        let errorMessage = 'Erro ao atualizar personagem.';
-        if (error.status === 400) {
-          errorMessage = 'Este nome já está em uso ou é inválido.';
-        } else if (error.status === 404) {
-          errorMessage = 'Personagem não encontrado.';
-        } else if (error.status === 401) {
-          errorMessage = 'Você precisa estar logado para editar personagens.';
-        }
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: errorMessage
-        });
-      }
-    });
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: errorMessage,
+          });
+        },
+      });
   }
 
   deleteCharacter(character: UserCharacter) {
@@ -244,38 +259,41 @@ export class MyCharacters implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Cancelar',
       accept: () => {
+        this.userCharacterService
+          .deleteUserCharacter(character._id!)
+          .subscribe({
+            next: () => {
+              const currentCharacters = this.myCharacters();
+              const updatedList = currentCharacters.filter(
+                (char) => char._id !== character._id
+              );
+              this.myCharacters.set(updatedList);
 
-        this.userCharacterService.deleteUserCharacter(character._id!).subscribe({
-          next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Personagem Deletado',
+                detail: `${character.characterName} foi removido.`,
+              });
+            },
+            error: (error) => {
+              console.error('❌ Erro ao deletar personagem:', error);
 
-            const currentCharacters = this.myCharacters();
-            const updatedList = currentCharacters.filter(char => char._id !== character._id);
-            this.myCharacters.set(updatedList);
+              let errorMessage = 'Erro ao deletar personagem.';
+              if (error.status === 404) {
+                errorMessage = 'Personagem não encontrado.';
+              } else if (error.status === 401) {
+                errorMessage =
+                  'Você precisa estar logado para deletar personagens.';
+              }
 
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Personagem Deletado',
-              detail: `${character.characterName} foi removido.`
-            });
-          },
-          error: (error) => {
-            console.error('❌ Erro ao deletar personagem:', error);
-
-            let errorMessage = 'Erro ao deletar personagem.';
-            if (error.status === 404) {
-              errorMessage = 'Personagem não encontrado.';
-            } else if (error.status === 401) {
-              errorMessage = 'Você precisa estar logado para deletar personagens.';
-            }
-
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erro',
-              detail: errorMessage
-            });
-          }
-        });
-      }
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Erro',
+                detail: errorMessage,
+              });
+            },
+          });
+      },
     });
   }
 
@@ -290,20 +308,20 @@ export class MyCharacters implements OnInit {
       const playerName = character.player.name.toLowerCase();
 
       const icons: { [key: string]: string } = {
-        'velocista': 'pi pi-bolt',
-        'speedster': 'pi pi-bolt',
-        'maestro': 'pi pi-send',
-        'artilheiro': 'pi pi-target',
-        'striker': 'pi pi-target',
-        'defensor': 'pi pi-shield',
-        'defender': 'pi pi-shield',
-        'lider': 'pi pi-star',
-        'leader': 'pi pi-star',
+        velocista: 'pi pi-bolt',
+        speedster: 'pi pi-bolt',
+        maestro: 'pi pi-send',
+        artilheiro: 'pi pi-target',
+        striker: 'pi pi-target',
+        defensor: 'pi pi-shield',
+        defender: 'pi pi-shield',
+        lider: 'pi pi-star',
+        leader: 'pi pi-star',
         'cavaleiro-sombrio': 'pi pi-shield',
         'arqueiro-elfico': 'pi pi-target',
         'paladino-dourado': 'pi pi-shield',
         'mago-das-chamas': 'pi pi-bolt',
-        'ladino-sombrio': 'pi pi-eye'
+        'ladino-sombrio': 'pi pi-eye',
       };
 
       return icons[playerName] || 'pi pi-user';
@@ -318,6 +336,8 @@ export class MyCharacters implements OnInit {
     }
     return 'Personagem Desconhecido';
   }
+
+
 
   getPlayerRarity(character: UserCharacter): string {
     if (character.player) {
@@ -354,7 +374,9 @@ export class MyCharacters implements OnInit {
       target.style.display = 'none';
       const container = target.closest('.character-avatar');
       if (container) {
-        const fallbackIcon = container.querySelector('.fallback-icon') as HTMLElement;
+        const fallbackIcon = container.querySelector(
+          '.fallback-icon'
+        ) as HTMLElement;
         if (fallbackIcon) {
           fallbackIcon.style.display = 'flex';
         }
