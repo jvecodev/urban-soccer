@@ -143,11 +143,15 @@ export class Header implements OnInit, OnDestroy {
         this.router.navigate(['/player-selection']);
     }
 
+    navigateToMyCharacters(): void {
+        this.router.navigate(['/my-characters']);
+    }
+
     navigateToPlayerSelectionAndClose(): void {
         this.router.navigate(['/player-selection']);
         this.closeMobileMenu();
     }
-    
+
 
     navigateToSignupAndClose(): void {
         this.router.navigate(['/signup']);

@@ -222,21 +222,11 @@ export class Auth {
         this.currentUserSubject.next(user);
         this.api.setAuthToken(token);
 
-        this.getUserProfile().subscribe({
-          next: (profile) => {
-            const updatedUser: User = {
-              ...user,
-              id: profile._id,
-              username: profile.name,
-              email: profile.email
-            };
-            this.currentUserSubject.next(updatedUser);
-            localStorage.setItem('current_user', JSON.stringify(updatedUser));
-          },
-          error: (error) => {
-            console.warn('Não foi possível atualizar dados do usuário:', error);
-          }
-        });
+        console.log('✅ Usuário carregado do localStorage:', user.username);
+
+        // Removi a chamada automática para /users/me que estava causando erro 401
+        // A atualização do perfil pode ser feita manualmente quando necessário
+
       } catch (error) {
         console.error('Erro ao carregar usuário do localStorage:', error);
         this.logout();

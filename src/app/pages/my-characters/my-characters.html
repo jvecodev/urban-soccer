@@ -1,4 +1,4 @@
-<!-- Loading Screen -->
+<!-- Loading State -->
 <div class="loading-container" *ngIf="isLoading()">
   <div class="loading-content">
     <div class="loading-spinner">
@@ -11,7 +11,7 @@
 <!-- Main Content -->
 <div class="my-characters-container" *ngIf="!isLoading()">
 
-  <!-- Header Section -->
+  <!-- Header -->
   <div class="my-characters-header">
     <div class="header-content">
       <div class="header-nav">
@@ -25,74 +25,159 @@
 
         <div class="header-title-section">
           <h1 class="header-title">Meus Personagens</h1>
-          <p class="header-subtitle">Gerencie seus jogadores salvos</p>
+          <p class="header-subtitle">Gerencie seus jogadores criados</p>
         </div>
 
-        <p-button
-          icon="pi pi-plus"
-          label="Novo Personagem"
-          (onClick)="createNewCharacter()"
-          severity="info"
-          size="small">
-        </p-button>
+        <div class="header-actions">
+          <p-button
+            icon="pi pi-refresh"
+            (onClick)="refreshCharacters()"
+            severity="secondary"
+            size="small"
+            [text]="true"
+            pTooltip="Atualizar lista"
+            tooltipPosition="bottom">
+          </p-button>
+
+          <p-button
+            icon="pi pi-plus"
+            label="Criar Novo"
+            (onClick)="createNewCharacter()"
+            severity="info"
+            size="small">
+          </p-button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Characters Grid -->
   <div class="characters-grid" *ngIf="myCharacters().length > 0">
-    <div class="character-card" *ngFor="let character of myCharacters()">
-      <p-card styleClass="character-card-content">
+    <div class="character-card-wrapper" *ngFor="let character of myCharacters()">
+      <div class="character-card" [attr.data-rarity]="character.player?.rarity">
 
-        <!-- Character Avatar -->
-        <div class="character-avatar" [attr.data-player-id]="character.playerId">
-          <i [class]="getArchetypeIcon(character.playerId)"></i>
+        <!-- Character Image (Top of card) -->
+        <div class="character-image-top">
+          <img *ngIf="getPlayerImage(character)"
+               [src]="getPlayerImage(character)"
+               [alt]="character.characterName"
+               class="character-image"
+               loading="lazy"
+               (error)="onImageError($event)">
+
+          <div class="image-overlay" *ngIf="!getPlayerImage(character)">
+            <i [class]="getArchetypeIcon(character)" class="overlay-icon"></i>
+          </div>
+
+          <!-- Badge de raridade no canto da imagem -->
+          <div class="rarity-badge" [attr.data-rarity]="character.player?.rarity">
+            <span>{{ getArchetypeName(character) }}</span>
+          </div>
         </div>
 
-        <!-- Character Info -->
-        <div class="character-info">
-          <h3 class="character-name">{{ character.characterName }}</h3>
-          <p-tag
-            [value]="getArchetypeName(character.playerId)"
-            severity="info"
-            styleClass="archetype-tag">
-          </p-tag>
-          <p class="created-date" *ngIf="character.createdAt">
-            Criado em {{ character.createdAt | date:'dd/MM/yyyy' }}
-          </p>
+        <!-- Character Content -->
+        <div class="character-content">
+
+          <!-- Character Name -->
+          <div class="character-header">
+            <div class="character-name">
+              <span>{{ character.characterName }}</span>
+            </div>
+          </div>
+
+          <!-- Special Ability -->
+          <div class="special-ability" *ngIf="character.player?.stats?.specialAbility">
+            <div class="ability-header">
+              <i class="pi pi-flash"></i>
+              <span>HABILIDADE ESPECIAL</span>
+            </div>
+            <div class="ability-value">{{ character.player?.stats?.specialAbility }}</div>
+          </div>
+
+          <!-- Attributes Grid -->
+          <div class="attributes-section" *ngIf="getPlayerStats(character) as stats">
+            <div class="attributes-grid">
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-bolt" [style.color]="getAttributeColor(stats.speed)"></i>
+                  <span>Velocidade</span>
+                </div>
+                <div class="attribute-value-simple">
+                  <span class="value-number">{{ stats.speed }}</span>
+                </div>
+              </div>
+
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-target" [style.color]="getAttributeColor(stats.attack)"></i>
+                  <span>Ataque</span>
+                </div>
+                <div class="attribute-value-simple">
+                  <span class="value-number">{{ stats.attack }}</span>
+                </div>
+              </div>
+
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-shield" [style.color]="getAttributeColor(stats.defense)"></i>
+                  <span>Defesa</span>
+                </div>
+                <div class="attribute-value-simple">
+                  <span class="value-number">{{ stats.defense }}</span>
+                </div>
+              </div>
+
+              <div class="attribute-item">
+                <div class="attribute-header">
+                  <i class="pi pi-star" [style.color]="getAttributeColor(stats.leadership)"></i>
+                  <span>Liderança</span>
+                </div>
+                <div class="attribute-value-simple">
+                  <span class="value-number">{{ stats.leadership }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Character Metadata -->
+          <div class="character-metadata">
+            <p class="created-date" *ngIf="character.createdAt">
+              <i class="pi pi-calendar"></i>
+              Criado em {{ character.createdAt | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="card-actions">
+            <div class="action-buttons">
+              <p-button
+                label="JOGAR"
+                icon="pi pi-play"
+                (onClick)="selectCharacter(character)"
+                severity="success"
+                styleClass="action-button play-button">
+              </p-button>
+
+              <p-button
+                label="EDITAR"
+                icon="pi pi-pencil"
+                (onClick)="editCharacter(character)"
+                severity="info"
+                styleClass="action-button edit-button"
+                [outlined]="true">
+              </p-button>
+
+              <p-button
+                icon="pi pi-trash"
+                (onClick)="deleteCharacter(character)"
+                severity="danger"
+                styleClass="action-button delete-button"
+                [outlined]="true">
+              </p-button>
+            </div>
+          </div>
         </div>
-
-        <!-- Action Buttons -->
-        <div class="character-actions">
-          <p-button
-            icon="pi pi-play"
-            label="Jogar"
-            (onClick)="selectCharacter(character)"
-            severity="success"
-            size="small"
-            styleClass="action-button">
-          </p-button>
-
-          <p-button
-            icon="pi pi-pencil"
-            label="Editar"
-            (onClick)="editCharacter(character)"
-            size="small"
-            styleClass="action-button"
-            [text]="true">
-          </p-button>
-
-          <p-button
-            icon="pi pi-trash"
-            (onClick)="deleteCharacter(character)"
-            severity="danger"
-            size="small"
-            styleClass="action-button"
-            [text]="true">
-          </p-button>
-        </div>
-
-      </p-card>
+      </div>
     </div>
   </div>
 
@@ -128,13 +213,13 @@
   <div class="dialog-content" *ngIf="editingCharacter()">
     <div class="editing-character-info">
       <div class="character-preview">
-        <div class="preview-avatar" [attr.data-player-id]="editingCharacter()!.playerId">
-          <i [class]="getArchetypeIcon(editingCharacter()!.playerId)"></i>
+        <div class="preview-avatar" [attr.data-player-id]="editingCharacter()!.player?._id">
+          <i [class]="getArchetypeIcon(editingCharacter()!)"></i>
         </div>
         <div class="character-details">
           <h3>{{ editingCharacter()!.characterName }}</h3>
           <p-tag
-            [value]="getArchetypeName(editingCharacter()!.playerId)"
+            [value]="getArchetypeName(editingCharacter()!)"
             severity="info">
           </p-tag>
         </div>
@@ -151,7 +236,7 @@
         (ngModelChange)="newCharacterName.set($event)"
         placeholder="Digite o novo nome"
         maxlength="20"
-        class="urban-input" 
+        class="urban-input"
         autocomplete="off" />
       <small class="input-help">Máximo 20 caracteres (mínimo 2)</small>
     </div>

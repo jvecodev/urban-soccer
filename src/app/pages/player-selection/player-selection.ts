@@ -17,6 +17,8 @@ import { MessageService } from 'primeng/api';
 
 import { PlayerArchetype, Player } from '../../models/player';
 import { PlayerService } from '../../services/player.service';
+import { UserCharacterService } from '../../services/userCharacter.service';
+import { UserCharacterCreate } from '../../models/userCharacter';
 
 @Component({
   selector: 'app-player-selection',
@@ -68,7 +70,8 @@ export class PlayerSelection implements OnInit {
   constructor(
     private router: Router,
     private messageService: MessageService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private userCharacterService: UserCharacterService
   ) {}
 
   ngOnInit() {
@@ -134,28 +137,84 @@ export class PlayerSelection implements OnInit {
       return;
     }
 
-    const newPlayer: Player = {
-      id: archetype.id,
-      name: name,
-      archetype: archetype,
-      level: 1,
-      experience: 0
+    if (name.length < 2) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Nome muito curto',
+        detail: 'O nome deve ter pelo menos 2 caracteres.'
+      });
+      return;
+    }
+
+    if (name.length > 20) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Nome muito longo',
+        detail: 'O nome deve ter no máximo 20 caracteres.'
+      });
+      return;
+    }
+
+    // Criar personagem na API
+    const characterData: UserCharacterCreate = {
+      playerId: archetype.id,
+      characterName: name
     };
 
-    localStorage.setItem('selectedPlayer', JSON.stringify(newPlayer));
+    console.log('📡 Criando personagem:', characterData);
 
-    if (archetype.stats) {
-      localStorage.setItem('playerStats', JSON.stringify(archetype.stats));
-    }
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Jogador Criado!',
-      detail: `${name}, o ${archetype.name}, foi criado com sucesso!`
+    this.userCharacterService.createUserCharacter(characterData).subscribe({
+      next: (createdCharacter) => {
+        console.log('✅ Personagem criado:', createdCharacter);
+
+        // Salva dados locais para compatibilidade
+        const newPlayer: Player = {
+          id: archetype.id,
+          name: name,
+          archetype: archetype,
+          level: 1,
+          experience: 0
+        };
+
+        localStorage.setItem('selectedPlayer', JSON.stringify(newPlayer));
+        localStorage.setItem('selectedUserCharacter', JSON.stringify(createdCharacter));
+
+        if (archetype.stats) {
+          localStorage.setItem('playerStats', JSON.stringify(archetype.stats));
+        }
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Jogador Criado!',
+          detail: `${name}, o ${archetype.name}, foi criado com sucesso!`
+        });
+
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('❌ Erro ao criar personagem:', error);
+
+        let errorMessage = 'Erro ao criar personagem.';
+        if (error.status === 400) {
+          errorMessage = 'Este nome já está em uso ou os dados são inválidos.';
+        } else if (error.status === 401) {
+          errorMessage = 'Você precisa estar logado para criar personagens.';
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        } else if (error.status === 404) {
+          errorMessage = 'Arquétipo de jogador não encontrado.';
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao Criar Personagem',
+          detail: errorMessage
+        });
+      }
     });
-
-    setTimeout(() => {
-      this.router.navigate(['/dashboard']);
-    }, 2000);
   }
 
   cancelSelection() {

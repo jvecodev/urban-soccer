@@ -53,6 +53,11 @@
         *ngIf="isAuthenticated()"
       >
         <app-button
+          text="MEUS PERSONAGENS"
+          (onClick)="navigateToMyCharacters()"
+        ></app-button>
+
+        <app-button
           text="CRIAR JOGADOR"
           (onClick)="navigateToPlayerSelection()"
         ></app-button>
@@ -118,6 +123,14 @@
             </div>
 
           <div class="mobile-menu-nav">
+            <button
+              type="button"
+              class="custom-header-button mobile-nav-btn"
+              routerLink="/my-characters"
+              (click)="closeMobileMenu()"
+            >
+              <span>MEUS PERSONAGENS</span>
+            </button>
             <button
               type="button"
               class="custom-header-button mobile-nav-btn"

@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 
@@ -17,6 +18,7 @@ import { UserCharacter, UserCharacterUpdate } from '../../models/userCharacter';
 import { UserCharacterService } from '../../services/userCharacter.service';
 import { PlayerService } from '../../services/player.service';
 import { PlayerArchetype } from '../../models/player';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-my-characters',
@@ -30,7 +32,8 @@ import { PlayerArchetype } from '../../models/player';
     DialogModule,
     InputTextModule,
     ConfirmDialogModule,
-    TagModule
+    TagModule,
+    TooltipModule
   ],
   templateUrl: './my-characters.html',
   styleUrls: ['./my-characters.scss'],
@@ -49,16 +52,15 @@ export class MyCharacters implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private userCharacterService: UserCharacterService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private auth: Auth
   ) {}
 
   ngOnInit() {
     this.loadMyCharacters();
-    this.loadPlayerArchetypes();
   }
 
   private loadMyCharacters() {
-    console.log('🔍 Carregando personagens do usuário...');
     this.isLoading.set(true);
 
     this.userCharacterService.getUserCharacters().subscribe({
@@ -66,18 +68,22 @@ export class MyCharacters implements OnInit {
         console.log('✅ Personagens carregados:', characters);
         this.myCharacters.set(characters);
         this.isLoading.set(false);
+
+
       },
       error: (error) => {
         console.error('❌ Erro ao carregar personagens:', error);
         this.isLoading.set(false);
 
         let errorMessage = 'Erro ao carregar seus personagens.';
-        
+
         if (error.status === 401) {
-          errorMessage = 'Você precisa estar logado para ver seus personagens.';
+          errorMessage = 'Sessão expirada. Faça login novamente.';
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 2000);
+        } else if (error.status === 0) {
+          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
         }
 
         this.messageService.add({
@@ -89,38 +95,45 @@ export class MyCharacters implements OnInit {
     });
   }
 
-  private loadPlayerArchetypes() {
-    this.playerService.getAvailablePlayers().subscribe({
-      next: (players) => {
-        const archetypesMap: { [key: string]: PlayerArchetype } = {};
-        players.forEach(player => {
-          archetypesMap[player.id] = player;
-        });
-        this.playerArchetypes.set(archetypesMap);
-      },
-      error: (error) => {
-        console.error('Erro ao carregar arquétipos:', error);
-      }
-    });
+  // Método público para refresh da tela
+  refreshCharacters() {
+    this.loadMyCharacters();
   }
 
-  selectCharacter(character: UserCharacter) {
-    const archetype = this.playerArchetypes()[character.playerId];
 
-    if (!archetype) {
+
+  selectCharacter(character: UserCharacter) {
+    if (!character.player) {
       this.messageService.add({
         severity: 'warn',
-        summary: 'Arquétipo não encontrado',
-        detail: 'O arquétipo deste personagem não foi encontrado.'
+        summary: 'Dados incompletos',
+        detail: 'Os dados do personagem não foram carregados completamente.'
       });
       return;
     }
 
     // Salva o personagem selecionado no localStorage
     const playerData = {
-      id: archetype.id,
+      id: character.player._id,
       name: character.characterName,
-      archetype: archetype,
+      archetype: {
+        id: character.player._id,
+        name: character.player.name,
+        title: character.player.name,
+        description: character.player.description,
+        image: character.player.imageUrl,
+        attributes: {
+          speed: character.player.stats.speed,
+          shooting: character.player.stats.attack,
+          passing: character.player.stats.leadership,
+          defense: character.player.stats.defense,
+          leadership: character.player.stats.leadership
+        },
+        primaryColor: character.player.rarity === 'unique' ? '#7C2C78' : '#1095CF',
+        secondaryColor: character.player.rarity === 'unique' ? '#EB6E19' : '#30C9F9',
+        rarity: character.player.rarity,
+        stats: character.player.stats
+      },
       level: 1,
       experience: 0
     };
@@ -128,8 +141,8 @@ export class MyCharacters implements OnInit {
     localStorage.setItem('selectedPlayer', JSON.stringify(playerData));
     localStorage.setItem('selectedUserCharacter', JSON.stringify(character));
 
-    if (archetype.stats) {
-      localStorage.setItem('playerStats', JSON.stringify(archetype.stats));
+    if (character.player.stats) {
+      localStorage.setItem('playerStats', JSON.stringify(character.player.stats));
     }
 
     this.messageService.add({
@@ -189,14 +202,6 @@ export class MyCharacters implements OnInit {
 
     this.userCharacterService.updateUserCharacter(character._id!, updateData).subscribe({
       next: (updatedCharacter) => {
-        console.log('✅ Personagem atualizado:', updatedCharacter);
-        
-        // Atualiza a lista local
-        const currentCharacters = this.myCharacters();
-        const updatedList = currentCharacters.map(char =>
-          char._id === updatedCharacter._id ? updatedCharacter : char
-        );
-        this.myCharacters.set(updatedList);
 
         this.messageService.add({
           severity: 'success',
@@ -205,6 +210,10 @@ export class MyCharacters implements OnInit {
         });
 
         this.closeEditDialog();
+
+        setTimeout(() => {
+          this.loadMyCharacters();
+        }, 500);
       },
       error: (error) => {
         console.error('❌ Erro ao atualizar personagem:', error);
@@ -235,13 +244,10 @@ export class MyCharacters implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Cancelar',
       accept: () => {
-        console.log('🗑️ Deletando personagem:', character._id);
-        
+
         this.userCharacterService.deleteUserCharacter(character._id!).subscribe({
           next: () => {
-            console.log('✅ Personagem deletado com sucesso');
-            
-            // Remove da lista local
+
             const currentCharacters = this.myCharacters();
             const updatedList = currentCharacters.filter(char => char._id !== character._id);
             this.myCharacters.set(updatedList);
@@ -279,31 +285,59 @@ export class MyCharacters implements OnInit {
     this.newCharacterName.set('');
   }
 
-  getArchetypeIcon(playerId: string): string {
-    const icons: { [key: string]: string } = {
-      'velocista': 'pi pi-bolt',
-      'maestro': 'pi pi-send',
-      'artilheiro': 'pi pi-target',
-      'defensor': 'pi pi-shield',
-      'lider': 'pi pi-star',
-      'speedster': 'pi pi-bolt',
-      'striker': 'pi pi-target',
-      'defender': 'pi pi-shield',
-      'leader': 'pi pi-star',
-      'cavaleiro-sombrio': 'pi pi-shield',
-      'arqueiro-elfico': 'pi pi-target',
-      'paladino-dourado': 'pi pi-shield',
-      'mago-das-chamas': 'pi pi-bolt',
-      'ladino-sombrio': 'pi pi-eye'
-    };
+  getArchetypeIcon(character: UserCharacter): string {
+    if (character.player) {
+      const playerName = character.player.name.toLowerCase();
 
-    const lowercaseId = playerId.toLowerCase();
-    return icons[playerId] || icons[lowercaseId] || 'pi pi-user';
+      const icons: { [key: string]: string } = {
+        'velocista': 'pi pi-bolt',
+        'speedster': 'pi pi-bolt',
+        'maestro': 'pi pi-send',
+        'artilheiro': 'pi pi-target',
+        'striker': 'pi pi-target',
+        'defensor': 'pi pi-shield',
+        'defender': 'pi pi-shield',
+        'lider': 'pi pi-star',
+        'leader': 'pi pi-star',
+        'cavaleiro-sombrio': 'pi pi-shield',
+        'arqueiro-elfico': 'pi pi-target',
+        'paladino-dourado': 'pi pi-shield',
+        'mago-das-chamas': 'pi pi-bolt',
+        'ladino-sombrio': 'pi pi-eye'
+      };
+
+      return icons[playerName] || 'pi pi-user';
+    }
+
+    return 'pi pi-user';
   }
 
-  getArchetypeName(playerId: string): string {
-    const archetype = this.playerArchetypes()[playerId];
-    return archetype ? archetype.name : 'Arquétipo Desconhecido';
+  getArchetypeName(character: UserCharacter): string {
+    if (character.player) {
+      return character.player.name;
+    }
+    return 'Personagem Desconhecido';
+  }
+
+  getPlayerRarity(character: UserCharacter): string {
+    if (character.player) {
+      return character.player.rarity === 'unique' ? 'Único' : 'Comum';
+    }
+    return 'Comum';
+  }
+
+  getPlayerImage(character: UserCharacter): string {
+    if (character.player && character.player.imageUrl) {
+      return character.player.imageUrl;
+    }
+    return '';
+  }
+
+  getPlayerStats(character: UserCharacter) {
+    if (character.player && character.player.stats) {
+      return character.player.stats;
+    }
+    return null;
   }
 
   createNewCharacter() {
@@ -312,5 +346,26 @@ export class MyCharacters implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/home']);
+  }
+
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.style.display = 'none';
+      const container = target.closest('.character-avatar');
+      if (container) {
+        const fallbackIcon = container.querySelector('.fallback-icon') as HTMLElement;
+        if (fallbackIcon) {
+          fallbackIcon.style.display = 'flex';
+        }
+      }
+    }
+  }
+
+  getAttributeColor(value: number): string {
+    if (value >= 80) return 'var(--amarelo-dourado)';
+    if (value >= 60) return 'var(--ciano-eletrico)';
+    if (value >= 40) return 'var(--azul-acento)';
+    return 'var(--cinza-neutro)';
   }
 }
