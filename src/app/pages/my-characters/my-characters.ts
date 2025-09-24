@@ -77,7 +77,6 @@ export class MyCharacters implements OnInit {
 
     this.userCharacterService.getUserCharacters().subscribe({
       next: (characters) => {
-        console.log('✅ Personagens carregados:', characters);
         this.myCharacters.set(characters);
         this.isLoading.set(false);
       },
@@ -162,11 +161,11 @@ export class MyCharacters implements OnInit {
     this.messageService.add({
       severity: 'success',
       summary: 'Personagem Selecionado',
-      detail: `${character.characterName} foi selecionado!`,
+      detail: `${character.characterName} foi selecionado! Gerando campanhas...`,
     });
 
     setTimeout(() => {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/campaign-selection']);
     }, 1500);
   }
 
@@ -212,7 +211,6 @@ export class MyCharacters implements OnInit {
       characterName: newName,
     };
 
-    console.log('✏️ Atualizando personagem:', character._id, updateData);
 
     this.userCharacterService
       .updateUserCharacter(character._id!, updateData)

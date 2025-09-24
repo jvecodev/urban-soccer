@@ -1,0 +1,136 @@
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading()">
+  <div class="loading-content">
+    <div class="loading-spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <h2 class="loading-text">Gerando campanhas com IA...</h2>
+    <p class="loading-subtitle">Criando aventuras personalizadas para {{ getCharacterName() }}</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="campaign-selection-container" *ngIf="!isLoading()">
+  <!-- Header -->
+  <div class="campaign-header">
+    <div class="header-content">
+      <div class="header-nav">
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Voltar"
+          (onClick)="goBack()"
+          severity="secondary"
+          [text]="true"
+        ></p-button>
+
+        <div class="header-title-section">
+          <h1 class="header-title">Escolha sua Campanha</h1>
+          <p class="header-subtitle">Aventuras geradas especialmente para {{ getCharacterName() }}</p>
+        </div>
+
+        <div class="header-actions">
+          <p-button
+            icon="pi pi-refresh"
+            (onClick)="refreshOptions()"
+            severity="secondary"
+            size="small"
+            [text]="true"
+            pTooltip="Gerar novas opções"
+            tooltipPosition="bottom"
+            [disabled]="isLoading()"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Character Info -->
+  <div class="character-info-section" *ngIf="selectedUserCharacter() && selectedPlayer()">
+    <div class="character-info-card">
+      <div class="character-avatar">
+        <img
+          *ngIf="getCharacterImage()"
+          [src]="getCharacterImage()"
+          [alt]="getCharacterName()"
+          class="character-image"
+          loading="lazy"
+        />
+        <div class="character-fallback" *ngIf="!getCharacterImage()">
+          <i class="pi pi-user"></i>
+        </div>
+      </div>
+      <div class="character-details">
+        <h3 class="character-name">{{ getCharacterName() }}</h3>
+        <p-tag
+          [value]="getCharacterArchetype()"
+          severity="info"
+          class="archetype-tag"
+        ></p-tag>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaign Options -->
+  <div class="campaigns-grid" *ngIf="campaignOptions().length > 0">
+    <div
+      class="campaign-card-wrapper"
+      *ngFor="let option of campaignOptions(); let i = index"
+    >
+      <div class="campaign-card" [class.creating]="isCreatingCampaign()">
+        <div class="campaign-header-card">
+          <div class="campaign-number">
+            <span>{{ i + 1 }}</span>
+          </div>
+          <h3 class="campaign-title">{{ option.campaignName }}</h3>
+        </div>
+
+        <div class="campaign-description">
+          <p>{{ option.description }}</p>
+        </div>
+
+        <div class="campaign-actions">
+          <p-button
+            label="Escolher Esta Campanha"
+            icon="pi pi-play"
+            (onClick)="selectCampaign(option)"
+            [disabled]="isCreatingCampaign()"
+            [loading]="isCreatingCampaign()"
+            severity="success"
+            styleClass="select-campaign-button"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading for Campaign Creation -->
+  <div class="creating-campaign-overlay" *ngIf="isCreatingCampaign()">
+    <div class="creating-content">
+      <div class="creating-spinner">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+      <h3>Iniciando Campanha...</h3>
+      <p>Preparando sua aventura</p>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="campaignOptions().length === 0 && !isLoading()">
+    <p-card styleClass="empty-card">
+      <div class="empty-content">
+        <i class="pi pi-exclamation-triangle empty-icon"></i>
+        <h3>Nenhuma campanha gerada</h3>
+        <p>Houve um problema ao gerar as campanhas. Tente novamente.</p>
+        <p-button
+          label="Tentar Novamente"
+          icon="pi pi-refresh"
+          (onClick)="refreshOptions()"
+          severity="secondary"
+        ></p-button>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<!-- Toast Messages -->
+<p-toast position="top-right"></p-toast>

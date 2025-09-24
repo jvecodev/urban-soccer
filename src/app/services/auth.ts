@@ -215,6 +215,8 @@ export class Auth {
     const token = localStorage.getItem('auth_token');
     const userJson = localStorage.getItem('current_user');
 
+
+
     if (token && userJson) {
       try {
         this.token = token;
@@ -222,15 +224,15 @@ export class Auth {
         this.currentUserSubject.next(user);
         this.api.setAuthToken(token);
 
-        console.log('✅ Usuário carregado do localStorage:', user.username);
 
         // Removi a chamada automática para /users/me que estava causando erro 401
         // A atualização do perfil pode ser feita manualmente quando necessário
 
       } catch (error) {
-        console.error('Erro ao carregar usuário do localStorage:', error);
+        console.error('❌ Erro ao carregar usuário do localStorage:', error);
         this.logout();
       }
+    } else {
     }
   }
 
@@ -244,17 +246,20 @@ export class Auth {
     }
 
     try {
-      // Para fins de teste, considerar token sempre válido
-      // Em produção, você pode decodificar o JWT real
-      return false;
+      // Implementação real para JWT
+      if (this.token.includes('.')) {
+        const payload = JSON.parse(atob(this.token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        const isExpired = payload.exp < currentTime;
 
-      /* Implementação real para JWT:
-      const payload = JSON.parse(atob(this.token.split('.')[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-      return payload.exp < currentTime;
-      */
+
+        return isExpired;
+      } else {
+        // Se não é um JWT válido, considerar válido por 1 hora
+        return false;
+      }
     } catch (error) {
-      console.error('Erro ao validar token:', error);
+      console.error('❌ Erro ao validar token:', error);
       return true;
     }
   }

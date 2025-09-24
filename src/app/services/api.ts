@@ -26,6 +26,10 @@ export class Api {
       ...options?.headers
     });
 
+    // Debug de requisições importantes
+    if (endpoint.includes('campaign')) {
+
+    }
 
     return this.http.post<T>(url, data, { headers })
       .pipe(

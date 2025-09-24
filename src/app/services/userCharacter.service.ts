@@ -29,13 +29,11 @@ export class UserCharacterService {
       const storedToken = localStorage.getItem('auth_token');
       if (storedToken) {
         token = storedToken;
-        console.log('🔑 Token encontrado no localStorage');
       }
     }
 
     if (token) {
       this.api.setAuthToken(token);
-      console.log('🔑 Token configurado para requisições de personagens');
     } else {
       console.warn('⚠️ Token não encontrado para configurar API');
     }
@@ -46,7 +44,6 @@ export class UserCharacterService {
    */
   createUserCharacter(characterData: UserCharacterCreate): Observable<UserCharacterPublic> {
     this.setupAuthToken();
-    console.log('📡 Criando personagem:', characterData);
 
     return this.api.post<UserCharacterPublic>('/characters/', characterData);
   }
@@ -56,12 +53,10 @@ export class UserCharacterService {
    */
   getUserCharacters(): Observable<UserCharacterPublic[]> {
     this.setupAuthToken();
-    console.log('📡 Buscando personagens do usuário...');
 
     return this.api.get<UserCharacterList>('/characters/')
       .pipe(
         map(response => {
-          console.log('✅ Resposta da API:', response);
           return response.characters || [];
         })
       );
@@ -72,7 +67,6 @@ export class UserCharacterService {
    */
   getUserCharacterById(characterId: string): Observable<UserCharacterPublic> {
     this.setupAuthToken();
-    console.log('📡 Buscando personagem por ID:', characterId);
 
     return this.api.get<UserCharacterPublic>(`/characters/${characterId}`);
   }
@@ -82,7 +76,6 @@ export class UserCharacterService {
    */
   updateUserCharacter(characterId: string, updateData: UserCharacterUpdate): Observable<UserCharacterPublic> {
     this.setupAuthToken();
-    console.log('📡 Atualizando personagem:', characterId, updateData);
 
     return this.api.patch<UserCharacterPublic>(`/characters/${characterId}`, updateData);
   }
@@ -92,7 +85,6 @@ export class UserCharacterService {
    */
   deleteUserCharacter(characterId: string): Observable<void> {
     this.setupAuthToken();
-    console.log('📡 Deletando personagem:', characterId);
 
     return this.api.delete<void>(`/characters/${characterId}`);
   }

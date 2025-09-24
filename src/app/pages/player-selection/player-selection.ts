@@ -181,11 +181,9 @@ export class PlayerSelection implements OnInit {
       characterName: name
     };
 
-    console.log('📡 Criando personagem:', characterData);
 
     this.userCharacterService.createUserCharacter(characterData).subscribe({
       next: (createdCharacter) => {
-        console.log('✅ Personagem criado:', createdCharacter);
 
         // Salva dados locais para compatibilidade
         const newPlayer: Player = {
