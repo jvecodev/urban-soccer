@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Api } from './api';
-import { CampaignGenerateResponse, CampaignCreate, Campaign } from '../models/campaign';
+import { CampaignGenerateResponse, CampaignCreate, Campaign, CampaignListResponse, GameStartResponse, GamePlayRequest, GamePlayResponse } from '../models/campaign';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,9 @@ export class CampaignService {
    * @returns Observable com a lista de campanhas
    */
   getUserCampaigns(): Observable<Campaign[]> {
-    return this.api.get<Campaign[]>('/campaigns/user');
+    return this.api.get<CampaignListResponse>('/campaigns/').pipe(
+      map(response => response.campaigns)
+    );
   }
 
   /**
@@ -49,5 +52,33 @@ export class CampaignService {
    */
   getCampaignById(campaignId: string): Observable<Campaign> {
     return this.api.get<Campaign>(`/campaigns/${campaignId}`);
+  }
+
+  /**
+   * Deleta uma campanha específica
+   * @param campaignId ID da campanha
+   * @returns Observable void
+   */
+  deleteCampaign(campaignId: string): Observable<void> {
+    return this.api.delete<void>(`/campaigns/${campaignId}`);
+  }
+
+  /**
+   * Inicia uma campanha e retorna o estado inicial do jogo
+   * @param campaignId ID da campanha
+   * @returns Observable com o estado inicial do jogo
+   */
+  startGame(campaignId: string): Observable<GameStartResponse> {
+    return this.api.get<GameStartResponse>(`/campaigns/${campaignId}/start`);
+  }
+
+  /**
+   * Executa uma ação no jogo e retorna o novo estado
+   * @param campaignId ID da campanha
+   * @param gamePlayData Dados da ação escolhida
+   * @returns Observable com o novo estado do jogo
+   */
+  playGame(campaignId: string, gamePlayData: GamePlayRequest): Observable<GamePlayResponse> {
+    return this.api.post<GamePlayResponse>(`/campaigns/${campaignId}/play`, gamePlayData);
   }
 }

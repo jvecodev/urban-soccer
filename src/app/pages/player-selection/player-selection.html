@@ -162,13 +162,6 @@
   <!-- Empty State -->
   <div class="empty-state" *ngIf="playerArchetypes().length === 0">
     <p-card class="empty-card">
-      <ng-template pTemplate="header">
-        <div class="card-header-content">
-          <i class="pi pi-users"></i>
-          <span>Nenhum Personagem Disponível</span>
-        </div>
-      </ng-template>
-
       <div class="empty-content">
         <p>Não há personagens disponíveis para seleção no momento.</p>
         <p-button label="TENTAR NOVAMENTE" icon="pi pi-refresh" (onClick)="reloadPlayers()" severity="info"

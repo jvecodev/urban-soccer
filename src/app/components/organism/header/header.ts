@@ -143,12 +143,21 @@ export class Header implements OnInit, OnDestroy {
         this.router.navigate(['/player-selection']);
     }
 
+    navigateToMyCampaigns(): void {
+        this.router.navigate(['/my-campaigns']);
+    }
+
     navigateToDashboard(): void {
         this.router.navigate(['/dashboard']);
     }
 
     navigateToPlayerSelectionAndClose(): void {
         this.router.navigate(['/player-selection']);
+        this.closeMobileMenu();
+    }
+
+    navigateToMyCampaignsAndClose(): void {
+        this.router.navigate(['/my-campaigns']);
         this.closeMobileMenu();
     }
 

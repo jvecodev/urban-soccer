@@ -1,0 +1,162 @@
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading()">
+  <div class="loading-content">
+    <div class="loading-spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <h2 class="loading-text">Iniciando o jogo...</h2>
+    <p class="loading-subtitle">Preparando {{ getCampaignName() }}</p>
+  </div>
+</div>
+
+<!-- Game Interface -->
+<div class="game-container" *ngIf="!isLoading()">
+  <!-- Header -->
+  <div class="game-header">
+    <div class="header-content">
+      <div class="header-nav">
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Voltar"
+          (onClick)="goBack()"
+          severity="secondary"
+          [text]="true"
+        ></p-button>
+
+        <div class="header-title-section">
+          <h1 class="header-title">{{ getCampaignName() }}</h1>
+          <p class="header-subtitle" *ngIf="gameState()">
+            {{ gameState()?.score }} | Tempo: {{ gameState()?.time }}'
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <p-button
+            icon="pi pi-home"
+            label="Campanhas"
+            (onClick)="backToCampaigns()"
+            severity="secondary"
+            size="small"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game State Info -->
+  <div class="game-state-section" *ngIf="gameState()">
+    <div class="game-state-card">
+      <div class="score-display">
+        <div class="score-item">
+          <span class="score-label">Placar</span>
+          <span class="score-value">{{ gameState()?.score }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Tempo</span>
+          <span class="score-value">{{ gameState()?.time }}'</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narration Section -->
+  <div class="narration-section">
+    <div class="narration-card">
+      <div class="narration-header">
+        <i class="pi pi-microphone narration-icon"></i>
+        <h3>Narração</h3>
+      </div>
+      <div class="narration-content">
+        <p class="current-narration">{{ currentNarration() }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Cards -->
+  <div class="actions-section" *ngIf="!isGameOver()">
+    <div class="actions-header">
+      <h3>Escolha sua próxima jogada</h3>
+    </div>
+    <div class="actions-grid">
+      <div
+        class="action-card-wrapper"
+        *ngFor="let card of availableCards(); let i = index"
+      >
+        <div
+          class="action-card"
+          [class.disabled]="isPlayingAction()"
+          (click)="playAction(card)"
+        >
+          <div class="action-icon">
+            <i [class]="getActionIcon(card.actionId)"></i>
+          </div>
+          <div class="action-content">
+            <h4 class="action-title">{{ card.label }}</h4>
+            <p class="action-description" *ngIf="card.description">
+              {{ card.description }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over State -->
+  <div class="game-over-section" *ngIf="isGameOver()">
+    <p-card styleClass="game-over-card">
+      <div class="game-over-content">
+        <div class="game-result">
+          <p-tag
+            [value]="getResultLabel()"
+            [severity]="getResultSeverity()"
+            styleClass="result-tag"
+          ></p-tag>
+        </div>
+        <h3>Jogo Finalizado!</h3>
+        <p>{{ currentNarration() }}</p>
+        <div class="game-over-actions">
+          <p-button
+            label="Ver Campanhas"
+            icon="pi pi-list"
+            (onClick)="backToCampaigns()"
+            severity="primary"
+          ></p-button>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Loading Action State -->
+  <div class="action-loading-overlay" *ngIf="isPlayingAction()">
+    <div class="action-loading-content">
+      <div class="action-loading-spinner">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+      <h3>Executando jogada...</h3>
+      <p>A IA está processando sua ação</p>
+    </div>
+  </div>
+
+  <!-- Narration History (Optional - can be toggled) -->
+  <div class="history-section" *ngIf="narrationHistory().length > 1">
+    <div class="history-toggle">
+      <p-button
+        label="Ver Histórico"
+        icon="pi pi-history"
+        (onClick)="showHistory = !showHistory"
+        severity="secondary"
+        [text]="true"
+        size="small"
+      ></p-button>
+    </div>
+    <div class="history-content" *ngIf="showHistory">
+      <div class="history-item" *ngFor="let narration of narrationHistory().slice(0, -1); let i = index">
+        <span class="history-number">{{ i + 1 }}.</span>
+        <span class="history-text">{{ narration }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Messages -->
+<p-toast position="top-right"></p-toast>

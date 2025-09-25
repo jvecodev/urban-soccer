@@ -73,7 +73,7 @@ export class CampaignSelection implements OnInit {
 
 
   private loadCharacterData() {
-   
+
     // Carrega dados do personagem selecionado do localStorage
     const selectedUserCharacterData = localStorage.getItem('selectedUserCharacter');
     const selectedPlayerData = localStorage.getItem('selectedPlayer');
@@ -157,7 +157,7 @@ export class CampaignSelection implements OnInit {
     const userCharacter = this.selectedUserCharacter();
     const player = this.selectedPlayer();
 
-    if (!userCharacter || !player) {
+    if (!userCharacter || !player || !userCharacter._id) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -169,7 +169,7 @@ export class CampaignSelection implements OnInit {
     this.isCreatingCampaign.set(true);
 
     const campaignData: CampaignCreate = {
-      playerId: player.id,
+      userCharacterId: userCharacter._id,
       campaignName: option.campaignName,
       description: option.description,
     };
@@ -189,9 +189,9 @@ export class CampaignSelection implements OnInit {
 
         this.isCreatingCampaign.set(false);
 
-        // Navega para o dashboard após 1.5 segundos
+        // Navega para o game-start após 1.5 segundos
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/game-start']);
         }, 1500);
       },
       error: (error) => {

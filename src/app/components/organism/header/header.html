@@ -53,6 +53,10 @@
         *ngIf="isAuthenticated()"
       >
         <app-button
+          text="MINHAS CAMPANHAS"
+          (onClick)="navigateToMyCampaigns()"
+        ></app-button>
+        <app-button
           text="CRIAR JOGADOR"
           (onClick)="navigateToPlayerSelection()"
         ></app-button>
@@ -119,6 +123,13 @@
 
           <div class="mobile-menu-nav">
 
+            <button
+              type="button"
+              class="custom-header-button mobile-nav-btn"
+              (click)="navigateToMyCampaignsAndClose()"
+            >
+              <span>MINHAS CAMPANHAS</span>
+            </button>
             <button
               type="button"
               class="custom-header-button mobile-nav-btn"

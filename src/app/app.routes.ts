@@ -7,6 +7,8 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { PlayerSelection } from './pages/player-selection/player-selection';
 import { MyCharacters } from './pages/my-characters/my-characters';
 import { CampaignSelection } from './pages/campaign-selection/campaign-selection';
+import { MyCampaigns } from './pages/my-campaigns/my-campaigns';
+import { GameStart } from './pages/game-start/game-start';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -33,6 +35,20 @@ export const routes: Routes = [
   {
     path: 'campaign-selection',
     component: CampaignSelection,
+    canActivate: [authGuard]
+  },
+
+  // Rota protegida - minhas campanhas só acessível com token válido
+  {
+    path: 'my-campaigns',
+    component: MyCampaigns,
+    canActivate: [authGuard]
+  },
+
+  // Rota protegida - início do jogo só acessível com token válido
+  {
+    path: 'game-start',
+    component: GameStart,
     canActivate: [authGuard]
   },
 

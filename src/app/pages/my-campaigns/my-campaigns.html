@@ -1,0 +1,166 @@
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading()">
+  <div class="loading-content">
+    <div class="loading-spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <h2 class="loading-text">Carregando suas campanhas...</h2>
+    <p class="loading-subtitle">Buscando suas aventuras salvas</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="my-campaigns-container" *ngIf="!isLoading()">
+  <!-- Header -->
+  <div class="campaigns-header">
+    <div class="header-content">
+      <div class="header-nav">
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Voltar"
+          (onClick)="goBack()"
+          severity="secondary"
+          [text]="true"
+        ></p-button>
+
+        <div class="header-title-section">
+          <h1 class="header-title">Minhas Campanhas</h1>
+          <p class="header-subtitle">Suas aventuras e progresso</p>
+        </div>
+
+        <div class="header-actions">
+          <p-button
+            icon="pi pi-refresh"
+            (onClick)="refreshCampaigns()"
+            severity="secondary"
+            size="small"
+            [text]="true"
+            pTooltip="Atualizar campanhas"
+            tooltipPosition="bottom"
+            [disabled]="isLoading()"
+          ></p-button>
+          <p-button
+            icon="pi pi-plus"
+            label="Nova Campanha"
+            (onClick)="createNewCampaign()"
+            severity="success"
+            size="small"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaigns Grid -->
+  <div class="campaigns-grid" *ngIf="campaigns().length > 0">
+    <div
+      class="campaign-card-wrapper"
+      *ngFor="let campaign of campaigns(); let i = index"
+    >
+      <div class="campaign-card">
+        <div class="campaign-header-card">
+          <div class="campaign-status">
+            <p-tag
+              [value]="getStatusLabel(campaign.status)"
+              [severity]="getStatusSeverity(campaign.status)"
+              class="status-tag"
+            ></p-tag>
+          </div>
+          <h3 class="campaign-title">{{ campaign.campaignName }}</h3>
+        </div>
+
+        <div class="campaign-description">
+          <p>{{ campaign.description }}</p>
+        </div>
+
+        <div class="campaign-progress" *ngIf="campaign.progress">
+          <div class="progress-info">
+            <span class="progress-label">Progresso</span>
+            <span class="progress-percentage">{{ getProgressPercentage(campaign.progress) }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="getProgressPercentage(campaign.progress)"
+            ></div>
+          </div>
+          <div class="progress-details">
+            <small>Nível {{ campaign.progress.currentLevel }} de {{ campaign.progress.totalLevels }}</small>
+            <small *ngIf="campaign.progress.experience">{{ campaign.progress.experience }} XP</small>
+          </div>
+        </div>
+
+        <div class="campaign-meta">
+          <div class="meta-item">
+            <i class="pi pi-calendar"></i>
+            <span>Iniciada em {{ formatDate(campaign.startDate) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="campaign.lastPlayedDate">
+            <i class="pi pi-clock"></i>
+            <span>Última vez: {{ formatDate(campaign.lastPlayedDate) }}</span>
+          </div>
+        </div>
+
+        <div class="campaign-achievements" *ngIf="campaign.progress?.achievements && campaign.progress.achievements.length > 0">
+          <div class="achievements-header">
+            <i class="pi pi-trophy"></i>
+            <span>Conquistas ({{ campaign.progress.achievements.length }})</span>
+          </div>
+          <div class="achievements-list">
+            <span
+              class="achievement-item"
+              *ngFor="let achievement of campaign.progress.achievements.slice(0, 3)"
+            >
+              {{ achievement }}
+            </span>
+            <span
+              class="more-achievements"
+              *ngIf="campaign.progress.achievements.length > 3"
+            >
+              +{{ campaign.progress.achievements.length - 3 }} mais
+            </span>
+          </div>
+        </div>
+
+        <div class="campaign-actions">
+          <p-button
+            [label]="campaign.status === 'active' ? 'Continuar' : 'Jogar'"
+            [icon]="campaign.status === 'active' ? 'pi pi-play' : 'pi pi-refresh'"
+            (onClick)="selectCampaign(campaign)"
+            [severity]="campaign.status === 'active' ? 'success' : 'primary'"
+            styleClass="select-campaign-button"
+          ></p-button>
+          <p-button
+            label="Deletar"
+            icon="pi pi-trash"
+            (onClick)="deleteCampaign(campaign)"
+            severity="danger"
+            size="small"
+            [outlined]="true"
+            styleClass="delete-campaign-button"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="campaigns().length === 0 && !isLoading()">
+    <p-card styleClass="empty-card">
+      <div class="empty-content">
+        <i class="pi pi-inbox empty-icon"></i>
+        <h3>Nenhuma campanha encontrada</h3>
+        <p>Você ainda não possui nenhuma campanha. Crie sua primeira aventura!</p>
+        <p-button
+          label="Criar Nova Campanha"
+          icon="pi pi-plus"
+          (onClick)="createNewCampaign()"
+          severity="success"
+        ></p-button>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<!-- Toast Messages -->
+<p-toast position="top-right"></p-toast>

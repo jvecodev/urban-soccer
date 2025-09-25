@@ -8,9 +8,13 @@ export interface CampaignGenerateResponse {
 }
 
 export interface CampaignCreate {
-  playerId: string;
+  userCharacterId: string;
   campaignName: string;
   description: string;
+}
+
+export interface CampaignListResponse {
+  campaigns: Campaign[];
 }
 
 export interface CampaignProgress {
@@ -35,3 +39,37 @@ export interface Campaign {
 }
 
 export type CampaignPublic = Campaign;
+
+// Interfaces para o gameplay
+export interface ActionCard {
+  actionId: string;
+  label: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface GameState {
+  score: string;
+  time: number;
+  playerPosition?: string;
+  ballPosition?: string;
+  [key: string]: any;
+}
+
+export interface GameStartResponse {
+  narration: string;
+  availableCards: ActionCard[];
+  gameState: GameState;
+}
+
+export interface GamePlayRequest {
+  actionId: string;
+}
+
+export interface GamePlayResponse {
+  narration: string;
+  availableCards: ActionCard[];
+  gameState: GameState;
+  isGameOver?: boolean;
+  result?: 'win' | 'lose' | 'draw';
+}
