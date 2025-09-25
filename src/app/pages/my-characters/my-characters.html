@@ -14,9 +14,11 @@
   <div class="my-characters-header">
     <div class="header-content">
       <div class="header-nav">
-        <app-button text="Voltar" (onClick)="goBack()"
-          ><i class="pi pi-arrow-left"></i
-        ></app-button>
+        <div class="header-back-button">
+          <app-button text="Voltar" (onClick)="goBack()">
+            <i class="pi pi-arrow-left"></i>
+          </app-button>
+        </div>
 
         <div class="header-title-section">
           <h1 class="header-title">Meus Personagens</h1>
@@ -24,6 +26,26 @@
         </div>
 
         <div class="header-actions">
+          <!-- User Profile Section -->
+          <div class="header-user-section">
+            <!-- Desktop User Avatar -->
+            <div class="desktop-user-avatar" (click)="navigateToDashboard()">
+              <div class="user-avatar-circle">
+                <i class="pi pi-user"></i>
+              </div>
+            </div>
+
+            <!-- Mobile User Profile -->
+            <div class="mobile-user-profile" (click)="navigateToDashboard()">
+              <div class="user-avatar-circle large">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="mobile-user-info">
+                <span class="mobile-username">Usuário</span>
+              </div>
+            </div>
+          </div>
+
           <p-button
             icon="pi pi-refresh"
             (onClick)="refreshCharacters()"

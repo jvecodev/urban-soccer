@@ -208,7 +208,7 @@ export class PlayerSelection implements OnInit {
         });
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/my-characters']);
         }, 2000);
       },
       error: (error) => {
@@ -293,5 +293,9 @@ export class PlayerSelection implements OnInit {
 
   navigateToHome() {
     this.router.navigate(['/home']);
+  }
+
+  navigateToDashboard() {
+    this.router.navigate(['/dashboard']);
   }
 }

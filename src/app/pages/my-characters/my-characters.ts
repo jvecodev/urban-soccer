@@ -366,6 +366,10 @@ export class MyCharacters implements OnInit {
     this.router.navigate(['/home']);
   }
 
+  navigateToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
     if (target) {

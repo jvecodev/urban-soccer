@@ -20,12 +20,10 @@ export class FirstOrganism implements OnInit, OnDestroy {
   isAuthenticated = computed(() => this.authService.isAuthenticated());
   currentUser = computed(() => this.userSignal());
 
-  // Computed para o texto do botão
   buttonText = computed(() =>
     this.isAuthenticated() ? 'Criar Meu Jogador' : 'Entrar para Jogar'
   );
 
-  // Computed para a mensagem de boas-vindas
   welcomeMessage = computed(() => {
     const user = this.currentUser();
     if (this.isAuthenticated() && user?.username) {
@@ -40,11 +38,9 @@ export class FirstOrganism implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Inicializa o signal com o usuário atual
     const currentUser = this.authService.getCurrentUser();
     this.userSignal.set(currentUser);
 
-    // Assina mudanças no estado do usuário
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.userSignal.set(user);
     });

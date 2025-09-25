@@ -17,15 +17,39 @@
   <div class="player-selection-header">
     <div class="header-content">
       <div class="header-nav">
-        <app-button text="Voltar" (onClick)="navigateToHome()"><i class='pi pi-arrow-left'></i></app-button>
+        <div class="header-back-button">
+          <app-button text="Voltar" (onClick)="navigateToHome()">
+            <i class='pi pi-arrow-left'></i>
+          </app-button>
+        </div>
 
         <div class="header-title-section">
           <h1 class="header-title">Seleção de Jogadores</h1>
           <p class="header-subtitle">Escolha seu arquétipo ideal</p>
         </div>
 
+        <div class="header-actions">
+          <!-- User Profile Section -->
+          <div class="header-user-section">
+            <!-- Desktop User Avatar -->
+            <div class="desktop-user-avatar" (click)="navigateToDashboard()">
+              <div class="user-avatar-circle">
+                <i class="pi pi-user"></i>
+              </div>
+            </div>
 
-        <app-button
+            <!-- Mobile User Profile -->
+            <div class="mobile-user-profile" (click)="navigateToDashboard()">
+              <div class="user-avatar-circle large">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="mobile-user-info">
+                <span class="mobile-username">Usuário</span>
+              </div>
+            </div>
+          </div>
+
+          <app-button
             text="MEUS PERSONAGENS"
             (onClick)="navigateToMyCharacters()"
           ></app-button>

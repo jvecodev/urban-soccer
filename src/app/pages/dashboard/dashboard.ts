@@ -99,6 +99,9 @@ export class Dashboard implements OnInit {
       });
     }
   }
+   navigateToMyCharacters(): void {
+        this.router.navigate(['/my-characters']);
+    }
 
   onEditProfile(): void {
     const user = this.currentUser();
