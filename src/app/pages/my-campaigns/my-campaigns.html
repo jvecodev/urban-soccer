@@ -73,27 +73,38 @@
           <p>{{ campaign.description }}</p>
         </div>
 
-        <div class="campaign-progress" *ngIf="campaign.progress">
+        <div class="campaign-progress">
           <div class="progress-info">
             <span class="progress-label">Progresso</span>
-            <span class="progress-percentage">{{ getProgressPercentage(campaign.progress) }}%</span>
+            <span class="progress-percentage" *ngIf="campaign.progress">{{ getProgressPercentage(campaign.progress) }}%</span>
+            <span class="progress-percentage" *ngIf="!campaign.progress || !isCampaignStarted(campaign)">0%</span>
           </div>
           <div class="progress-bar">
             <div
               class="progress-fill"
-              [style.width.%]="getProgressPercentage(campaign.progress)"
+              [style.width.%]="campaign.progress ? getProgressPercentage(campaign.progress) : 0"
+              [class.not-started]="!isCampaignStarted(campaign)"
             ></div>
           </div>
           <div class="progress-details">
-            <small>Nível {{ campaign.progress.currentLevel }} de {{ campaign.progress.totalLevels }}</small>
-            <small *ngIf="campaign.progress.experience">{{ campaign.progress.experience }} XP</small>
+            <small *ngIf="campaign.progress && isCampaignStarted(campaign)">
+              Lance {{ campaign.progress.time || 0 }} de 10 | Nível {{ campaign.progress.level || 1 }}
+            </small>
+            <small *ngIf="!isCampaignStarted(campaign)">Campanha não iniciada</small>
+            <small *ngIf="campaign.progress && isCampaignStarted(campaign) && campaign.progress.currentMission">
+              {{ campaign.progress.currentMission }}
+            </small>
           </div>
         </div>
 
         <div class="campaign-meta">
-          <div class="meta-item">
+          <div class="meta-item" *ngIf="campaign.startDate">
             <i class="pi pi-calendar"></i>
             <span>Iniciada em {{ formatDate(campaign.startDate) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="!campaign.startDate">
+            <i class="pi pi-calendar"></i>
+            <span>Aguardando início</span>
           </div>
           <div class="meta-item" *ngIf="campaign.lastPlayedDate">
             <i class="pi pi-clock"></i>
@@ -101,33 +112,30 @@
           </div>
         </div>
 
-        <div class="campaign-achievements" *ngIf="campaign.progress?.achievements && campaign.progress.achievements.length > 0">
-          <div class="achievements-header">
-            <i class="pi pi-trophy"></i>
-            <span>Conquistas ({{ campaign.progress.achievements.length }})</span>
+        <!-- Placar da Partida -->
+        <div class="campaign-score" *ngIf="campaign.progress && isCampaignStarted(campaign)">
+          <div class="score-header">
+            <i class="pi pi-flag"></i>
+            <span>Placar Atual</span>
           </div>
-          <div class="achievements-list">
-            <span
-              class="achievement-item"
-              *ngFor="let achievement of campaign.progress.achievements.slice(0, 3)"
-            >
-              {{ achievement }}
-            </span>
-            <span
-              class="more-achievements"
-              *ngIf="campaign.progress.achievements.length > 3"
-            >
-              +{{ campaign.progress.achievements.length - 3 }} mais
-            </span>
+          <div class="score-display">
+            <div class="score-team player">
+              <span class="team-label">Você</span>
+              <span class="score-value">{{ campaign.progress.score || 0 }}</span>
+            </div>
+            <div class="score-separator">x</div>
+            <div class="score-team opponent">
+              <span class="team-label">Adversário</span>
+              <span class="score-value">{{ campaign.progress.opponent_score || 0 }}</span>
+            </div>
           </div>
         </div>
-
         <div class="campaign-actions">
           <p-button
-            [label]="campaign.status === 'active' ? 'Continuar' : 'Jogar'"
-            [icon]="campaign.status === 'active' ? 'pi pi-play' : 'pi pi-refresh'"
+            [label]="getButtonText(campaign)"
+            [icon]="getButtonIcon(campaign)"
             (onClick)="selectCampaign(campaign)"
-            [severity]="campaign.status === 'active' ? 'success' : 'primary'"
+            [severity]="getButtonSeverity(campaign)"
             styleClass="select-campaign-button"
           ></p-button>
           <p-button
@@ -161,6 +169,149 @@
     </p-card>
   </div>
 </div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<p-dialog
+  [(visible)]="showDeleteModal"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="delete-confirmation-modal"
+  header="Confirmar Exclusão"
+  [style]="{ width: '400px' }"
+>
+  <div class="modal-content" *ngIf="campaignToDelete()">
+    <div class="modal-icon">
+      <i class="pi pi-exclamation-triangle"></i>
+    </div>
+
+    <div class="modal-message">
+      <h4>Tem certeza que deseja deletar esta campanha?</h4>
+      <p>
+        <strong>{{ campaignToDelete()?.campaignName }}</strong>
+      </p>
+      <p class="warning-text">
+        Esta ação não pode ser desfeita. Todo o progresso será perdido permanentemente.
+      </p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="modal-actions">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="closeDeleteModal()"
+        severity="secondary"
+        [outlined]="true"
+        styleClass="modal-cancel-btn"
+      ></p-button>
+      <p-button
+        label="Deletar"
+        icon="pi pi-trash"
+        (onClick)="confirmDeleteCampaign()"
+        severity="danger"
+        styleClass="modal-confirm-btn"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Modal de Resumo da Campanha -->
+<p-dialog
+  [(visible)]="showSummaryModal"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="campaign-summary-modal"
+  header="Resumo da Campanha"
+  [style]="{ width: '500px' }"
+>
+  <div class="summary-content" *ngIf="campaignToReview()">
+    <div class="campaign-header-summary">
+      <h3>{{ campaignToReview()?.campaignName }}</h3>
+      <p class="campaign-desc">{{ campaignToReview()?.description }}</p>
+    </div>
+
+    <div class="result-banner" [ngClass]="getCampaignResult(campaignToReview()!).severity">
+      <i class="pi" [ngClass]="{
+        'pi-trophy': getCampaignResult(campaignToReview()!).result === 'Vitória',
+        'pi-times-circle': getCampaignResult(campaignToReview()!).result === 'Derrota',
+        'pi-minus-circle': getCampaignResult(campaignToReview()!).result === 'Empate'
+      }"></i>
+      <span class="result-text">{{ getCampaignResult(campaignToReview()!).result }}</span>
+    </div>
+
+    <div class="summary-stats">
+      <div class="stat-group">
+        <div class="stat-item">
+          <i class="pi pi-flag stat-icon"></i>
+          <div class="stat-content">
+            <span class="stat-label">Placar Final</span>
+            <span class="stat-value">{{ campaignToReview()?.progress?.score || 0 }} x {{ campaignToReview()?.progress?.opponent_score || 0 }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <i class="pi pi-clock stat-icon"></i>
+          <div class="stat-content">
+            <span class="stat-label">Lances Jogados</span>
+            <span class="stat-value">{{ campaignToReview()?.progress?.time || 0 }}/10</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <i class="pi pi-star stat-icon"></i>
+          <div class="stat-content">
+            <span class="stat-label">Nível Alcançado</span>
+            <span class="stat-value">{{ campaignToReview()?.progress?.level || 1 }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item" *ngIf="campaignToReview()?.progress?.currentMission">
+          <i class="pi pi-target stat-icon"></i>
+          <div class="stat-content">
+            <span class="stat-label">Missão</span>
+            <span class="stat-value">{{ campaignToReview()?.progress?.currentMission }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item" *ngIf="campaignToReview()?.progress?.gameContext">
+          <i class="pi pi-map-marker stat-icon"></i>
+          <div class="stat-content">
+            <span class="stat-label">Contexto Final</span>
+            <span class="stat-value">{{ campaignToReview()?.progress?.gameContext }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="campaign-dates">
+      <div class="date-item" *ngIf="campaignToReview()?.startDate">
+        <i class="pi pi-calendar"></i>
+        <span>Iniciada: {{ formatDate(campaignToReview()!.startDate!) }}</span>
+      </div>
+      <div class="date-item" *ngIf="campaignToReview()?.lastPlayedDate">
+        <i class="pi pi-clock"></i>
+        <span>Finalizada: {{ formatDate(campaignToReview()!.lastPlayedDate!) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="summary-actions">
+      <p-button
+        label="Fechar"
+        icon="pi pi-times"
+        (onClick)="closeSummaryModal()"
+        severity="secondary"
+        styleClass="summary-close-btn"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast Messages -->
 <p-toast position="top-right"></p-toast>

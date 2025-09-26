@@ -32,6 +32,16 @@
 
         <div class="header-actions">
           <p-button
+            icon="pi pi-pause"
+            label="Pausar"
+            (onClick)="showPauseCampaignModal()"
+            severity="secondary"
+            size="small"
+            [outlined]="true"
+            pTooltip="Pausar e sair da campanha"
+            tooltipPosition="bottom"
+          ></p-button>
+          <p-button
             icon="pi pi-home"
             label="Campanhas"
             (onClick)="backToCampaigns()"
@@ -68,24 +78,39 @@
           <h3>Narração</h3>
         </div>
         <div class="narration-controls">
-          <p-button
-            [icon]="isSpeaking() ? 'pi pi-pause' : 'pi pi-play'"
-            [label]="isSpeaking() ? 'Pausar' : 'Repetir'"
-            (onClick)="toggleNarration()"
-            severity="secondary"
-            size="small"
-            [outlined]="true"
-          ></p-button>
-          <p-button
-            icon="pi pi-stop"
-            (onClick)="stopNarration()"
-            severity="danger"
-            size="small"
-            [outlined]="true"
-            [disabled]="!isSpeaking()"
-            pTooltip="Parar narração"
-            tooltipPosition="bottom"
-          ></p-button>
+          <div class="volume-control">
+            <i class="pi pi-volume-down volume-icon"></i>
+            <p-slider
+              [ngModel]="narrationVolume()"
+              (ngModelChange)="onVolumeChange($event || 0)"
+              [min]="0"
+              [max]="100"
+              [step]="5"
+              styleClass="volume-slider"
+            ></p-slider>
+            <i class="pi pi-volume-up volume-icon"></i>
+            <span class="volume-label">{{ narrationVolume() }}%</span>
+          </div>
+          <div class="playback-controls">
+            <p-button
+              [icon]="isPaused() ? 'pi pi-play' : (isSpeaking() ? 'pi pi-pause' : 'pi pi-play')"
+              [label]="isPaused() ? 'Retomar' : (isSpeaking() ? 'Pausar' : 'Repetir')"
+              (onClick)="toggleNarration()"
+              severity="secondary"
+              size="small"
+              [outlined]="true"
+            ></p-button>
+            <p-button
+              icon="pi pi-stop"
+              (onClick)="stopNarration()"
+              severity="danger"
+              size="small"
+              [outlined]="true"
+              [disabled]="!isSpeaking() && !isPaused()"
+              pTooltip="Parar narração"
+              tooltipPosition="bottom"
+            ></p-button>
+          </div>
         </div>
       </div>
       <div class="narration-content">
@@ -183,6 +208,75 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Pausa da Campanha -->
+<p-dialog
+  [(visible)]="showPauseModal"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="pause-campaign-modal"
+  header="Pausar Campanha"
+  [style]="{ width: '450px' }"
+>
+  <div class="pause-modal-content">
+    <div class="pause-icon">
+      <i class="pi pi-pause-circle"></i>
+    </div>
+
+    <div class="pause-message">
+      <h4>Deseja pausar a campanha?</h4>
+      <p>Você pode escolher uma das opções abaixo:</p>
+
+      <div class="pause-options">
+        <div class="option-card save-option">
+          <i class="pi pi-save"></i>
+          <div class="option-content">
+            <h5>Pausar e Salvar</h5>
+            <p>Salva seu progresso atual e retorna ao menu principal</p>
+          </div>
+        </div>
+
+        <div class="option-card exit-option">
+          <i class="pi pi-sign-out"></i>
+          <div class="option-content">
+            <h5>Sair sem Salvar</h5>
+            <p>Retorna ao menu sem salvar o progresso atual</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="pause-modal-actions">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="closePauseModal()"
+        severity="secondary"
+        [outlined]="true"
+        styleClass="pause-cancel-btn"
+      ></p-button>
+      <p-button
+        label="Sair sem Salvar"
+        icon="pi pi-sign-out"
+        (onClick)="exitWithoutSaving()"
+        severity="danger"
+        [outlined]="true"
+        styleClass="pause-exit-btn"
+      ></p-button>
+      <p-button
+        label="Pausar e Salvar"
+        icon="pi pi-save"
+        (onClick)="pauseAndExit()"
+        severity="success"
+        styleClass="pause-save-btn"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast Messages -->
 <p-toast position="top-right"></p-toast>

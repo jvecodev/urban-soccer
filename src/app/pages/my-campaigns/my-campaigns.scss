@@ -177,6 +177,11 @@
               background: linear-gradient(90deg, var(--ciano-eletrico), var(--amarelo-dourado));
               border-radius: 4px;
               transition: width 0.3s ease;
+
+              &.not-started {
+                background: rgba(255, 255, 255, 0.3);
+                animation: pulse 2s infinite;
+              }
             }
           }
 
@@ -213,44 +218,105 @@
           }
         }
 
-        .campaign-achievements {
+        .campaign-score {
           margin-bottom: 1.5rem;
 
-          .achievements-header {
+          .score-header {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-            color: var(--amarelo-dourado);
-            font-weight: 500;
 
             i {
               color: var(--amarelo-dourado);
+              font-size: 1rem;
+            }
+
+            span {
+              font-size: 0.9rem;
+              color: var(--ciano-eletrico);
+              font-weight: 500;
             }
           }
 
-          .achievements-list {
+          .score-display {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
 
-            .achievement-item {
-              background: rgba(255, 255, 255, 0.1);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              padding: 0.25rem 0.75rem;
-              font-size: 0.8rem;
-              color: rgba(255, 255, 255, 0.8);
+            .score-team {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 0.5rem;
+
+              .team-label {
+                font-size: 0.8rem;
+                color: rgba(255, 255, 255, 0.7);
+                text-transform: uppercase;
+                font-weight: 500;
+              }
+
+              .score-value {
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--branco-puro);
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+              }
+
+              &.player .score-value {
+                color: var(--ciano-eletrico);
+              }
+
+              &.opponent .score-value {
+                color: #dc3545;
+              }
             }
 
-            .more-achievements {
-              background: var(--amarelo-dourado);
-              color: var(--azul-escuro);
-              border-radius: 12px;
-              padding: 0.25rem 0.75rem;
-              font-size: 0.8rem;
+            .score-separator {
+              font-size: 1.5rem;
+              font-weight: 600;
+              color: rgba(255, 255, 255, 0.5);
+            }
+          }
+        }
+
+        .campaign-context {
+          margin-bottom: 1.5rem;
+
+          .context-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+
+            i {
+              color: var(--amarelo-dourado);
+              font-size: 1rem;
+            }
+
+            span {
+              font-size: 0.9rem;
+              color: var(--ciano-eletrico);
               font-weight: 500;
+            }
+          }
+
+          .context-info {
+            .context-value {
+              background: rgba(255, 255, 255, 0.1);
+              color: var(--branco-puro);
+              padding: 0.5rem 1rem;
+              border-radius: 8px;
+              font-size: 0.9rem;
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              display: inline-block;
+              text-transform: capitalize;
             }
           }
         }
@@ -370,6 +436,15 @@
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 .campaign-card {
   animation: fadeInUp 0.6s ease forwards;
 }
@@ -380,3 +455,296 @@
 .campaign-card:nth-child(4) { animation-delay: 0.4s; }
 .campaign-card:nth-child(5) { animation-delay: 0.5s; }
 .campaign-card:nth-child(6) { animation-delay: 0.6s; }
+
+// Modal de confirmação de exclusão
+:host ::ng-deep .delete-confirmation-modal {
+  .p-dialog {
+    background: var(--azul-escuro);
+    border: 2px solid var(--ciano-eletrico);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(135deg, var(--azul-primario), var(--azul-escuro));
+    color: var(--branco-puro);
+    border-bottom: 1px solid var(--ciano-eletrico);
+    border-radius: 14px 14px 0 0;
+    padding: 1.5rem 2rem;
+
+    .p-dialog-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--branco-puro);
+    }
+
+    .p-dialog-header-icon {
+      color: var(--branco-puro);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--ciano-eletrico);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: var(--azul-escuro);
+    color: var(--branco-puro);
+    padding: 2rem;
+  }
+
+  .p-dialog-footer {
+    background: var(--azul-escuro);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 14px 14px;
+    padding: 1.5rem 2rem;
+  }
+}
+
+.modal-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  .modal-icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: rgba(220, 53, 69, 0.2);
+    border: 2px solid #dc3545;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 1.8rem;
+      color: #dc3545;
+    }
+  }
+
+  .modal-message {
+    flex: 1;
+
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--branco-puro);
+      margin: 0 0 1rem 0;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 0 0.8rem 0;
+      color: var(--branco-puro);
+      line-height: 1.5;
+
+      strong {
+        color: var(--ciano-eletrico);
+        font-weight: 600;
+      }
+    }
+
+    .warning-text {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-style: italic;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  .modal-cancel-btn {
+    min-width: 100px;
+  }
+
+  .modal-confirm-btn {
+    min-width: 100px;
+  }
+}
+
+// Modal de resumo da campanha
+:host ::ng-deep .campaign-summary-modal {
+  .p-dialog {
+    background: var(--azul-escuro);
+    border: 2px solid var(--ciano-eletrico);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(135deg, var(--azul-primario), var(--azul-escuro));
+    color: var(--branco-puro);
+    border-bottom: 1px solid var(--ciano-eletrico);
+    border-radius: 14px 14px 0 0;
+    padding: 1.5rem 2rem;
+
+    .p-dialog-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--branco-puro);
+    }
+
+    .p-dialog-header-icon {
+      color: var(--branco-puro);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--ciano-eletrico);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: var(--azul-escuro);
+    color: var(--branco-puro);
+    padding: 2rem;
+  }
+
+  .p-dialog-footer {
+    background: var(--azul-escuro);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 14px 14px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+  }
+}
+
+.summary-content {
+  .campaign-header-summary {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ciano-eletrico);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .campaign-desc {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  .result-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 2px solid;
+
+    &.success {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+
+    &.danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    &.warning {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    i {
+      font-size: 2rem;
+    }
+
+    .result-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+
+  .summary-stats {
+    margin-bottom: 2rem;
+
+    .stat-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      .stat-icon {
+        color: var(--amarelo-dourado);
+        font-size: 1.2rem;
+        width: 1.5rem;
+        text-align: center;
+      }
+
+      .stat-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .stat-label {
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.9rem;
+        }
+
+        .stat-value {
+          color: var(--branco-puro);
+          font-weight: 600;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .campaign-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+
+      i {
+        color: var(--ciano-eletrico);
+      }
+    }
+  }
+}
+
+.summary-actions {
+  display: flex;
+  justify-content: center;
+
+  .summary-close-btn {
+    min-width: 120px;
+  }
+}

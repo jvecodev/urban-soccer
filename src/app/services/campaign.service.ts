@@ -73,6 +73,15 @@ export class CampaignService {
   }
 
   /**
+   * Resume uma campanha já iniciada e retorna o estado atual do jogo
+   * @param campaignId ID da campanha
+   * @returns Observable com o estado atual do jogo
+   */
+  resumeGame(campaignId: string): Observable<GameStartResponse> {
+    return this.api.get<GameStartResponse>(`/campaigns/${campaignId}/resume`);
+  }
+
+  /**
    * Executa uma ação no jogo e retorna o novo estado
    * @param campaignId ID da campanha
    * @param gamePlayData Dados da ação escolhida

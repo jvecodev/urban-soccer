@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 import { CampaignService } from '../../services/campaign.service';
@@ -23,6 +24,7 @@ import { Auth } from '../../services/auth';
     ToastModule,
     SkeletonModule,
     TagModule,
+    DialogModule,
   ],
   templateUrl: './my-campaigns.html',
   styleUrls: ['./my-campaigns.scss'],
@@ -31,6 +33,14 @@ import { Auth } from '../../services/auth';
 export class MyCampaigns implements OnInit {
   isLoading = signal(true);
   campaigns = signal<Campaign[]>([]);
+
+  // Modal de confirmação de exclusão
+  showDeleteModal = signal(false);
+  campaignToDelete = signal<Campaign | null>(null);
+
+  // Modal de resumo da campanha
+  showSummaryModal = signal(false);
+  campaignToReview = signal<Campaign | null>(null);
 
   constructor(
     private router: Router,
@@ -90,18 +100,69 @@ export class MyCampaigns implements OnInit {
   }
 
   selectCampaign(campaign: Campaign) {
+    const campaignId = campaign.id || (campaign as any)._id;
 
+    if (!campaignId) {
+      console.error('❌ ID da campanha não encontrado:', campaign);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'ID da campanha não encontrado.',
+      });
+      return;
+    }
 
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
 
+    // Verifica o status da campanha para decidir a ação
+    if (campaign.status === 'abandoned' || campaign.status === 'completed') {
+      this.reviewCampaign(campaign);
+    } else if (this.isCampaignStarted(campaign)) {
+      this.resumeCampaign(campaign);
+    } else {
+      this.startCampaign(campaign);
+    }
+  }
+
+  private startCampaign(campaign: Campaign) {
     this.messageService.add({
       severity: 'success',
-      summary: 'Campanha Selecionada!',
-      detail: `${campaign.campaignName} foi selecionada!`,
+      summary: 'Iniciando Campanha!',
+      detail: `Iniciando ${campaign.campaignName}...`,
     });
 
     setTimeout(() => {
-      this.router.navigate(['/game-start']);
+      this.router.navigate(['/game-start'], {
+        queryParams: { action: 'start', campaignId: campaign.id || (campaign as any)._id }
+      });
+    }, 1000);
+  }
+
+  private resumeCampaign(campaign: Campaign) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Continuando Campanha!',
+      detail: `Continuando ${campaign.campaignName}...`,
+    });
+
+    setTimeout(() => {
+      this.router.navigate(['/game-start'], {
+        queryParams: { action: 'resume', campaignId: campaign.id || (campaign as any)._id }
+      });
+    }, 1000);
+  }
+
+  private reviewCampaign(campaign: Campaign) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Revisando Campanha!',
+      detail: `Revisando ${campaign.campaignName}...`,
+    });
+
+    // Para campanhas finalizadas, podemos mostrar um resumo ou redirecionar para uma página de revisão
+    // Por enquanto, vou mostrar os detalhes da campanha sem tentar fazer resume
+    setTimeout(() => {
+      this.showCampaignSummary(campaign);
     }, 1000);
   }
 
@@ -110,54 +171,89 @@ export class MyCampaigns implements OnInit {
   }
 
   deleteCampaign(campaign: Campaign) {
-    if (confirm(`Tem certeza que deseja deletar a campanha "${campaign.campaignName}"? Esta ação não pode ser desfeita.`)) {
-      const campaignId = campaign.id || (campaign as any)._id;
+    this.campaignToDelete.set(campaign);
+    this.showDeleteModal.set(true);
+  }
 
-      if (!campaignId) {
-        console.error('❌ ID da campanha não encontrado:', campaign);
+  confirmDeleteCampaign() {
+    const campaign = this.campaignToDelete();
+    if (!campaign) return;
+
+    const campaignId = campaign.id || (campaign as any)._id;
+
+    if (!campaignId) {
+      console.error('❌ ID da campanha não encontrado:', campaign);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'ID da campanha não encontrado.',
+      });
+      this.closeDeleteModal();
+      return;
+    }
+
+    this.campaignService.deleteCampaign(campaignId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Campanha Deletada!',
+          detail: `${campaign.campaignName} foi deletada com sucesso.`,
+        });
+
+        const currentCampaigns = this.campaigns();
+        const updatedCampaigns = currentCampaigns.filter(c => (c.id || (c as any)._id) !== campaignId);
+        this.campaigns.set(updatedCampaigns);
+        this.closeDeleteModal();
+      },
+      error: (error) => {
+        console.error('❌ Erro ao deletar campanha:', error);
+        let errorMessage = 'Erro ao deletar campanha.';
+
+        if (error.status === 401) {
+          errorMessage = 'Sessão expirada. Faça login novamente.';
+          this.auth.logout();
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        } else if (error.status === 404) {
+          errorMessage = 'Campanha não encontrada.';
+        } else if (error.status === 0) {
+          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+        }
+
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'ID da campanha não encontrado.',
+          detail: errorMessage,
         });
-        return;
-      }
+        this.closeDeleteModal();
+      },
+    });
+  }
 
-      this.campaignService.deleteCampaign(campaignId).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Campanha Deletada!',
-            detail: `${campaign.campaignName} foi deletada com sucesso.`,
-          });
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.campaignToDelete.set(null);
+  }
 
-          const currentCampaigns = this.campaigns();
-          const updatedCampaigns = currentCampaigns.filter(c => (c.id || (c as any)._id) !== campaignId);
-          this.campaigns.set(updatedCampaigns);
-        },
-        error: (error) => {
-          console.error('❌ Erro ao deletar campanha:', error);
-          let errorMessage = 'Erro ao deletar campanha.';
+  private showCampaignSummary(campaign: Campaign) {
+    this.campaignToReview.set(campaign);
+    this.showSummaryModal.set(true);
+  }
 
-          if (error.status === 401) {
-            errorMessage = 'Sessão expirada. Faça login novamente.';
-            this.auth.logout();
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2000);
-          } else if (error.status === 404) {
-            errorMessage = 'Campanha não encontrada.';
-          } else if (error.status === 0) {
-            errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
-          }
+  closeSummaryModal() {
+    this.showSummaryModal.set(false);
+    this.campaignToReview.set(null);
+  }
 
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: errorMessage,
-          });
-        },
-      });
+  getCampaignResult(campaign: Campaign): { result: string; severity: string } {
+    const progress = campaign.progress;
+    if (progress.score > progress.opponent_score) {
+      return { result: 'Vitória', severity: 'success' };
+    } else if (progress.score < progress.opponent_score) {
+      return { result: 'Derrota', severity: 'danger' };
+    } else {
+      return { result: 'Empate', severity: 'warning' };
     }
   }
 
@@ -173,12 +269,16 @@ export class MyCampaigns implements OnInit {
 
   getStatusSeverity(status: string): "success" | "info" | "warning" | "danger" | "secondary" | "contrast" | undefined {
     switch (status) {
+      case 'not_started':
+        return 'secondary';
       case 'active':
         return 'success';
       case 'completed':
         return 'info';
       case 'paused':
         return 'warning';
+      case 'abandoned':
+        return 'danger';
       default:
         return 'secondary';
     }
@@ -186,12 +286,16 @@ export class MyCampaigns implements OnInit {
 
   getStatusLabel(status: string): string {
     switch (status) {
+      case 'not_started':
+        return 'Não Iniciada';
       case 'active':
         return 'Ativa';
       case 'completed':
         return 'Concluída';
       case 'paused':
         return 'Pausada';
+      case 'abandoned':
+        return 'Finalizada';
       default:
         return 'Desconhecido';
     }
@@ -207,9 +311,72 @@ export class MyCampaigns implements OnInit {
   }
 
   getProgressPercentage(progress: any): number {
-    if (!progress || !progress.totalLevels || progress.totalLevels === 0) {
+    if (!progress) {
       return 0;
     }
-    return Math.round((progress.currentLevel / progress.totalLevels) * 100);
+
+    // Se tem time (lances jogados), usa como base do progresso
+    if (progress.time && progress.time > 0) {
+      const maxLances = 10; // Máximo de lances por campanha
+      return Math.min(Math.round((progress.time / maxLances) * 100), 100);
+    }
+
+    // Fallback para estrutura antiga
+    if (progress.totalLevels && progress.totalLevels > 0) {
+      return Math.round((progress.currentLevel / progress.totalLevels) * 100);
+    }
+
+    return 0;
+  }
+
+  /**
+   * Verifica se a campanha já foi iniciada
+   */
+  isCampaignStarted(campaign: Campaign): boolean {
+    return campaign.status === 'active' ||
+           campaign.status === 'abandoned' ||
+           campaign.status === 'completed' ||
+           campaign.hasGameStarted === true ||
+           !!campaign.lastPlayedDate ||
+           (campaign.progress && campaign.progress.time > 0);
+  }
+
+  /**
+   * Retorna o texto do botão baseado no status da campanha
+   */
+  getButtonText(campaign: Campaign): string {
+    if (campaign.status === 'abandoned' || campaign.status === 'completed') {
+      return 'Revisar';
+    }
+    if (this.isCampaignStarted(campaign)) {
+      return 'Continuar';
+    }
+    return 'Iniciar';
+  }
+
+  /**
+   * Retorna o ícone do botão baseado no status da campanha
+   */
+  getButtonIcon(campaign: Campaign): string {
+    if (campaign.status === 'abandoned' || campaign.status === 'completed') {
+      return 'pi pi-eye';
+    }
+    if (this.isCampaignStarted(campaign)) {
+      return 'pi pi-play';
+    }
+    return 'pi pi-play-circle';
+  }
+
+  /**
+   * Retorna a severidade do botão baseado no status da campanha
+   */
+  getButtonSeverity(campaign: Campaign): "success" | "info" | "danger" | "help" | "primary" | "secondary" | "contrast" | undefined {
+    if (campaign.status === 'abandoned' || campaign.status === 'completed') {
+      return 'info';
+    }
+    if (this.isCampaignStarted(campaign)) {
+      return 'success';
+    }
+    return 'primary';
   }
 }

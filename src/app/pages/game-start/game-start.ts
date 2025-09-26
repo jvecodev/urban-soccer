@@ -1,6 +1,7 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
@@ -8,6 +9,8 @@ import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { SliderModule } from 'primeng/slider';
 import { MessageService } from 'primeng/api';
 
 import { CampaignService } from '../../services/campaign.service';
@@ -19,12 +22,15 @@ import { Auth } from '../../services/auth';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ButtonModule,
     CardModule,
     ToastModule,
     SkeletonModule,
     TagModule,
     TooltipModule,
+    DialogModule,
+    SliderModule,
   ],
   templateUrl: './game-start.html',
   styleUrls: ['./game-start.scss'],
@@ -44,8 +50,16 @@ export class GameStart implements OnInit, OnDestroy {
   isSpeaking = signal(false);
   audioElement: HTMLAudioElement | null = null;
 
+  // Modal de pausa da campanha
+  showPauseModal = signal(false);
+
+  // Controle de volume da narração
+  narrationVolume = signal(80);
+  isPaused = signal(false);
+
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private location: Location,
     private messageService: MessageService,
     private campaignService: CampaignService,
@@ -127,9 +141,18 @@ export class GameStart implements OnInit, OnDestroy {
       return;
     }
 
+    // Verifica se é para iniciar ou resumir baseado nos query parameters
+    const action = this.route.snapshot.queryParams['action'] || 'start';
 
-    this.campaignService.startGame(campaignId).subscribe({
+    const gameObservable = action === 'resume'
+      ? this.campaignService.resumeGame(campaignId)
+      : this.campaignService.startGame(campaignId);
+
+    console.log(`🎮 ${action === 'resume' ? 'Resumindo' : 'Iniciando'} jogo para campanha:`, campaignId);
+
+    gameObservable.subscribe({
       next: (gameData: GameStartResponse) => {
+        console.log('🎮 Dados do jogo carregados:', gameData);
 
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
@@ -141,10 +164,12 @@ export class GameStart implements OnInit, OnDestroy {
         this.speakNarration(gameData.narration);
       },
       error: (error) => {
-        console.error('❌ Erro ao iniciar jogo:', error);
+        console.error('❌ Erro ao carregar jogo:', error);
         this.isLoading.set(false);
 
-        let errorMessage = 'Erro ao iniciar o jogo.';
+        let errorMessage = action === 'resume'
+          ? 'Erro ao continuar o jogo.'
+          : 'Erro ao iniciar o jogo.';
 
         if (error.status === 401) {
           errorMessage = 'Sessão expirada. Faça login novamente.';
@@ -259,11 +284,16 @@ export class GameStart implements OnInit, OnDestroy {
         const audioUrl = URL.createObjectURL(response);
         this.audioElement = new Audio(audioUrl);
 
+        // Define o volume baseado no controle
+        this.audioElement.volume = this.narrationVolume() / 100;
+
         this.audioElement.onloadeddata = () => {
+          console.log('🎵 Áudio carregado do backend');
         };
 
         this.audioElement.onended = () => {
           this.isSpeaking.set(false);
+          this.isPaused.set(false);
           if (this.audioElement) {
             URL.revokeObjectURL(this.audioElement.src);
             this.audioElement = null;
@@ -273,6 +303,7 @@ export class GameStart implements OnInit, OnDestroy {
         this.audioElement.onerror = () => {
           console.error('❌ Erro ao reproduzir áudio do backend');
           this.isSpeaking.set(false);
+          this.isPaused.set(false);
           this.speakWithBrowser(text);
         };
 
@@ -295,7 +326,7 @@ export class GameStart implements OnInit, OnDestroy {
       utterance.lang = 'pt-BR';
       utterance.rate = 0.9;
       utterance.pitch = 1;
-      utterance.volume = 0.8;
+      utterance.volume = this.narrationVolume() / 100;
 
       utterance.onstart = () => {
       };
@@ -335,8 +366,10 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   toggleNarration() {
-    if (this.isSpeaking()) {
-      this.stopNarration();
+    if (this.isSpeaking() && !this.isPaused()) {
+      this.pauseNarration();
+    } else if (this.isPaused()) {
+      this.resumeNarration();
     } else {
       const currentText = this.currentNarration();
       if (currentText) {
@@ -345,12 +378,89 @@ export class GameStart implements OnInit, OnDestroy {
     }
   }
 
+  pauseNarration() {
+    if (this.audioElement && !this.audioElement.paused) {
+      this.audioElement.pause();
+      this.isPaused.set(true);
+      console.log('⏸️ Narração pausada');
+    } else if ('speechSynthesis' in window && speechSynthesis.speaking) {
+      speechSynthesis.pause();
+      this.isPaused.set(true);
+      console.log('⏸️ Narração pausada (browser)');
+    }
+  }
+
+  resumeNarration() {
+    if (this.audioElement && this.audioElement.paused) {
+      this.audioElement.play();
+      this.isPaused.set(false);
+      console.log('▶️ Narração retomada');
+    } else if ('speechSynthesis' in window && speechSynthesis.paused) {
+      speechSynthesis.resume();
+      this.isPaused.set(false);
+      console.log('▶️ Narração retomada (browser)');
+    }
+  }
+
+  onVolumeChange(volume: number) {
+    this.narrationVolume.set(volume);
+
+    // Atualiza o volume do áudio ativo
+    if (this.audioElement) {
+      this.audioElement.volume = volume / 100;
+    }
+
+    // Para TTS do browser não há como alterar o volume em tempo real
+    // mas será aplicado na próxima narração
+  }
+
   goBack(): void {
     this.location.back();
   }
 
   backToCampaigns(): void {
     this.router.navigate(['/my-campaigns']);
+  }
+
+  // Métodos para controle de pausa da campanha
+  showPauseCampaignModal(): void {
+    this.showPauseModal.set(true);
+  }
+
+  closePauseModal(): void {
+    this.showPauseModal.set(false);
+  }
+
+  pauseAndExit(): void {
+    // Para a narração se estiver tocando
+    this.stopNarration();
+
+    // Aqui poderia chamar uma API para salvar o estado atual da campanha
+    // Por enquanto, apenas volta para a lista de campanhas
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Campanha Pausada',
+      detail: 'Seu progresso foi salvo. Você pode continuar depois.',
+    });
+
+    setTimeout(() => {
+      this.router.navigate(['/my-campaigns']);
+    }, 1500);
+  }
+
+  exitWithoutSaving(): void {
+    // Para a narração se estiver tocando
+    this.stopNarration();
+
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Saindo da Campanha',
+      detail: 'Retornando à lista de campanhas...',
+    });
+
+    setTimeout(() => {
+      this.router.navigate(['/my-campaigns']);
+    }, 1000);
   }
 
   getCampaignName(): string {

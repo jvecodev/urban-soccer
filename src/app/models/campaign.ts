@@ -18,24 +18,32 @@ export interface CampaignListResponse {
 }
 
 export interface CampaignProgress {
-  currentLevel: number;
-  totalLevels: number;
-  experience: number;
-  achievements: string[];
+  level: number;
+  score: number;
+  opponent_score: number;
+  time: number;
+  currentMission: string;
+  inventory: any[];
+  availableCards: any[];
+  gameContext: string;
 }
 
 export interface Campaign {
-  id: string;
+  id?: string;
+  _id?: string; // MongoDB ObjectId
   userId: string;
-  playerId: string;
+  userCharacterId: string;
   campaignName: string;
   description: string;
-  status: 'active' | 'completed' | 'paused';
+  status: 'not_started' | 'active' | 'completed' | 'paused' | 'abandoned';
   progress: CampaignProgress;
-  startDate: string;
-  lastPlayedDate: string;
+  startDate?: string;
+  lastPlayedDate?: string;
   createdAt: string;
   updatedAt: string;
+  // Campos adicionais para controle do jogo
+  hasGameStarted?: boolean;
+  gameState?: GameState;
 }
 
 export type CampaignPublic = Campaign;
