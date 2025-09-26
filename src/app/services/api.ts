@@ -103,6 +103,25 @@ export class Api {
   }
 
   /**
+   * Realiza uma requisição POST para retornar blob (áudio, imagem, etc)
+   */
+  postBlob(endpoint: string, data: any, options?: any): Observable<Blob> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...options?.headers
+    });
+
+    return this.http.post(url, data, {
+      headers,
+      responseType: 'blob'
+    }).pipe(
+      timeout(environment.apiTimeout || 10000),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
    * Adiciona token de autenticação aos headers
    */
   setAuthToken(token: string): void {

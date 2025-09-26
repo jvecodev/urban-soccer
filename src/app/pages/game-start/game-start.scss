@@ -137,23 +137,64 @@
       .narration-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 1rem;
         margin-bottom: 1.5rem;
 
-        .narration-icon {
-          font-size: 1.5rem;
-          color: var(--amarelo-dourado);
+        .narration-title {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .narration-icon {
+            font-size: 1.5rem;
+            color: var(--amarelo-dourado);
+          }
+
+          h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--branco-puro);
+            margin: 0;
+          }
         }
 
-        h3 {
-          font-size: 1.4rem;
-          font-weight: 600;
-          color: var(--branco-puro);
-          margin: 0;
+        .narration-controls {
+          display: flex;
+          gap: 0.5rem;
+
+          @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 0.25rem;
+          }
         }
       }
 
       .narration-content {
+        .narration-status {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-bottom: 1rem;
+          padding: 0.75rem 1rem;
+          background: rgba(255, 215, 0, 0.1);
+          border: 1px solid rgba(255, 215, 0, 0.3);
+          border-radius: 8px;
+          animation: pulse 2s infinite;
+
+          .speaking-icon {
+            font-size: 1.1rem;
+            color: var(--amarelo-dourado);
+            animation: soundWave 1.5s infinite;
+          }
+
+          span {
+            font-size: 0.9rem;
+            color: var(--amarelo-dourado);
+            font-weight: 500;
+          }
+        }
+
         .current-narration {
           font-size: 1.2rem;
           line-height: 1.8;
@@ -161,6 +202,13 @@
           margin: 0;
           text-align: justify;
           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+
+          &.speaking {
+            color: var(--branco-puro);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            font-weight: 500;
+          }
         }
       }
     }
@@ -438,6 +486,24 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes soundWave {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
   }
 }
 

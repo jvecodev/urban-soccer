@@ -81,4 +81,14 @@ export class CampaignService {
   playGame(campaignId: string, gamePlayData: GamePlayRequest): Observable<GamePlayResponse> {
     return this.api.post<GamePlayResponse>(`/campaigns/${campaignId}/play`, gamePlayData);
   }
+
+  /**
+   * Converte texto em áudio usando TTS do backend
+   * @param text Texto para ser convertido em áudio
+   * @returns Observable com o blob de áudio
+   */
+  speakNarration(text: string): Observable<Blob> {
+    const body = { text };
+    return this.api.postBlob('/narration/speak', body);
+  }
 }

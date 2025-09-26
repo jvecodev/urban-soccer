@@ -63,11 +63,37 @@
   <div class="narration-section">
     <div class="narration-card">
       <div class="narration-header">
-        <i class="pi pi-microphone narration-icon"></i>
-        <h3>Narração</h3>
+        <div class="narration-title">
+          <i class="pi pi-microphone narration-icon"></i>
+          <h3>Narração</h3>
+        </div>
+        <div class="narration-controls">
+          <p-button
+            [icon]="isSpeaking() ? 'pi pi-pause' : 'pi pi-play'"
+            [label]="isSpeaking() ? 'Pausar' : 'Repetir'"
+            (onClick)="toggleNarration()"
+            severity="secondary"
+            size="small"
+            [outlined]="true"
+          ></p-button>
+          <p-button
+            icon="pi pi-stop"
+            (onClick)="stopNarration()"
+            severity="danger"
+            size="small"
+            [outlined]="true"
+            [disabled]="!isSpeaking()"
+            pTooltip="Parar narração"
+            tooltipPosition="bottom"
+          ></p-button>
+        </div>
       </div>
       <div class="narration-content">
-        <p class="current-narration">{{ currentNarration() }}</p>
+        <div class="narration-status" *ngIf="isSpeaking()">
+          <i class="pi pi-volume-up speaking-icon"></i>
+          <span>Reproduzindo narração...</span>
+        </div>
+        <p class="current-narration" [class.speaking]="isSpeaking()">{{ currentNarration() }}</p>
       </div>
     </div>
   </div>

@@ -61,7 +61,6 @@ export class MyCampaigns implements OnInit {
   private loadUserCampaigns() {
     this.campaignService.getUserCampaigns().subscribe({
       next: (campaigns) => {
-        console.log('✅ Campanhas carregadas:', campaigns);
         this.campaigns.set(campaigns);
         this.isLoading.set(false);
       },
@@ -91,13 +90,8 @@ export class MyCampaigns implements OnInit {
   }
 
   selectCampaign(campaign: Campaign) {
-    console.log('✅ Campanha selecionada:', campaign);
 
-    // Debug: Verificar estrutura da campanha
-    console.log('🔍 ID da campanha:', campaign.id || (campaign as any)._id);
-    console.log('🔍 Chaves do objeto campanha:', Object.keys(campaign));
 
-    // Salva a campanha selecionada no localStorage
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
 
     this.messageService.add({
@@ -106,7 +100,6 @@ export class MyCampaigns implements OnInit {
       detail: `${campaign.campaignName} foi selecionada!`,
     });
 
-    // Navega para o game-start após 1 segundo
     setTimeout(() => {
       this.router.navigate(['/game-start']);
     }, 1000);
@@ -118,7 +111,6 @@ export class MyCampaigns implements OnInit {
 
   deleteCampaign(campaign: Campaign) {
     if (confirm(`Tem certeza que deseja deletar a campanha "${campaign.campaignName}"? Esta ação não pode ser desfeita.`)) {
-      // Tenta usar id ou _id (compatibilidade com MongoDB)
       const campaignId = campaign.id || (campaign as any)._id;
 
       if (!campaignId) {
@@ -133,14 +125,12 @@ export class MyCampaigns implements OnInit {
 
       this.campaignService.deleteCampaign(campaignId).subscribe({
         next: () => {
-          console.log('✅ Campanha deletada com sucesso');
           this.messageService.add({
             severity: 'success',
             summary: 'Campanha Deletada!',
             detail: `${campaign.campaignName} foi deletada com sucesso.`,
           });
 
-          // Remove a campanha da lista local
           const currentCampaigns = this.campaigns();
           const updatedCampaigns = currentCampaigns.filter(c => (c.id || (c as any)._id) !== campaignId);
           this.campaigns.set(updatedCampaigns);

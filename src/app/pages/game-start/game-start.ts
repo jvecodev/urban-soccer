@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 
 import { CampaignService } from '../../services/campaign.service';
@@ -23,12 +24,13 @@ import { Auth } from '../../services/auth';
     ToastModule,
     SkeletonModule,
     TagModule,
+    TooltipModule,
   ],
   templateUrl: './game-start.html',
   styleUrls: ['./game-start.scss'],
   providers: [MessageService],
 })
-export class GameStart implements OnInit {
+export class GameStart implements OnInit, OnDestroy {
   isLoading = signal(true);
   isPlayingAction = signal(false);
   selectedCampaign = signal<Campaign | null>(null);
@@ -39,6 +41,8 @@ export class GameStart implements OnInit {
   gameResult = signal<'win' | 'lose' | 'draw' | null>(null);
   narrationHistory = signal<string[]>([]);
   showHistory = false;
+  isSpeaking = signal(false);
+  audioElement: HTMLAudioElement | null = null;
 
   constructor(
     private router: Router,
@@ -47,6 +51,10 @@ export class GameStart implements OnInit {
     private campaignService: CampaignService,
     private auth: Auth
   ) {}
+
+  ngOnDestroy() {
+    this.stopNarration();
+  }
 
   ngOnInit() {
     // Verifica se o usuário está autenticado
@@ -86,9 +94,7 @@ export class GameStart implements OnInit {
     try {
       const campaign = JSON.parse(selectedCampaignData);
       this.selectedCampaign.set(campaign);
-      console.log('✅ Campanha carregada:', campaign);
-      console.log('🔍 ID da campanha:', campaign.id || campaign._id);
-      console.log('🔍 Chaves do objeto campanha:', Object.keys(campaign));
+
 
       // Inicia o jogo
       this.startGame();
@@ -121,11 +127,9 @@ export class GameStart implements OnInit {
       return;
     }
 
-    console.log('🎮 Iniciando jogo para campanha:', campaignId);
 
     this.campaignService.startGame(campaignId).subscribe({
       next: (gameData: GameStartResponse) => {
-        console.log('✅ Jogo iniciado com sucesso:', gameData);
 
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
@@ -180,13 +184,11 @@ export class GameStart implements OnInit {
       return;
     }
 
-    console.log('🎯 Executando ação:', actionCard);
 
     this.isPlayingAction.set(true);
 
     this.campaignService.playGame(campaignId, { actionId: actionCard.actionId }).subscribe({
       next: (response: GamePlayResponse) => {
-        console.log('✅ Resposta da ação:', response);
 
         // Atualiza o estado do jogo
         this.currentNarration.set(response.narration);
@@ -202,7 +204,6 @@ export class GameStart implements OnInit {
         if (response.isGameOver) {
           this.isGameOver.set(true);
           this.gameResult.set(response.result || null);
-          console.log('🏁 Jogo finalizado com resultado:', response.result);
         }
 
         this.isPlayingAction.set(false);
@@ -238,13 +239,109 @@ export class GameStart implements OnInit {
   }
 
   private speakNarration(text: string) {
-    // Implementa text-to-speech se disponível
+    if (this.isSpeaking()) {
+      this.stopNarration();
+    }
+
+    this.isSpeaking.set(true);
+
+    // Primeiro tenta usar o TTS do backend
+    this.speakWithBackend(text).catch(() => {
+      this.speakWithBrowser(text);
+    });
+  }
+
+  private async speakWithBackend(text: string): Promise<void> {
+    try {
+      const response = await this.campaignService.speakNarration(text).toPromise();
+
+      if (response && response instanceof Blob) {
+        const audioUrl = URL.createObjectURL(response);
+        this.audioElement = new Audio(audioUrl);
+
+        this.audioElement.onloadeddata = () => {
+        };
+
+        this.audioElement.onended = () => {
+          this.isSpeaking.set(false);
+          if (this.audioElement) {
+            URL.revokeObjectURL(this.audioElement.src);
+            this.audioElement = null;
+          }
+        };
+
+        this.audioElement.onerror = () => {
+          console.error('❌ Erro ao reproduzir áudio do backend');
+          this.isSpeaking.set(false);
+          this.speakWithBrowser(text);
+        };
+
+        await this.audioElement.play();
+      } else {
+        throw new Error('Resposta inválida do backend');
+      }
+    } catch (error) {
+      console.error('❌ Erro no TTS do backend:', error);
+      throw error;
+    }
+  }
+
+  private speakWithBrowser(text: string) {
     if ('speechSynthesis' in window) {
+      // Para a fala anterior se estiver ativa
+      speechSynthesis.cancel();
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'pt-BR';
       utterance.rate = 0.9;
       utterance.pitch = 1;
+      utterance.volume = 0.8;
+
+      utterance.onstart = () => {
+      };
+
+      utterance.onend = () => {
+        this.isSpeaking.set(false);
+      };
+
+      utterance.onerror = (event) => {
+        console.error('❌ Erro na narração do navegador:', event);
+        this.isSpeaking.set(false);
+      };
+
       speechSynthesis.speak(utterance);
+    } else {
+      console.warn('⚠️ Text-to-Speech não disponível');
+      this.isSpeaking.set(false);
+    }
+  }
+
+  stopNarration() {
+
+    // Para áudio do backend
+    if (this.audioElement) {
+      this.audioElement.pause();
+      this.audioElement.currentTime = 0;
+      URL.revokeObjectURL(this.audioElement.src);
+      this.audioElement = null;
+    }
+
+    // Para TTS do navegador
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel();
+    }
+
+    this.isSpeaking.set(false);
+  }
+
+  toggleNarration() {
+    if (this.isSpeaking()) {
+      this.stopNarration();
+    } else {
+      const currentText = this.currentNarration();
+      if (currentText) {
+        this.speakNarration(currentText);
+      }
     }
   }
 
