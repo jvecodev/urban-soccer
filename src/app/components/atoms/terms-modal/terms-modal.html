@@ -1,0 +1,36 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="onModalBackdropClick($event)">
+  <div class="modal-container" (click)="onModalContentClick($event)">
+    <!-- Header do Modal -->
+    <div class="modal-header">
+      <div class="modal-icon">
+        <i class="pi" [class.pi-shield]="modalType === 'privacy'" [class.pi-file-text]="modalType === 'terms'"></i>
+      </div>
+      <h3 class="modal-title">{{ modalTitle }}</h3>
+      <button class="modal-close" (click)="onCloseModal()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <!-- Conteúdo do Modal -->
+    <div class="modal-body">
+      <div class="terms-content">
+        <div class="term-section" *ngFor="let section of modalContent">
+          <h4 class="section-title">{{ section.title }}</h4>
+          <div class="section-content">
+            <p *ngFor="let paragraph of section.content" class="section-paragraph">
+              {{ paragraph }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer do Modal -->
+    <div class="modal-footer">
+
+      <button class="modal-button" (click)="onCloseModal()">
+        <span>Entendi</span>
+      </button>
+    </div>
+  </div>
+</div>
