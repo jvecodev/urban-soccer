@@ -1,11 +1,7 @@
 <div class="dashboard-container">
-  <!-- Header do Dashboard -->
   <div class="dashboard-header">
     <div class="user-profile-header">
-      <app-user-avatar
-        [username]="currentUser()?.username || 'Usuario'"
-        [clickable]="false"
-        size="extra-large">
+      <app-user-avatar [username]="currentUser()?.username || 'Usuario'" [clickable]="false" size="extra-large">
       </app-user-avatar>
       <div class="user-info-header">
         <h1>{{ currentUser()?.username || 'Usuario' }}</h1>
@@ -45,11 +41,7 @@
       </div>
 
       <div class="card-actions">
-        <button
-          type="button"
-          class="custom-header-button"
-          (click)="onEditProfile()"
-        >
+        <button type="button" class="custom-header-button" (click)="onEditProfile()">
           <span>Editar Perfil</span>
         </button>
 
@@ -97,26 +89,20 @@
         <div class="action-section">
           <h4>Navegação</h4>
           <div class="action-buttons">
-            <button
-          type="button"
-          class="custom-header-button"
-          (click)="navigateToMyCharacters()"
-        >
-          <span style="gap: 0.5rem" >  <i class="pi pi-user-edit"></i>  Meus Personagens</span>
-        </button>
-        <button
-          type="button"
-          class="custom-header-button"
-          (click)="onLegend()"
-        >
-          <span style="gap: 0.5rem">  <i class="pi pi-user-plus"></i>  Criar Personagem</span>
-        </button>
-            <button
-              type="button"
-              class="custom-header-button"
-              (click)="onHome()"
-            >
-              <span style="gap: 0.5rem">  <i class="pi pi-home"></i>  Voltar ao Início</span>
+            <button type="button" class="custom-header-button" (click)="navigateToMyCharacters()">
+              <span style="gap: 0.5rem"> <i class="pi pi-flag"></i> Minhas Campanhas</span>
+            </button>
+
+            <button type="button" class="custom-header-button" (click)="onLegend()">
+              <span style="gap: 0.5rem"> <i class="pi pi-user-plus"></i> Criar Personagem</span>
+            </button>
+
+            <button type="button" class="custom-header-button" (click)="navigateToMyCharacters()">
+              <span style="gap: 0.5rem"> <i class="pi pi-user-edit"></i> Meus Personagens</span>
+            </button>
+
+            <button type="button" class="custom-header-button" (click)="onHome()">
+              <span style="gap: 0.5rem"> <i class="pi pi-home"></i> Voltar ao Início</span>
             </button>
           </div>
         </div>
@@ -124,19 +110,11 @@
         <div class="action-section">
           <h4>Conta</h4>
           <div class="action-buttons">
-            <button
-              type="button"
-              class="custom-header-button"
-              (click)="onLogout()"
-            >
-              <span style="gap: 0.5rem"> <i class="pi pi-sign-out"></i>  Fazer Logout</span>
+            <button type="button" class="custom-header-button" (click)="onLogout()">
+              <span style="gap: 0.5rem"> <i class="pi pi-sign-out"></i> Fazer Logout</span>
             </button>
-            <button
-              type="button"
-              class="custom-header-button"
-              (click)="onDeleteAccount()"
-            >
-              <span style="gap: 0.5rem"> <i class="pi pi-trash"></i>  Deletar Conta</span>
+            <button type="button" class="custom-header-button" (click)="onDeleteAccount()">
+              <span style="gap: 0.5rem"> <i class="pi pi-trash"></i> Deletar Conta</span>
             </button>
           </div>
         </div>
@@ -145,97 +123,153 @@
 
   </div>
 
-  <!-- Modal de Edição -->
-  <p-dialog
-    [visible]="isEditModalVisible()"
-    (visibleChange)="isEditModalVisible.set($event)"
-    [modal]="true"
-    [closable]="true"
-    [resizable]="false"
-    [draggable]="false"
-    styleClass="edit-profile-dialog">
-
-    <ng-template pTemplate="header" >
-      <div class="dialog-header-content">
-        <i class="pi pi-user-edit"></i>
-        <span>Editar Perfil</span>
-      </div>
-    </ng-template>
-
-    <form [formGroup]="editForm" (ngSubmit)="onSaveProfile()">
-
-      <!-- Campo Username -->
-      <div class="form-group">
-        <label for="username">Nome de Usuário *</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>
-            <i class="pi pi-user"></i>
-          </p-inputGroupAddon>
-          <input
-            pInputText
-            id="username"
-            formControlName="username"
-            placeholder="Seu nome de usuário"
-            [class.p-invalid]="editForm.get('username')?.touched && editForm.get('username')?.errors">
-        </p-inputGroup>
-        <small class="p-error" *ngIf="usernameErrors">{{ usernameErrors }}</small>
+  <!-- Custom Edit Profile Modal -->
+  <div class="custom-modal-overlay" *ngIf="isEditModalVisible()" (click)="onCancelEdit()">
+    <div class="custom-modal" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="custom-modal-header">
+        <div class="header-line"></div>
+        <div class="header-content">
+          <div class="header-icon">
+            <i class="pi pi-user-edit"></i>
+          </div>
+          <h2 class="header-title">EDITAR PERFIL</h2>
+        </div>
+        <button class="close-button" (click)="onCancelEdit()">
+          <i class="pi pi-times"></i>
+        </button>
       </div>
 
-      <!-- Campo Email -->
-      <div class="form-group">
-        <label for="email">Email *</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>
-            <i class="pi pi-envelope"></i>
-          </p-inputGroupAddon>
-          <input
-            pInputText
-            id="email"
-            formControlName="email"
-            placeholder="seu@email.com"
-            [class.p-invalid]="editForm.get('email')?.touched && editForm.get('email')?.errors">
-        </p-inputGroup>
-        <small class="p-error" *ngIf="emailErrors">{{ emailErrors }}</small>
+      <!-- Modal Content -->
+      <div class="custom-modal-content">
+        <!-- User Preview -->
+        <div class="user-preview-section">
+          <div class="user-preview">
+            <div class="preview-avatar">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="user-info">
+              <h3 class="user-name">{{ currentUser()?.username || 'Usuário' }}</h3>
+              <div class="user-tag">
+                <span>Perfil Ativo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Section -->
+        <form [formGroup]="editForm" (ngSubmit)="onSaveProfile()">
+          <!-- Username Input -->
+          <div class="form-input-section">
+            <label for="username" class="input-label">
+              <span class="label-dot"></span>
+              NOME DE USUÁRIO *
+            </label>
+            <div class="input-container">
+              <div class="input-icon">
+                <i class="pi pi-user"></i>
+              </div>
+              <input
+                id="username"
+                type="text"
+                formControlName="username"
+                placeholder="Seu nome de usuário"
+                class="custom-input"
+                [class.input-error]="editForm.get('username')?.touched && editForm.get('username')?.errors"
+                autocomplete="username"
+              />
+              <div class="input-border"></div>
+            </div>
+            <small class="input-help input-error-text" *ngIf="usernameErrors">
+              <i class="pi pi-exclamation-triangle"></i>
+              {{ usernameErrors }}
+            </small>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-input-section">
+            <label for="email" class="input-label">
+              <span class="label-dot"></span>
+              EMAIL *
+            </label>
+            <div class="input-container">
+              <div class="input-icon">
+                <i class="pi pi-envelope"></i>
+              </div>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="seu@email.com"
+                class="custom-input"
+                [class.input-error]="editForm.get('email')?.touched && editForm.get('email')?.errors"
+                autocomplete="email"
+              />
+              <div class="input-border"></div>
+            </div>
+            <small class="input-help input-error-text" *ngIf="emailErrors">
+              <i class="pi pi-exclamation-triangle"></i>
+              {{ emailErrors }}
+            </small>
+          </div>
+
+          <div class="form-input-section">
+            <label for="password" class="input-label">
+              <span class="label-dot"></span>
+              NOVA SENHA (OPCIONAL)
+            </label>
+            <div class="input-container">
+              <div class="input-icon">
+                <i class="pi pi-lock"></i>
+              </div>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                placeholder="Deixe em branco para manter a atual"
+                class="custom-input"
+                [class.input-error]="editForm.get('password')?.touched && editForm.get('password')?.errors"
+                autocomplete="new-password"
+              />
+              <div class="input-border"></div>
+            </div>
+            <small class="input-help input-error-text" *ngIf="passwordErrors">
+              <i class="pi pi-exclamation-triangle"></i>
+              {{ passwordErrors }}
+            </small>
+            <small class="input-help" *ngIf="!passwordErrors">
+              <i class="pi pi-info-circle"></i>
+              Mínimo 6 caracteres, deixe vazio para não alterar
+            </small>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="custom-modal-footer">
+            <div class="footer-line"></div>
+            <div class="dialog-actions">
+              <button type="button" class="custom-button cancel-button" (click)="onCancelEdit()">
+                <i class="pi pi-times"></i>
+                <span>CANCELAR</span>
+                <div class="button-shimmer"></div>
+              </button>
+              <button
+                type="submit"
+                class="custom-button save-button"
+                [disabled]="!editForm.valid || isLoading()"
+              >
+                <i class="pi pi-check" *ngIf="!isLoading()"></i>
+                <i class="pi pi-spin pi-spinner" *ngIf="isLoading()"></i>
+                <span>{{ isLoading() ? 'SALVANDO...' : 'SALVAR' }}</span>
+                <div class="button-shimmer" *ngIf="!isLoading()"></div>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
+    </div>
+  </div>
 
-      <!-- Campo Password -->
-      <div class="form-group">
-        <label for="password">Nova Senha (opcional)</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>
-            <i class="pi pi-lock"></i>
-          </p-inputGroupAddon>
-          <input
-            pInputText
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="Deixe em branco para manter a atual"
-            [class.p-invalid]="editForm.get('password')?.touched && editForm.get('password')?.errors">
-        </p-inputGroup>
-        <small class="p-error" *ngIf="passwordErrors">{{ passwordErrors }}</small>
-      </div>
-
-      <!-- Botões do Modal -->
-      <div class="modal-actions">
-        <p-button
-          label="Cancelar"
-          icon="pi pi-times"
-          class="p-button-secondary"
-          type="button"
-          (click)="onCancelEdit()">
-        </p-button>
-        <p-button
-          label="Salvar Alterações"
-          icon="pi pi-check"
-          class="p-button-primary"
-          type="submit"
-          [loading]="isLoading()">
-        </p-button>
-      </div>
-
-    </form>
-
-  </p-dialog>
+  <!-- Modal de Confirmação para Deletar Conta -->
+  <p-confirmDialog></p-confirmDialog>
 
 </div>

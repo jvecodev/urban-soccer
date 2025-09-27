@@ -5,6 +5,12 @@
   background: linear-gradient(135deg, var(--azul-primario) 0%, var(--azul-escuro) 100%);
   color: var(--branco-puro);
 
+    .stat-value {
+          color: var(--branco-puro);
+          font-weight: 600;
+          font-size: 1rem;
+        }
+
   .game-header {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);

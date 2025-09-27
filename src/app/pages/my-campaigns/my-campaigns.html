@@ -262,22 +262,6 @@
           </div>
         </div>
 
-        <div class="stat-item">
-          <i class="pi pi-star stat-icon"></i>
-          <div class="stat-content">
-            <span class="stat-label">Nível Alcançado</span>
-            <span class="stat-value">{{ campaignToReview()?.progress?.level || 1 }}</span>
-          </div>
-        </div>
-
-        <div class="stat-item" *ngIf="campaignToReview()?.progress?.currentMission">
-          <i class="pi pi-target stat-icon"></i>
-          <div class="stat-content">
-            <span class="stat-label">Missão</span>
-            <span class="stat-value">{{ campaignToReview()?.progress?.currentMission }}</span>
-          </div>
-        </div>
-
         <div class="stat-item" *ngIf="campaignToReview()?.progress?.gameContext">
           <i class="pi pi-map-marker stat-icon"></i>
           <div class="stat-content">

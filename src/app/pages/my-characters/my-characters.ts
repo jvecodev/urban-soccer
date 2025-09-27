@@ -5,12 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } 
 import { Button } from '../../components/atoms/button/button';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -34,12 +29,7 @@ import { Auth } from '../../services/auth';
     ToastModule,
     Button,
     ButtonModule,
-    DialogModule,
-    InputTextModule,
-    InputGroupModule,
-    InputGroupAddonModule,
     ConfirmDialogModule,
-    TagModule,
     TooltipModule,
   ],
   templateUrl: './my-characters.html',

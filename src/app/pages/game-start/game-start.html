@@ -126,7 +126,10 @@
   <!-- Action Cards -->
   <div class="actions-section" *ngIf="!isGameOver()">
     <div class="actions-header">
-      <h3>Escolha sua próxima jogada</h3>
+      <h3>Escolha sua jogada</h3>
+    </div>
+    <div>
+      <span class="stat-value">{{ campaignToReview()?.progress?.gameContext }}</span>
     </div>
     <div class="actions-grid">
       <div
@@ -251,14 +254,7 @@
 
   <ng-template pTemplate="footer">
     <div class="pause-modal-actions">
-      <p-button
-        label="Cancelar"
-        icon="pi pi-times"
-        (onClick)="closePauseModal()"
-        severity="secondary"
-        [outlined]="true"
-        styleClass="pause-cancel-btn"
-      ></p-button>
+
       <p-button
         label="Sair sem Salvar"
         icon="pi pi-sign-out"

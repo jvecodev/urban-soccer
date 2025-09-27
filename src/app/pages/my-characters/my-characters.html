@@ -230,84 +230,89 @@
   </div>
 </div>
 
-<!-- Edit Character Dialog -->
-<p-dialog
-  [(visible)]="showEditDialog"
-  [modal]="true"
-  [closable]="true"
-  [resizable]="false"
-  [draggable]="false"
-  styleClass="edit-character-dialog"
-  (onHide)="closeEditDialog()"
->
-  <ng-template pTemplate="header">
-    <div class="dialog-header-content">
-      <i class="pi pi-pencil"></i>
-      <span>EDITAR PERSONAGEM</span>
+<!-- Custom Edit Character Modal -->
+<div class="custom-modal-overlay" *ngIf="showEditDialog()" (click)="closeEditDialog()">
+  <div class="custom-modal" (click)="$event.stopPropagation()" *ngIf="editingCharacter()">
+    <!-- Modal Header -->
+    <div class="custom-modal-header">
+      <div class="header-line"></div>
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="pi pi-pencil"></i>
+        </div>
+        <h2 class="header-title">EDITAR PERSONAGEM</h2>
+      </div>
+      <button class="close-button" (click)="closeEditDialog()">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
-  </ng-template>
 
-  <div class="dialog-content" *ngIf="editingCharacter()">
-    <div class="editing-character-info">
-      <div class="character-preview">
-        <div
-          class="preview-avatar"
-          [attr.data-player-id]="editingCharacter()!.player?._id"
-        >
-          <i [class]="getArchetypeIcon(editingCharacter()!)"></i>
+    <!-- Modal Content -->
+    <div class="custom-modal-content">
+      <!-- Character Preview -->
+      <div class="character-preview-section">
+        <div class="character-preview">
+          <div class="preview-avatar" [attr.data-player-id]="editingCharacter()!.player?._id">
+            <i [class]="getArchetypeIcon(editingCharacter()!)"></i>
+            <div class="avatar-glow"></div>
+          </div>
+          <div class="character-details">
+            <h3 class="character-name">{{ editingCharacter()!.characterName }}</h3>
+            <div class="character-tag">
+              <span>{{ getArchetypeName(editingCharacter()!) }}</span>
+            </div>
+          </div>
         </div>
-        <div class="character-details">
-          <h3>{{ editingCharacter()!.characterName }}</h3>
-          <p-tag
-            [value]="getArchetypeName(editingCharacter()!)"
-            severity="info"
-          >
-          </p-tag>
+      </div>
+
+      <!-- Name Input Section -->
+      <div class="name-input-section">
+        <label for="editCharacterName" class="input-label">
+          <span class="label-dot"></span>
+          NOVO NOME
+        </label>
+        <div class="input-container">
+          <input
+            id="editCharacterName"
+            type="text"
+            [ngModel]="newCharacterName()"
+            (ngModelChange)="newCharacterName.set($event)"
+            placeholder="Digite o novo nome"
+            maxlength="20"
+            class="custom-input"
+            autocomplete="off"
+          />
+          <div class="input-border"></div>
         </div>
+        <small class="input-help">
+          <i class="pi pi-info-circle"></i>
+          Máximo 20 caracteres (mínimo 2)
+        </small>
       </div>
     </div>
 
-    <div class="name-input-section">
-      <label for="editCharacterName" class="input-label">NOVO NOME</label>
-      <input
-        pInputText
-        id="editCharacterName"
-        type="text"
-        [ngModel]="newCharacterName()"
-        (ngModelChange)="newCharacterName.set($event)"
-        placeholder="Digite o novo nome"
-        maxlength="20"
-        class="urban-input"
-        autocomplete="off"
-      />
-      <small class="input-help">Máximo 20 caracteres (mínimo 2)</small>
+    <!-- Modal Footer -->
+    <div class="custom-modal-footer">
+      <div class="footer-line"></div>
+      <div class="dialog-actions">
+        <button class="custom-button cancel-button" (click)="closeEditDialog()">
+          <i class="pi pi-times"></i>
+          <span>CANCELAR</span>
+          <div class="button-shimmer"></div>
+        </button>
+        <button
+          class="custom-button save-button"
+          (click)="confirmEdit()"
+          [disabled]="!newCharacterName().trim() || newCharacterName().trim().length < 2"
+        >
+          <i class="pi pi-check"></i>
+          <span>SALVAR</span>
+          <div class="button-shimmer"></div>
+        </button>
+      </div>
     </div>
   </div>
-
-  <ng-template pTemplate="footer">
-    <div class="dialog-actions">
-      <p-button
-        label="CANCELAR"
-        icon="pi pi-times"
-        (onClick)="closeEditDialog()"
-        severity="secondary"
-        styleClass="cancel-button"
-      >
-      </p-button>
-      <p-button
-        label="SALVAR"
-        icon="pi pi-check"
-        (onClick)="confirmEdit()"
-        [disabled]="
-          !newCharacterName().trim() || newCharacterName().trim().length < 2
-        "
-        severity="success"
-        styleClass="save-button"
-      >
-      </p-button>
-    </div>
-  </ng-template>
-</p-dialog>
+</div>
 
 <!-- Toast Messages -->
 <p-toast position="top-right"></p-toast>

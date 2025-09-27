@@ -53,6 +53,8 @@ export class GameStart implements OnInit, OnDestroy {
   // Modal de pausa da campanha
   showPauseModal = signal(false);
 
+  campaignToReview = signal<Campaign | null>(null);
+
   // Controle de volume da narração
   narrationVolume = signal(80);
   isPaused = signal(false);

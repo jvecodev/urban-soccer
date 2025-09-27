@@ -139,7 +139,6 @@ export class Auth {
     return this.api.delete<void>(`/users/${userId}`)
       .pipe(
         tap(() => {
-          // Faz logout após deletar a conta
           this.logout();
         }),
         catchError((error) => {

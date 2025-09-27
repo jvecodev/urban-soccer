@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { DialogModule } from 'primeng/dialog';
+
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -23,10 +20,6 @@ import { UserAvatar } from '../../components/atoms/user-avatar/user-avatar';
     ReactiveFormsModule,
     ButtonModule,
     CardModule,
-    InputTextModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    DialogModule,
     ToastModule,
     ConfirmDialogModule,
     UserAvatar
@@ -184,6 +177,7 @@ export class Dashboard implements OnInit {
       acceptLabel: 'Sim, Deletar',
       rejectLabel: 'Cancelar',
       acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         const user = this.currentUser();
         if (user) {
