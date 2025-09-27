@@ -65,6 +65,14 @@
           <span class="score-label">Tempo</span>
           <span class="score-value">{{ gameState()?.time }}'</span>
         </div>
+        <div class="score-item context-item">
+          <span class="score-label">Situação</span>
+          <div class="context-info">
+            <i [class]="getContextIcon(gameState()?.gameContext)"
+               [style.color]="getContextColor(gameState()?.gameContext)"></i>
+            <span class="context-label">{{ getGameContextLabel() }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,16 +108,6 @@
               size="small"
               [outlined]="true"
             ></p-button>
-            <p-button
-              icon="pi pi-stop"
-              (onClick)="stopNarration()"
-              severity="danger"
-              size="small"
-              [outlined]="true"
-              [disabled]="!isSpeaking() && !isPaused()"
-              pTooltip="Parar narração"
-              tooltipPosition="bottom"
-            ></p-button>
           </div>
         </div>
       </div>
@@ -127,10 +125,61 @@
   <div class="actions-section" *ngIf="!isGameOver()">
     <div class="actions-header">
       <h3>Escolha sua jogada</h3>
+      <p class="actions-subtitle">Clique em um card para ver mais detalhes e confirmar sua ação</p>
     </div>
-    <div>
-      <span class="stat-value">{{ campaignToReview()?.progress?.gameContext }}</span>
+
+    <div class="card-confirmation-section" *ngIf="selectedCard()">
+      <div class="confirmation-card">
+        <div class="confirmation-header">
+          <div class="selected-card-info">
+            <div class="selected-card-icon">
+              <i [class]="getActionIcon(selectedCard()!.actionId)"></i>
+            </div>
+            <div class="selected-card-content">
+              <h4 class="selected-card-title">{{ selectedCard()?.label }}</h4>
+              <p class="selected-card-description" *ngIf="selectedCard()?.description">
+                {{ selectedCard()?.description }}
+              </p>
+            </div>
+          </div>
+          <button
+            class="close-confirmation-btn"
+            (click)="cancelCardSelection()"
+            type="button"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+
+        <div class="confirmation-context">
+          <div class="context-badge">
+            <i [class]="getContextIcon(gameState()?.gameContext)"
+               [style.color]="getContextColor(gameState()?.gameContext)"></i>
+            <span>{{ getGameContextLabel() }}</span>
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            (onClick)="cancelCardSelection()"
+            severity="secondary"
+            size="small"
+            [outlined]="true"
+          ></p-button>
+          <p-button
+            label="Executar Jogada"
+            icon="pi pi-play"
+            (onClick)="executeAction(selectedCard()!)"
+            severity="success"
+            size="small"
+            [disabled]="isPlayingAction()"
+          ></p-button>
+        </div>
+      </div>
     </div>
+
     <div class="actions-grid">
       <div
         class="action-card-wrapper"
@@ -139,7 +188,8 @@
         <div
           class="action-card"
           [class.disabled]="isPlayingAction()"
-          (click)="playAction(card)"
+          [class.selected]="selectedCard()?.actionId === card.actionId"
+          (click)="selectCard(card)"
         >
           <div class="action-icon">
             <i [class]="getActionIcon(card.actionId)"></i>
@@ -149,6 +199,9 @@
             <p class="action-description" *ngIf="card.description">
               {{ card.description }}
             </p>
+          </div>
+          <div class="selection-indicator" *ngIf="selectedCard()?.actionId === card.actionId">
+            <i class="pi pi-check"></i>
           </div>
         </div>
       </div>

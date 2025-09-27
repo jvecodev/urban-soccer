@@ -23,7 +23,6 @@ export interface CampaignProgress {
   opponent_score: number;
   time: number;
   currentMission: string;
-  inventory: any[];
   availableCards: any[];
   gameContext: string;
 }
@@ -60,6 +59,7 @@ export interface GameState {
   score: string;
   time: number;
   playerPosition?: string;
+  gameContext?: string;
   ballPosition?: string;
   [key: string]: any;
 }

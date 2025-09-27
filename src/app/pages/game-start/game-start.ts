@@ -50,6 +50,10 @@ export class GameStart implements OnInit, OnDestroy {
   isSpeaking = signal(false);
   audioElement: HTMLAudioElement | null = null;
 
+  // Controle de seleção de card
+  selectedCard = signal<ActionCard | null>(null);
+  showCardConfirmation = signal(false);
+
   // Modal de pausa da campanha
   showPauseModal = signal(false);
 
@@ -129,7 +133,6 @@ export class GameStart implements OnInit, OnDestroy {
     const campaign = this.selectedCampaign();
     if (!campaign) return;
 
-    // Tenta usar id ou _id (compatibilidade com MongoDB)
     const campaignId = campaign.id || (campaign as any)._id;
 
     if (!campaignId) {
@@ -143,7 +146,6 @@ export class GameStart implements OnInit, OnDestroy {
       return;
     }
 
-    // Verifica se é para iniciar ou resumir baseado nos query parameters
     const action = this.route.snapshot.queryParams['action'] || 'start';
 
     const gameObservable = action === 'resume'
@@ -156,13 +158,30 @@ export class GameStart implements OnInit, OnDestroy {
       next: (gameData: GameStartResponse) => {
         console.log('🎮 Dados do jogo carregados:', gameData);
 
+        if (!gameData.narration || !gameData.availableCards || gameData.availableCards.length === 0) {
+          console.error('❌ Dados do jogo incompletos:', gameData);
+
+          if (action === 'resume') {
+            console.log('🔄 Tentando iniciar campanha do zero devido a dados incompletos...');
+            this.startGameFromScratch(campaignId);
+            return;
+          }
+
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Dados do jogo incompletos. Tente novamente.',
+          });
+          this.isLoading.set(false);
+          return;
+        }
+
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
         this.gameState.set(gameData.gameState);
         this.narrationHistory.set([gameData.narration]);
         this.isLoading.set(false);
 
-        // Lê a narração em voz alta
         this.speakNarration(gameData.narration);
       },
       error: (error) => {
@@ -194,7 +213,64 @@ export class GameStart implements OnInit, OnDestroy {
     });
   }
 
-  playAction(actionCard: ActionCard) {
+  private startGameFromScratch(campaignId: string) {
+    console.log('🎮 Iniciando jogo do zero para campanha:', campaignId);
+
+    this.campaignService.startGame(campaignId).subscribe({
+      next: (gameData: GameStartResponse) => {
+        console.log('🎮 Dados do jogo carregados (do zero):', gameData);
+
+        this.currentNarration.set(gameData.narration);
+        this.availableCards.set(gameData.availableCards);
+        this.gameState.set(gameData.gameState);
+        this.narrationHistory.set([gameData.narration]);
+        this.isLoading.set(false);
+
+        // Lê a narração em voz alta
+        this.speakNarration(gameData.narration);
+      },
+      error: (error) => {
+        console.error('❌ Erro ao iniciar jogo do zero:', error);
+        this.isLoading.set(false);
+
+        let errorMessage = 'Erro ao iniciar o jogo.';
+
+        if (error.status === 401) {
+          errorMessage = 'Sessão expirada. Faça login novamente.';
+          this.auth.logout();
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        } else if (error.status === 404) {
+          errorMessage = 'Campanha não encontrada.';
+        } else if (error.status === 0) {
+          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: errorMessage,
+        });
+      },
+    });
+  }
+
+  selectCard(actionCard: ActionCard) {
+    if (this.isPlayingAction() || this.isGameOver()) return;
+
+    // Se o card já está selecionado, executa a ação
+    if (this.selectedCard()?.actionId === actionCard.actionId) {
+      this.executeAction(actionCard);
+      return;
+    }
+
+    // Seleciona o card e mostra o contexto
+    this.selectedCard.set(actionCard);
+    this.showCardConfirmation.set(true);
+  }
+
+  executeAction(actionCard: ActionCard) {
     const campaign = this.selectedCampaign();
     if (!campaign || this.isPlayingAction() || this.isGameOver()) return;
 
@@ -211,6 +287,9 @@ export class GameStart implements OnInit, OnDestroy {
       return;
     }
 
+    // Limpa a seleção
+    this.selectedCard.set(null);
+    this.showCardConfirmation.set(false);
 
     this.isPlayingAction.set(true);
 
@@ -228,10 +307,7 @@ export class GameStart implements OnInit, OnDestroy {
         this.narrationHistory.set([...history]);
 
         // Verifica se o jogo acabou
-        if (response.isGameOver) {
-          this.isGameOver.set(true);
-          this.gameResult.set(response.result || null);
-        }
+        if (response.isGameOver) {/* Lines 232-234 omitted */}
 
         this.isPlayingAction.set(false);
 
@@ -244,17 +320,7 @@ export class GameStart implements OnInit, OnDestroy {
 
         let errorMessage = 'Erro ao executar ação.';
 
-        if (error.status === 401) {
-          errorMessage = 'Sessão expirada. Faça login novamente.';
-          this.auth.logout();
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        } else if (error.status === 400) {
-          errorMessage = 'Ação inválida.';
-        } else if (error.status === 0) {
-          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
-        }
+        if (error.status === 401) {/* Lines 248-253 omitted */} else if (error.status === 400) {/* Lines 254-255 omitted */} else if (error.status === 0) {/* Lines 256-257 omitted */}
 
         this.messageService.add({
           severity: 'error',
@@ -263,6 +329,16 @@ export class GameStart implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  cancelCardSelection() {
+    this.selectedCard.set(null);
+    this.showCardConfirmation.set(false);
+  }
+
+  // Método mantido para compatibilidade (agora chama selectCard)
+  playAction(actionCard: ActionCard) {
+    this.selectCard(actionCard);
   }
 
   private speakNarration(text: string) {
@@ -351,7 +427,6 @@ export class GameStart implements OnInit, OnDestroy {
 
   stopNarration() {
 
-    // Para áudio do backend
     if (this.audioElement) {
       this.audioElement.pause();
       this.audioElement.currentTime = 0;
@@ -412,8 +487,6 @@ export class GameStart implements OnInit, OnDestroy {
       this.audioElement.volume = volume / 100;
     }
 
-    // Para TTS do browser não há como alterar o volume em tempo real
-    // mas será aplicado na próxima narração
   }
 
   goBack(): void {
@@ -434,11 +507,9 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   pauseAndExit(): void {
-    // Para a narração se estiver tocando
     this.stopNarration();
 
-    // Aqui poderia chamar uma API para salvar o estado atual da campanha
-    // Por enquanto, apenas volta para a lista de campanhas
+
     this.messageService.add({
       severity: 'info',
       summary: 'Campanha Pausada',
@@ -454,15 +525,48 @@ export class GameStart implements OnInit, OnDestroy {
     // Para a narração se estiver tocando
     this.stopNarration();
 
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Saindo da Campanha',
-      detail: 'Retornando à lista de campanhas...',
-    });
-
-    setTimeout(() => {
+    const campaign = this.selectedCampaign();
+    if (!campaign) {
       this.router.navigate(['/my-campaigns']);
-    }, 1000);
+      return;
+    }
+
+    const campaignId = campaign.id || (campaign as any)._id;
+
+    if (!campaignId) {
+      console.error('❌ ID da campanha não encontrado para reset:', campaign);
+      this.router.navigate(['/my-campaigns']);
+      return;
+    }
+
+    // Reseta a campanha para o estado inicial
+    this.campaignService.resetCampaign(campaignId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Progresso Descartado',
+          detail: 'Você saiu sem salvar. O progresso foi descartado.',
+        });
+
+        setTimeout(() => {
+          this.router.navigate(['/my-campaigns']);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('❌ Erro ao resetar campanha:', error);
+
+        // Mesmo com erro, navega de volta - o usuário quer sair
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Saindo da Campanha',
+          detail: 'Retornando à lista de campanhas...',
+        });
+
+        setTimeout(() => {
+          this.router.navigate(['/my-campaigns']);
+        }, 1000);
+      }
+    });
   }
 
   getCampaignName(): string {
@@ -503,13 +607,59 @@ export class GameStart implements OnInit, OnDestroy {
     const result = this.gameResult();
     switch (result) {
       case 'win':
-        return 'Vitória!';
+        /* Line 506 omitted */
       case 'lose':
-        return 'Derrota';
+        /* Line 508 omitted */
       case 'draw':
-        return 'Empate';
+        /* Line 510 omitted */
       default:
         return 'Jogo Finalizado';
+    }
+  }
+
+  getGameContextLabel(): string {
+    const gameContext = this.gameState()?.gameContext;
+    switch (gameContext) {
+      case 'meio_campo':
+        return 'Meio-campo';
+      case 'ataque':
+        return 'Ataque';
+      case 'chance_clara_de_gol':
+        return 'Chance clara de gol';
+      case 'defesa_pressionada':
+        return 'Defesa pressionada';
+      default:
+        return 'Jogo em andamento';
+    }
+  }
+
+  getContextIcon(context?: string): string {
+    switch (context) {
+      case 'meio_campo':
+        return 'pi pi-arrows-alt';
+      case 'ataque':
+        return 'pi pi-angle-double-up';
+      case 'chance_clara_de_gol':
+        return 'pi pi-star-fill';
+      case 'defesa_pressionada':
+        return 'pi pi-shield';
+      default:
+        return 'pi pi-circle';
+    }
+  }
+
+  getContextColor(context?: string): string {
+    switch (context) {
+      case 'meio_campo':
+        return '#4CAF50'; // Verde
+      case 'ataque':
+        return '#FF9800'; // Laranja
+      case 'chance_clara_de_gol':
+        return '#FFD700'; // Dourado
+      case 'defesa_pressionada':
+        return '#F44336'; // Vermelho
+      default:
+        return '#607D8B'; // Cinza azulado
     }
   }
 }

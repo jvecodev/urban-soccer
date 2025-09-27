@@ -100,4 +100,13 @@ export class CampaignService {
     const body = { text };
     return this.api.postBlob('/narration/speak', body);
   }
+
+  /**
+   * Reseta uma campanha para o estado inicial, removendo todo o progresso
+   * @param campaignId ID da campanha
+   * @returns Observable com a confirmação do reset
+   */
+  resetCampaign(campaignId: string): Observable<any> {
+    return this.api.post(`/campaigns/${campaignId}/reset`, {});
+  }
 }

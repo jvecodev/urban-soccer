@@ -117,9 +117,11 @@ export class MyCampaigns implements OnInit {
     // Verifica o status da campanha para decidir a ação
     if (campaign.status === 'abandoned' || campaign.status === 'completed') {
       this.reviewCampaign(campaign);
-    } else if (this.isCampaignStarted(campaign)) {
+    } else if (this.hasRealProgress(campaign)) {
+      // Só usa resume se realmente tem progresso (ações jogadas)
       this.resumeCampaign(campaign);
     } else {
+      // Sempre usa start se não há progresso real, mesmo se já foi "iniciada"
       this.startCampaign(campaign);
     }
   }
@@ -342,13 +344,23 @@ export class MyCampaigns implements OnInit {
   }
 
   /**
+   * Verifica se a campanha teve progresso real (ações jogadas)
+   */
+  hasRealProgress(campaign: Campaign): boolean {
+    return (campaign.progress && campaign.progress.time > 0) ||
+           campaign.status === 'completed' ||
+           campaign.status === 'abandoned' ||
+           !!campaign.lastPlayedDate;
+  }
+
+  /**
    * Retorna o texto do botão baseado no status da campanha
    */
   getButtonText(campaign: Campaign): string {
     if (campaign.status === 'abandoned' || campaign.status === 'completed') {
       return 'Revisar';
     }
-    if (this.isCampaignStarted(campaign)) {
+    if (this.hasRealProgress(campaign)) {
       return 'Continuar';
     }
     return 'Iniciar';
@@ -361,7 +373,7 @@ export class MyCampaigns implements OnInit {
     if (campaign.status === 'abandoned' || campaign.status === 'completed') {
       return 'pi pi-eye';
     }
-    if (this.isCampaignStarted(campaign)) {
+    if (this.hasRealProgress(campaign)) {
       return 'pi pi-play';
     }
     return 'pi pi-play-circle';
@@ -374,7 +386,7 @@ export class MyCampaigns implements OnInit {
     if (campaign.status === 'abandoned' || campaign.status === 'completed') {
       return 'info';
     }
-    if (this.isCampaignStarted(campaign)) {
+    if (this.hasRealProgress(campaign)) {
       return 'success';
     }
     return 'primary';
