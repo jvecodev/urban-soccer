@@ -11,11 +11,13 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Auth } from '../../services/auth';
 import { SignupRequest } from '../../models/auth.types';
+import { TermsModal } from '../../components/organism/terms-modal/terms-modal';
+
 
 @Component({
     selector: 'app-signup',
     standalone: true,
-    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, FormsModule, PasswordModule, RouterModule, RippleModule, ToastModule],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, FormsModule, PasswordModule, RouterModule, RippleModule, ToastModule,TermsModal],
     templateUrl: './signup.html',
     styleUrls: ['./signup.scss', '../../shared/toast-styles.scss']
 })
@@ -27,6 +29,8 @@ export class Signup {
     confirmPassword: string = '';
     acceptTerms: boolean = false;
     isLoading: boolean = false;
+    showTermsModal: boolean = false;
+    showPrivacyModal: boolean = false;
 
     constructor(private router: Router, private messageService: MessageService, private auth: Auth) {}
 
@@ -167,7 +171,22 @@ export class Signup {
     }
 
     goToLogin() {
-        // Redirecionamento direto e simples
         this.router.navigate(['/login']);
+    }
+
+    openTermsModal(): void {
+        this.showTermsModal = true;
+    }
+
+    closeTermsModal(): void {
+        this.showTermsModal = false;
+    }
+
+    openPrivacyModal(): void {
+        this.showPrivacyModal = true;
+    }
+
+    closePrivacyModal(): void {
+        this.showPrivacyModal = false;
     }
 }

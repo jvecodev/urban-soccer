@@ -36,9 +36,8 @@
         <div class="nav-section">
           <h5 class="nav-title">LEGAL</h5>
           <ul class="nav-links">
-            <li><a href="#" class="nav-link animate-footer-link link-delay-1">Termos de Uso</a></li>
-            <li><a href="#" class="nav-link animate-footer-link link-delay-2">Política de Privacidade</a></li>
-            <li><a href="#" class="nav-link animate-footer-link link-delay-3">Código de Conduta</a></li>
+            <li><a (click)="openTermsModal()" class="nav-link animate-footer-link link-delay-1">Termos de Uso</a></li>
+            <li><a (click)="openPrivacyModal()" class="nav-link animate-footer-link link-delay-2">Política de Privacidade</a></li>
             <li><a href="#" class="nav-link animate-footer-link link-delay-4">FAQ</a></li>
           </ul>
         </div>
@@ -142,3 +141,16 @@
     </div>
   </div>
 </footer>
+
+<app-terms-modal
+  [isVisible]="showTermsModal"
+  modalType="terms"
+  (closeModal)="closeTermsModal()">
+</app-terms-modal>
+
+<!-- Modal de Política de Privacidade -->
+<app-terms-modal
+  [isVisible]="showPrivacyModal"
+  modalType="privacy"
+  (closeModal)="closePrivacyModal()">
+</app-terms-modal>

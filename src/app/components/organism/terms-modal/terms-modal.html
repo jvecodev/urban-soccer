@@ -3,7 +3,7 @@
     <!-- Header do Modal -->
     <div class="modal-header">
       <div class="modal-icon">
-        <i class="pi" [class.pi-shield]="modalType === 'privacy'" [class.pi-file-text]="modalType === 'terms'"></i>
+        <i class="pi" [class.pi-shield]="modalType === 'privacy'" [class.pi-info-circle]="modalType === 'terms'"></i>
       </div>
       <h3 class="modal-title">{{ modalTitle }}</h3>
       <button class="modal-close" (click)="onCloseModal()">

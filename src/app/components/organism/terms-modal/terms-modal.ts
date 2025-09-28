@@ -47,7 +47,7 @@ export class TermsModal {
       {
         title: '🔒 PROTEÇÃO DOS SEUS DADOS',
         content: [
-          'Seus dados estão mais seguros aqui do que a defesa do seu time favorito.',
+
           'Não vendemos suas informações para ninguém, nem mesmo para o técnico da seleção que está procurando talentos.',
         ]
       },

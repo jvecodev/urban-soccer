@@ -17,42 +17,36 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
 
-  // Rota protegida - seleção de jogador só acessível com token válido
   {
     path: 'player-selection',
     component: PlayerSelection,
     canActivate: [authGuard]
   },
 
-  // Rota protegida - meus personagens só acessível com token válido
   {
     path: 'my-characters',
     component: MyCharacters,
     canActivate: [authGuard]
   },
 
-  // Rota protegida - seleção de campanha só acessível com token válido
   {
     path: 'campaign-selection',
     component: CampaignSelection,
     canActivate: [authGuard]
   },
 
-  // Rota protegida - minhas campanhas só acessível com token válido
   {
     path: 'my-campaigns',
     component: MyCampaigns,
     canActivate: [authGuard]
   },
 
-  // Rota protegida - início do jogo só acessível com token válido
   {
     path: 'game-start',
     component: GameStart,
     canActivate: [authGuard]
   },
 
-  // Rota protegida - dashboard só acessível com token válido
   {
     path: 'dashboard',
     component: Dashboard,
