@@ -70,12 +70,38 @@ export class Auth {
   /**
    * Faz logout do usuário
    */
+  private clearAllUserData(): void {
+    const userDataKeys = [
+      'auth_token',
+      'current_user',
+      'selectedCampaign',
+      'selectedPlayer',
+      'selectedUserCharacter',
+      'playerStats'
+    ];
+
+    userDataKeys.forEach(key => {
+      localStorage.removeItem(key);
+    });
+  }
+
+  /**
+   * Limpa a sessão do usuário sem fazer logout completo (útil para token expirado)
+   */
+  private clearUserSession(): void {
+    this.token = '';
+    this.currentUserSubject.next(null);
+    this.api.removeAuthToken();
+    this.clearAllUserData();
+  }
+
   logout(): void {
     this.token = '';
     this.currentUserSubject.next(null);
     this.api.removeAuthToken();
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('current_user');
+
+    this.clearAllUserData();
+
   }
 
   /**
@@ -85,7 +111,6 @@ export class Auth {
     return this.api.get<UserProfile>('/users/me')
       .pipe(
         tap((profile) => {
-          // Atualiza o usuário atual com as informações mais recentes
           const currentUser = this.getCurrentUser();
           if (currentUser) {
             const updatedUser: User = {
@@ -156,7 +181,9 @@ export class Auth {
     const tokenNotExpired = !this.isTokenExpired();
     const isAuth = hasToken && tokenNotExpired;
 
-
+    if (hasToken && !tokenNotExpired && this.currentUserSubject.value) {
+      this.clearUserSession();
+    }
 
     return isAuth;
   }
@@ -229,6 +256,7 @@ export class Auth {
 
       } catch (error) {
         console.error('❌ Erro ao carregar usuário do localStorage:', error);
+        // Chama logout para limpar todos os dados corrompidos
         this.logout();
       }
     } else {
