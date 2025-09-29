@@ -61,7 +61,7 @@ p-toolbar {
 }
 
 /* Media Query para Mobile */
-@media (max-width: 768px) {
+@media (max-width: 908px) {
   /* Esconder elementos desktop */
   .desktop-menu,
   .desktop-actions {
@@ -255,9 +255,12 @@ p-toolbar {
     }
   }
 
-  .mobile-menu-actions {
+
+}
+.mobile-menu-actions {
     padding: 1rem 1.5rem 1.5rem;
     display: flex;
+    width: 100% !important;
     flex-direction: column;
     gap: 0.75rem;
 
@@ -275,7 +278,6 @@ p-toolbar {
       width: 100%;
     }
   }
-}
 
 .custom-header-button {
   width: auto;

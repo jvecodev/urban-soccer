@@ -33,6 +33,8 @@ export class Header implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
+
+
         const currentUser = this.authService.getCurrentUser();
         this.userSignal.set(currentUser);
 

@@ -103,50 +103,51 @@
           <i class="pi pi-times"></i>
         </button>
       </div>
-<!-- Mobile Actions - Usuário autenticado -->
-        <div *ngIf="isAuthenticated()">
-          <div>
-            <div class="mobile-user-profile">
-              <app-user-avatar
-                [username]="currentUser()?.username || 'Usuario'"
-                 [clickable]="true"
-                size="large"
-              >
-              </app-user-avatar>
-              <div class="mobile-user-info">
-                <span class="mobile-username">{{
-                  currentUser()?.username || "Usuario"
-                }}</span>
-                <span class="mobile-email">{{ currentUser()?.email }}</span>
-              </div>
-            </div>
 
-          <div class="mobile-menu-nav">
-
-            <button
-              type="button"
-              class="custom-header-button mobile-nav-btn"
-              (click)="navigateToMyCampaignsAndClose()"
-            >
-              <span>MINHAS CAMPANHAS</span>
-            </button>
-            <button
-              type="button"
-              class="custom-header-button mobile-nav-btn"
-              routerLink="/player-selection"
-              (click)="closeMobileMenu()"
-            >
-              <span>CRIAR JOGADOR</span>
-            </button>
-            <button
-              type="button"
-              class="custom-header-button mobile-nav-btn"
-              (click)="logout()"
-            >
-              <span>SAIR</span>
-            </button>
+      <!-- Mobile Actions - Usuário autenticado -->
+      <div *ngIf="isAuthenticated()">
+        <div class="mobile-user-profile">
+          <app-user-avatar
+            [username]="currentUser()?.username || 'Usuario'"
+             [clickable]="true"
+            size="large"
+          >
+          </app-user-avatar>
+          <div class="mobile-user-info">
+            <span class="mobile-username">{{
+              currentUser()?.username || "Usuario"
+            }}</span>
+            <span class="mobile-email">{{ currentUser()?.email }}</span>
           </div>
         </div>
+
+        <div class="mobile-menu-nav">
+          <button
+            type="button"
+            class="custom-header-button mobile-nav-btn"
+            (click)="navigateToMyCampaignsAndClose()"
+          >
+            <span>MINHAS CAMPANHAS</span>
+          </button>
+          <button
+            type="button"
+            class="custom-header-button mobile-nav-btn"
+            routerLink="/player-selection"
+            (click)="closeMobileMenu()"
+          >
+            <span>CRIAR JOGADOR</span>
+          </button>
+          <button
+            type="button"
+            class="custom-header-button mobile-nav-btn"
+            (click)="logout()"
+          >
+            <span>SAIR</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegação geral (sempre visível) -->
       <div class="mobile-menu-nav">
         <button
           type="button"
