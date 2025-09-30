@@ -1,0 +1,104 @@
+<div class="faq-container">
+  <div class="faq-header">
+    <button class="back-button" (click)="goBack()">
+      <i class="arrow-icon">←</i>
+    </button>
+    <h1>Mestre da Várzea</h1>
+    <p class="subtitle">Tire suas dúvidas sobre o jogo</p>
+  </div>
+
+  <div class="faq-content">
+    <!-- Área do Chat -->
+    <div class="chat-area">
+      <div class="chat-messages" *ngIf="currentAnswer">
+        <div class="message-container">
+          <div class="message user-message">
+            <div class="message-content">{{ question }}</div>
+          </div>
+          <div class="message bot-message">
+            <div class="message-header">
+              <strong>Mestre da Várzea</strong>
+            </div>
+            <div class="message-content">
+              {{ currentAnswer }}
+              <span class="typing-indicator" *ngIf="isStreaming">|</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vazio -->
+      <div class="empty-state" *ngIf="!currentAnswer && !isLoading">
+        <div class="empty-icon">🤖</div>
+        <h3>Olá! Eu sou o Mestre da Várzea</h3>
+        <p>Faça uma pergunta sobre o jogo e eu te ajudo!</p>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-state" *ngIf="isLoading && !currentAnswer">
+        <div class="loading-spinner"></div>
+        <p>Processando sua pergunta...</p>
+      </div>
+    </div>
+
+    <!-- Área de Input -->
+    <div class="input-area">
+      <div class="input-container">
+        <textarea
+          [(ngModel)]="question"
+          placeholder="Digite sua pergunta aqui..."
+          class="question-input"
+          (keydown)="onKeyPress($event)"
+          [disabled]="isLoading"
+          rows="3"
+        ></textarea>
+        <button
+          class="send-button"
+          (click)="askQuestion()"
+          [disabled]="!question.trim() || isLoading"
+        >
+          <span *ngIf="!isLoading">Enviar</span>
+          <span *ngIf="isLoading" class="loading-text">Enviando...</span>
+        </button>
+      </div>
+
+      <div class="action-buttons">
+        <button
+          class="action-button"
+          (click)="toggleHistory()"
+          [class.active]="showHistory"
+        >
+          📋 Histórico
+        </button>
+        <button
+          class="action-button"
+          (click)="clearChat()"
+          *ngIf="currentAnswer"
+        >
+          🗑️ Limpar
+        </button>
+      </div>
+    </div>
+
+    <!-- Histórico -->
+    <div class="history-panel" *ngIf="showHistory">
+      <div class="history-header">
+        <h3>Suas últimas perguntas</h3>
+        <button class="close-history" (click)="toggleHistory()">✕</button>
+      </div>
+      <div class="history-content">
+        <div
+          class="history-item"
+          *ngFor="let item of history"
+          (click)="selectHistoryQuestion(item.question)"
+        >
+          <div class="history-question">{{ item.question }}</div>
+          <div class="history-timestamp">{{ item.timestamp | date:'short' }}</div>
+        </div>
+        <div class="empty-history" *ngIf="history.length === 0">
+          <p>Nenhuma pergunta anterior encontrada.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

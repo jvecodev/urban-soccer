@@ -9,6 +9,7 @@ import { MyCharacters } from './pages/my-characters/my-characters';
 import { CampaignSelection } from './pages/campaign-selection/campaign-selection';
 import { MyCampaigns } from './pages/my-campaigns/my-campaigns';
 import { GameStart } from './pages/game-start/game-start';
+import { Faq } from './pages/faq/faq';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -50,6 +51,12 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: Dashboard,
+    canActivate: [authGuard]
+  },
+
+  {
+    path: 'faq',
+    component: Faq,
     canActivate: [authGuard]
   },
 

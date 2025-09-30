@@ -174,4 +174,8 @@ export class Footer implements OnInit, OnDestroy, AfterViewInit {
     closePrivacyModal(): void {
         this.showPrivacyModal = false;
     }
+
+    navigateToFaq(): void {
+        this.router.navigate(['/faq']);
+    }
 }
