@@ -34,7 +34,7 @@ export class FaqService {
     const token = localStorage.getItem('auth_token');
 
     return new Observable(observer => {
-      // Validar se o token existe  
+      // Validar se o token existe
       if (!token) {
         observer.error(new Error('Token de autenticação não encontrado'));
         return;
@@ -53,7 +53,7 @@ export class FaqService {
       })
       .then(response => {
 
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -69,14 +69,14 @@ export class FaqService {
           try {
             while (true) {
               const { done, value } = await reader.read();
-              
+
               if (done) {
                 observer.complete();
                 break;
               }
 
               const chunk = decoder.decode(value, { stream: true });
-              
+
               if (chunk) {
                 observer.next(chunk);
               }
@@ -104,5 +104,10 @@ export class FaqService {
   getMyHistory(): Observable<FaqHistoryResponse> {
     const headers = this.getAuthHeaders();
     return this.http.get<FaqHistoryResponse>(`${this.apiUrl}/faq/my-history`, { headers });
+  }
+
+  deleteFaqQuestion(logId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.apiUrl}/faq/${logId}`, { headers });
   }
 }

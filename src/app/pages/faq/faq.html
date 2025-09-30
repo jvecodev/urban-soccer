@@ -1,7 +1,7 @@
 <div class="faq-container">
   <div class="faq-header">
     <button class="back-button" (click)="goBack()">
-      <i class="arrow-icon">←</i>
+      <i class="pi pi-arrow-left"></i>
     </button>
     <h1>Mestre da Várzea</h1>
     <p class="subtitle">Tire suas dúvidas sobre o jogo</p>
@@ -10,32 +10,35 @@
   <div class="faq-content">
     <!-- Área do Chat -->
     <div class="chat-area">
-      <div class="chat-messages" *ngIf="currentAnswer">
+      <div class="chat-messages" *ngIf="currentQuestion">
         <div class="message-container">
           <div class="message user-message">
-            <div class="message-content">{{ question }}</div>
+            <div class="message-content">{{ currentQuestion }}</div>
           </div>
           <div class="message bot-message">
             <div class="message-header">
               <strong>Mestre da Várzea</strong>
             </div>
             <div class="message-content">
-              {{ currentAnswer }}
-              <span class="typing-indicator" *ngIf="isStreaming">|</span>
+              <span *ngIf="isLoading && !currentAnswer" class="loading-text">Processando sua pergunta...</span>
+              <span *ngIf="currentAnswer || isStreaming">{{ currentAnswer }}</span>
+              <span class="typing-indicator" *ngIf="isStreaming && currentAnswer">|</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Estado vazio -->
-      <div class="empty-state" *ngIf="!currentAnswer && !isLoading">
-        <div class="empty-icon">🤖</div>
+      <div class="empty-state" *ngIf="!currentQuestion && !isLoading">
+        <div class="empty-icon">
+          <i class="pi pi-comments"></i>
+        </div>
         <h3>Olá! Eu sou o Mestre da Várzea</h3>
         <p>Faça uma pergunta sobre o jogo e eu te ajudo!</p>
       </div>
 
       <!-- Loading -->
-      <div class="loading-state" *ngIf="isLoading && !currentAnswer">
+      <div class="loading-state" *ngIf="isLoading && !currentQuestion">
         <div class="loading-spinner"></div>
         <p>Processando sua pergunta...</p>
       </div>
@@ -52,14 +55,7 @@
           [disabled]="isLoading"
           rows="3"
         ></textarea>
-        <button
-          class="send-button"
-          (click)="askQuestion()"
-          [disabled]="!question.trim() || isLoading"
-        >
-          <span *ngIf="!isLoading">Enviar</span>
-          <span *ngIf="isLoading" class="loading-text">Enviando...</span>
-        </button>
+
       </div>
 
       <div class="action-buttons">
@@ -68,14 +64,17 @@
           (click)="toggleHistory()"
           [class.active]="showHistory"
         >
-          📋 Histórico
+          <i class="pi pi-history"></i>
+          <span>Histórico</span>
         </button>
-        <button
-          class="action-button"
-          (click)="clearChat()"
-          *ngIf="currentAnswer"
+                <button
+          class="send-button"
+          (click)="askQuestion()"
+          [disabled]="!question.trim() || isLoading"
         >
-          🗑️ Limpar
+          <i class="pi pi-send" *ngIf="!isLoading"></i>
+          <i class="pi pi-spin pi-spinner" *ngIf="isLoading"></i>
+          <span *ngIf="!isLoading">Enviar</span>
         </button>
       </div>
     </div>
@@ -84,20 +83,95 @@
     <div class="history-panel" *ngIf="showHistory">
       <div class="history-header">
         <h3>Suas últimas perguntas</h3>
-        <button class="close-history" (click)="toggleHistory()">✕</button>
+        <button class="close-history" (click)="toggleHistory()">
+          <i class="pi pi-times"></i>
+        </button>
       </div>
       <div class="history-content">
         <div
           class="history-item"
-          *ngFor="let item of history"
-          (click)="selectHistoryQuestion(item.question)"
+          *ngFor="let item of history; trackBy: trackByFn"
         >
-          <div class="history-question">{{ item.question }}</div>
-          <div class="history-timestamp">{{ item.timestamp | date:'short' }}</div>
+          <div class="history-item-content" (click)="selectHistoryQuestion(item.question)">
+            <div class="history-question">{{ item.question }}</div>
+            <div class="history-timestamp">{{ item.timestamp | date:'short' }}</div>
+          </div>
+          <button
+            class="delete-button"
+            (click)="deleteFaqQuestion(item.id, $event)"
+            title="Deletar pergunta do histórico"
+            aria-label="Deletar pergunta"
+          >
+            <i class="pi pi-trash"></i>
+          </button>
         </div>
         <div class="empty-history" *ngIf="history.length === 0">
           <p>Nenhuma pergunta anterior encontrada.</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="cancelDeleteQuestion()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon delete-icon">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <h3 class="modal-title">Confirmar Exclusão</h3>
+        <button class="modal-close" (click)="cancelDeleteQuestion()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-message">
+          Tem certeza que deseja deletar esta pergunta do histórico?
+        </p>
+        <div class="question-preview" *ngIf="itemToDelete">
+          <strong>Pergunta:</strong> "{{ itemToDelete.question }}"
+        </div>
+        <p class="modal-warning">
+          Esta ação não pode ser desfeita.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-button cancel-button" (click)="cancelDeleteQuestion()">
+          <i class="pi pi-times"></i>
+          <span>Cancelar</span>
+        </button>
+        <button class="modal-button confirm-button" (click)="confirmDeleteQuestion()">
+          <i class="pi pi-trash"></i>
+          <span>Deletar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Feedback -->
+  <div class="modal-overlay" *ngIf="showFeedbackModal" (click)="closeFeedbackModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon" [class.success-icon]="feedbackType === 'success'" [class.error-icon]="feedbackType === 'error'">
+          <i class="pi" [class.pi-check]="feedbackType === 'success'" [class.pi-times]="feedbackType === 'error'"></i>
+        </div>
+        <h3 class="modal-title">{{ feedbackType === 'success' ? 'Sucesso!' : 'Erro!' }}</h3>
+        <button class="modal-close" (click)="closeFeedbackModal()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-message">{{ feedbackMessage }}</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-button" (click)="closeFeedbackModal()">
+          <i class="pi pi-check"></i>
+          <span>OK</span>
+        </button>
       </div>
     </div>
   </div>
