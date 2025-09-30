@@ -54,8 +54,8 @@ export class MyCharacters implements OnInit {
     private location: Location
   ) {}
 
-    goBack(): void {
-    this.location.back();
+  goToPlayerSelection(): void {
+    this.router.navigate(['/player-selection']);
   }
 
   ngOnInit() {

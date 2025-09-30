@@ -217,8 +217,8 @@ export class CampaignSelection implements OnInit {
     });
   }
 
-  goBack(): void {
-    this.location.back();
+  goToMyCampaigns(): void {
+    this.router.navigate(['/my-campaigns']);
   }
 
   refreshOptions() {

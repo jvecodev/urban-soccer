@@ -259,8 +259,8 @@ export class MyCampaigns implements OnInit {
     }
   }
 
-  goBack(): void {
-    this.location.back();
+  goHome(): void {
+    this.router.navigate(['/home']);
   }
 
   refreshCampaigns() {
