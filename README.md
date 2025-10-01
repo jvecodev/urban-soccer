@@ -1,12 +1,12 @@
-![Urban Soccer Banner](./public/Logo-Transparente.png)
+![Banner do Urban Soccer](./public/Logo-Transparente.png)
 
-# Urban Soccer: A Lenda do Asfalto - Trainee Wise System
+# Urban Soccer: A Lenda do Asfalto - Um RPG Textual com IA
 
 ## 📖 Sobre o Projeto
 
-**Urban Soccer** é um ambicioso projeto que visa criar uma experiência imersiva de **RPG de Ação em um universo de futebol de rua**. Inspirado pela dramaticidade e pelas jogadas fantásticas de animes como *Super Campeões*, o jogo transporta o jogador para a **"Cidade do Futebol"**, uma metrópole vibrante onde o esporte é um estilo de vida e as lendas nascem no asfalto.
+**Urban Soccer** é uma experiência imersiva de **RPG de Ação textual**, onde cada partida é uma história única, narrada e moldada por Inteligência Artificial. Inspirado pela dramaticidade de animes como *Super Campeões*, o jogo transporta o jogador para a **"Cidade do Futebol"**, uma metrópole vibrante onde o esporte é um estilo de vida e as lendas nascem no asfalto.
 
-O objetivo é criar uma **jornada** onde o jogador começa como um atleta desconhecido e, através de desafios, torneios e uma narrativa envolvente, constrói sua própria equipe, reputação e legado para se tornar o maior jogador que a cidade já viu.
+O objetivo é criar uma **jornada interativa**, onde o jogador, através de escolhas e ações, guia seu atleta em uma narrativa dinâmica gerada em tempo real por um Large Language Model (LLM).
 
 > Este repositório contém o **código-fonte do frontend**, desenvolvido com **Angular**.
 
@@ -14,13 +14,12 @@ O objetivo é criar uma **jornada** onde o jogador começa como um atleta descon
 
 ## ✨ Conceito e Narrativa
 
-A história se desenrola na *Cidade do Futebol*, um lugar onde as competições de rua são tão prestigiadas quanto os campeonatos oficiais. O jogador deverá:
+A história se desenrola na *Cidade do Futebol*, onde as competições de rua são tão prestigiadas quanto os campeonatos oficiais. O jogador deverá:
 
-- **Explorar um Mundo Aberto**: Navegar pelos diversos bairros da cidade, cada um com seus próprios campos, desafios, lojas e segredos.
-- **Construir uma Lenda**: Começar do zero, participando de partidas de rua para ganhar reputação e dinheiro.
-- **Montar o Time dos Sonhos**: Recrutar outros jogadores espalhados pela cidade, cada um com habilidades, personalidades e histórias únicas.
-- **Evolução de Personagem**: Desenvolver as habilidades do seu jogador através de um sistema de progressão de RPG, com atributos, técnicas especiais e customização de equipamentos.
-- **Narrativa Dinâmica**: Interagir com diferentes facções de jogadores, técnicos e personalidades da cidade, onde suas escolhas e desempenho em campo moldam o desenrolar da história.
+-   **Criar sua Lenda**: Desenvolver um personagem único, escolhendo entre diferentes arquétipos de jogadores.
+-   **Viver a Partida**: Participar de partidas textuais onde cada lance é narrado por uma IA, criando uma experiência de rádio esportivo personalizada.
+-   **Tomar Decisões Críticas**: Suas escolhas durante a partida, gerenciadas por um LLM, definem o rumo do jogo e o desenvolvimento da sua carreira.
+-   **Construir sua Carreira**: Evoluir as habilidades do seu jogador, gerenciar campanhas e construir um legado para se tornar o maior jogador que a cidade já viu.
 
 ---
 
@@ -28,11 +27,10 @@ A história se desenrola na *Cidade do Futebol*, um lugar onde as competições 
 
 O projeto é construído sobre uma **stack moderna** para garantir performance, escalabilidade e uma experiência rica para o usuário:
 
-- **Frontend**: Angular 20+Framework robusto para UI, menus, telas de gerenciamento de equipe e renderização do jogo. **Utilizando o Prime NG**
-- **Backend (Planejado)**: FastAPI (Python)API de alta performance para lógica do jogo, dados de jogadores e partidas.
-- **Inteligência Artificial (Planejado)**: LLM (Large Language Model)Para diálogos dinâmicos com NPCs, narração em tempo real e histórias adaptativas.
-- **Containerização**: Docker & Docker Compose
-  Garantindo consistência entre ambientes de desenvolvimento e produção.
+-   **Frontend**: **Angular 20+**, utilizando **PrimeNG** para componentes de UI robustos e responsivos.
+-   **Backend (Planejado)**: **FastAPI (Python)**, uma API de alta performance para a lógica do jogo, gerenciamento de dados e integração com a IA.
+-   **Inteligência Artificial (Planejado)**: **LLM (Large Language Model)** para diálogos dinâmicos, narração em tempo real e histórias adaptativas.
+-   **Containerização**: **Docker & Docker Compose** para garantir consistência entre os ambientes de desenvolvimento e produção.
 
 ---
 
@@ -42,22 +40,22 @@ A identidade visual do Urban Soccer transmite a energia da **cultura de rua**, a
 
 ### Paleta de Cores
 
-| Cor              | Hex     | Uso Recomendado                                   |
-| ---------------- | ------- | ------------------------------------------------- |
-| Azul Noite       | #14223D | Cor de fundo principal para telas e menus         |
-| Roxo Urbano      | #7C2C78 | Painéis secundários e gradientes                |
-| Laranja Vibrante | #EB6E19 | Ação principal (botões primários, alertas)    |
-| Ciano Elétrico  | #30C9F9 | Acento secundário (ícones, barras de progresso) |
-| Cinza Claro      | #C9CBCA | Cor principal para textos de corpo                |
+| Cor | Hex | Uso Recomendado |
+| :--- | :--- | :--- |
+| Azul Noite | `#14223D` | Cor de fundo principal para telas e menus. |
+| Roxo Urbano | `#7C2C78` | Painéis secundários e gradientes. |
+| Laranja Vibrante| `#EB6E19` | Ação principal (botões primários, alertas). |
+| Ciano Elétrico | `#30C9F9` | Acento secundário (ícones, barras de progresso).|
+| Cinza Claro | `#C9CBCA` | Cor principal para textos de corpo. |
 
 ### Tipografia
 
-- **Teko**: Títulos de grande impacto
-- **Russo One**: Subtítulos e nomes
-- **Press Start 2P**: Stats e elementos retrô da UI
-- **Inter**: Corpo de texto e diálogos
+-   **Teko**: Títulos de grande impacto.
+-   **Russo One**: Subtítulos e nomes.
+-   **Press Start 2P**: Stats e elementos retrô da UI.
+-   **Inter**: Corpo de texto e diálogos.
 
-Acompanhe toda a estilização pelo arquivo [style-guide](./style-guide.md)
+Acompanhe toda a estilização pelo arquivo [style-guide.md](./style-guide.md).
 
 ---
 
@@ -69,71 +67,87 @@ Existem duas maneiras de executá-lo: **localmente** ou via **Docker** (recomend
 
 ### 🔹 Pré-requisitos
 
-- Node.js (20.x ou superior)
-- NPM (vem junto com o Node.js)
-- Angular CLI (`npm install -g @angular/cli`)
-- Docker e Docker Compose
+-   **Node.js** (versão 20.x ou superior)
+-   **NPM** (geralmente instalado com o Node.js)
+-   **Angular CLI** (instale globalmente com `npm install -g @angular/cli`)
+-   **Docker** e **Docker Compose** (para a execução com container)
 
 ---
 
 ### 1. Execução Local (Angular CLI)
 
-Clone o repositório:
+1.  **Clone o repositório:**
 
-```bash
-git clone <https://github.com/jvecodev/urban-soccer>
-cd urban-soccer
-```
+    ```bash
+    git clone [https://github.com/jvecodev/urban-soccer.git](https://github.com/jvecodev/urban-soccer.git)
+    cd urban-soccer
+    ```
 
-Instale as dependências:
+2.  **Instale as dependências:**
 
-```bash
-npm install
-```
+    ```bash
+    npm install
+    ```
 
-Inicie o servidor em desenvolvimento
+3.  **Inicie o servidor de desenvolvimento:**
 
-```bash
-ng serve
-```
+    ```bash
+    ng serve
+    ```
 
-Ou com o Docker
+4.  **Acesse a aplicação:**
+    Abra seu navegador e acesse `http://localhost:4200/`.
 
-```bash
-docker-compose up --build
-```
+### 2. Execução com Docker (Recomendado)
 
-Acesse a aplicação
-Abra seu navegador e acesse http://localhost:4200/.
+1.  **Clone o repositório** (se ainda não o fez):
+
+    ```bash
+    git clone [https://github.com/jvecodev/urban-soccer.git](https://github.com/jvecodev/urban-soccer.git)
+    cd urban-soccer
+    ```
+
+2.  **Construa e inicie o container:**
+
+    ```bash
+    docker-compose up --build
+    ```
+
+3.  **Acesse a aplicação:**
+    Abra seu navegador e acesse `http://localhost:4200/`.
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
-```bash
+A estrutura de pastas segue o padrão do Angular, organizada para escalabilidade e manutenção.
+
 urban-soccer/
 ├── .vscode/               # Configurações do VS Code
-├── node_modules/          # Dependências do projeto
-├── public/                # Assets estáticos (como o favicon)
+├── node_modules/          # Dependências do Node.js
+├── public/                # Assets estáticos (imagens, favicons)
 ├── src/
-│   ├── app/               # Código principal da aplicação (componentes, rotas, etc.)
+│   ├── app/
+│   │   ├── components/    # Componentes reutilizáveis (átomos, organismos)
+│   │   ├── guards/        # Guards de rota (ex: auth-guard)
+│   │   ├── models/        # Interfaces e tipos de dados (player, user, etc.)
+│   │   ├── pages/         # Componentes de página (home, login, dashboard)
+│   │   ├── services/      # Lógica de negócio e comunicação com API
+│   │   ├── shared/        # Estilos ou módulos compartilhados
 │   │   ├── app.config.ts  # Configuração da aplicação
-│   │   ├── app.html       # Template HTML principal
 │   │   ├── app.routes.ts  # Definição de rotas
-│   │   ├── app.scss       # Estilos do componente principal
-│   │   ├── app.spec.ts    # Testes do componente principal
-│   │   └── app.ts         # Lógica do componente principal
+│   │   └── app.ts         # Componente principal
 │   ├── index.html         # Página HTML principal
 │   ├── main.ts            # Ponto de entrada da aplicação
 │   └── styles.scss        # Estilos globais
-├── .dockerignore          # Arquivos a serem ignorados pelo Docker
-├── .editorconfig          # Configuração do editor de código
-├── .gitignore             # Arquivos a serem ignorados pelo Git
+├── .dockerignore          # Arquivos ignorados pelo Docker
+├── .editorconfig          # Configuração do editor
+├── .gitignore             # Arquivos ignorados pelo Git
 ├── angular.json           # Configuração do workspace do Angular
 ├── Dockerfile             # Instruções para construir a imagem Docker
 ├── docker-compose.yml     # Orquestração dos containers
-├── nginx.conf             # Configuração do servidor Nginx para o Angular
+├── nginx.conf             # Configuração do Nginx para servir a aplicação
 ├── package.json           # Dependências e scripts do projeto
 ├── style-guide.md         # Guia de Estilo Visual
 └── tsconfig.json          # Configuração do TypeScript
-```
+
