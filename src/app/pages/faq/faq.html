@@ -8,9 +8,65 @@
   </div>
 
   <div class="faq-content">
+    <!-- Conversa Atual -->
+    <div class="current-conversation" *ngIf="currentConversation">
+      <div class="conversation-header">
+        <div class="conversation-info">
+          <h3>{{ currentConversation.title }}</h3>
+          <span class="message-count">{{ currentConversation.messageCount }} mensagens</span>
+        </div>
+        <div class="conversation-actions">
+          <button class="conversation-action-btn" (click)="editConversationTitle()" title="Editar título">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button class="conversation-action-btn delete-btn" (click)="deleteConversation(currentConversation)"
+            title="Deletar conversa">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Área do Chat -->
     <div class="chat-area">
-      <div class="chat-messages" *ngIf="currentQuestion">
+      <!-- Mensagens da conversa atual -->
+      <div class="chat-messages" *ngIf="currentConversation && currentMessages.length > 0">
+        <div class="message-container">
+          <div class="message-pair" *ngFor="let message of currentMessages">
+            <div class="message user-message">
+              <div class="message-content">{{ message.question }}</div>
+            </div>
+            <div class="message bot-message">
+              <div class="message-header">
+                <strong>Mestre da Várzea</strong>
+              </div>
+              <div class="message-content">{{ message.answer }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversa atual em tempo real -->
+      <div class="chat-messages" *ngIf="currentQuestion && !currentConversation">
+        <div class="message-container">
+          <div class="message user-message">
+            <div class="message-content">{{ currentQuestion }}</div>
+          </div>
+          <div class="message bot-message">
+            <div class="message-header">
+              <strong>Mestre da Várzea</strong>
+            </div>
+            <div class="message-content">
+              <span *ngIf="isLoading && !currentAnswer" class="loading-text">Processando sua pergunta...</span>
+              <span *ngIf="currentAnswer || isStreaming">{{ currentAnswer }}</span>
+              <span class="typing-indicator" *ngIf="isStreaming && currentAnswer">|</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nova mensagem em conversa existente -->
+      <div class="new-message" *ngIf="currentQuestion && currentConversation">
         <div class="message-container">
           <div class="message user-message">
             <div class="message-content">{{ currentQuestion }}</div>
@@ -29,12 +85,15 @@
       </div>
 
       <!-- Estado vazio -->
-      <div class="empty-state" *ngIf="!currentQuestion && !isLoading">
+      <div class="empty-state"
+        *ngIf="!currentQuestion && !isLoading && (!currentConversation || currentMessages.length === 0)">
         <div class="empty-icon">
           <i class="pi pi-comments"></i>
         </div>
-        <h3>Olá! Eu sou o Mestre da Várzea</h3>
-        <p>Faça uma pergunta sobre o jogo e eu te ajudo!</p>
+        <h3 *ngIf="!currentConversation">Olá! Eu sou o Mestre da Várzea</h3>
+        <h3 *ngIf="currentConversation">{{ currentConversation.title }}</h3>
+        <p *ngIf="!currentConversation">Faça uma pergunta sobre o jogo e eu te ajudo!</p>
+        <p *ngIf="currentConversation">Continue a conversa fazendo uma nova pergunta.</p>
       </div>
 
       <!-- Loading -->
@@ -47,61 +106,87 @@
     <!-- Área de Input -->
     <div class="input-area">
       <div class="input-container">
-        <textarea
-          [(ngModel)]="question"
-          placeholder="Digite sua pergunta aqui..."
-          class="question-input"
-          (keydown)="onKeyPress($event)"
-          [disabled]="isLoading"
-          rows="3"
-        ></textarea>
+        <textarea [(ngModel)]="question" placeholder="Digite sua pergunta aqui..." class="question-input"
+          (keydown)="onKeyPress($event)" [disabled]="isLoading" rows="3"></textarea>
 
       </div>
 
-      <div class="action-buttons">
-        <button
-          class="action-button"
-          (click)="toggleHistory()"
-          [class.active]="showHistory"
-        >
-          <i class="pi pi-history"></i>
-          <span>Histórico</span>
-        </button>
-                <button
-          class="send-button"
-          (click)="askQuestion()"
-          [disabled]="!question.trim() || isLoading"
-        >
-          <i class="pi pi-send" *ngIf="!isLoading"></i>
+      <div class="buttons-container">
+        <app-button (click)="createNewConversation()" class="new-conversation-btn">
+          <i class="pi pi-plus"></i>
+          <span >Nova Conversa</span>
+        </app-button>
+        <app-button (click)="toggleConversations()">
+          <i class="pi pi-list"></i>
+          <span >Conversas</span>
+        </app-button>
+        <app-button (click)="askQuestion()" [disabled]="!question.trim() || isLoading">
           <i class="pi pi-spin pi-spinner" *ngIf="isLoading"></i>
+          <i class="pi pi-send" *ngIf="!isLoading"></i>
           <span *ngIf="!isLoading">Enviar</span>
-        </button>
+        </app-button>
       </div>
     </div>
 
-    <!-- Histórico -->
+    <!-- Painel de Conversações -->
+    <div class="conversations-panel" *ngIf="showConversations">
+      <div class="conversations-header">
+        <h3>Suas Conversas</h3>
+        <div class="header-actions">
+          <button class="create-conversation-btn" (click)="createNewConversation()" title="Criar nova conversa">
+            <i class="pi pi-plus"></i>
+          </button>
+          <button class="close-conversations" (click)="toggleConversations()">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="conversations-content">
+        <div class="conversation-item" *ngFor="let conversation of conversations"
+          [class.active]="currentConversation?.id === conversation.id"
+          (click)="conversation.id ? selectConversation(conversation) : null">
+          <div class="conversation-item-content">
+            <div class="conversation-title">
+              {{ conversation.title }}
+              <span *ngIf="!conversation.id" style="color: red; font-size: 0.8em;">[ID MISSING]</span>
+            </div>
+            <div class="conversation-meta">
+              <span class="message-count">{{ conversation.messageCount }} mensagens</span>
+              <span class="conversation-date">{{ conversation.updatedAt | date:'short' }}</span>
+              <span *ngIf="conversation.id" style="color: #666; font-size: 0.7em;">ID: {{ conversation.id }}</span>
+            </div>
+          </div>
+          <button class="delete-button" (click)="deleteConversation(conversation, $event)" title="Deletar conversa"
+            aria-label="Deletar conversa">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+        <div class="empty-conversations" *ngIf="conversations.length === 0">
+          <p>Nenhuma conversa encontrada.</p>
+          <button class="create-first-conversation" (click)="createNewConversation()">
+            <i class="pi pi-plus"></i>
+            <span>Criar primeira conversa</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico (mantido para compatibilidade) -->
     <div class="history-panel" *ngIf="showHistory">
       <div class="history-header">
-        <h3>Suas últimas perguntas</h3>
+        <h3>Histórico Antigo</h3>
         <button class="close-history" (click)="toggleHistory()">
           <i class="pi pi-times"></i>
         </button>
       </div>
       <div class="history-content">
-        <div
-          class="history-item"
-          *ngFor="let item of history; trackBy: trackByFn"
-        >
+        <div class="history-item" *ngFor="let item of history; trackBy: trackByFn">
           <div class="history-item-content" (click)="selectHistoryQuestion(item.question)">
             <div class="history-question">{{ item.question }}</div>
             <div class="history-timestamp">{{ item.timestamp | date:'short' }}</div>
           </div>
-          <button
-            class="delete-button"
-            (click)="deleteFaqQuestion(item.id, $event)"
-            title="Deletar pergunta do histórico"
-            aria-label="Deletar pergunta"
-          >
+          <button class="delete-button" (click)="deleteFaqQuestion(item.id, $event)"
+            title="Deletar pergunta do histórico" aria-label="Deletar pergunta">
             <i class="pi pi-trash"></i>
           </button>
         </div>
@@ -126,11 +211,18 @@
       </div>
 
       <div class="modal-body">
-        <p class="modal-message">
+        <p class="modal-message" *ngIf="itemToDelete">
           Tem certeza que deseja deletar esta pergunta do histórico?
+        </p>
+        <p class="modal-message" *ngIf="conversationToDelete">
+          Tem certeza que deseja deletar esta conversa e todas as suas mensagens?
         </p>
         <div class="question-preview" *ngIf="itemToDelete">
           <strong>Pergunta:</strong> "{{ itemToDelete.question }}"
+        </div>
+        <div class="conversation-preview" *ngIf="conversationToDelete">
+          <strong>Conversa:</strong> "{{ conversationToDelete.title }}"<br>
+          <strong>Mensagens:</strong> {{ conversationToDelete.messageCount }}
         </div>
         <p class="modal-warning">
           Esta ação não pode ser desfeita.
@@ -154,7 +246,8 @@
   <div class="modal-overlay" *ngIf="showFeedbackModal" (click)="closeFeedbackModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <div class="modal-icon" [class.success-icon]="feedbackType === 'success'" [class.error-icon]="feedbackType === 'error'">
+        <div class="modal-icon" [class.success-icon]="feedbackType === 'success'"
+          [class.error-icon]="feedbackType === 'error'">
           <i class="pi" [class.pi-check]="feedbackType === 'success'" [class.pi-times]="feedbackType === 'error'"></i>
         </div>
         <h3 class="modal-title">{{ feedbackType === 'success' ? 'Sucesso!' : 'Erro!' }}</h3>
@@ -171,6 +264,79 @@
         <button class="modal-button" (click)="closeFeedbackModal()">
           <i class="pi pi-check"></i>
           <span>OK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Criar Nova Conversa -->
+  <div class="modal-overlay" *ngIf="showNewConversationModal" (click)="cancelCreateConversation()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon success-icon">
+          <i class="pi pi-plus"></i>
+        </div>
+        <h3 class="modal-title">Nova Conversa</h3>
+        <button class="modal-close" (click)="cancelCreateConversation()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-message">
+          Digite um título para sua nova conversa:
+        </p>
+        <div class="input-field">
+          <input type="text" [(ngModel)]="newConversationTitle" placeholder="Ex: Dúvidas sobre Regras do Jogo"
+            class="conversation-title-input" (keydown.enter)="confirmCreateConversation()" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-button cancel-button" (click)="cancelCreateConversation()">
+          <i class="pi pi-times"></i>
+          <span>Cancelar</span>
+        </button>
+        <button class="modal-button confirm-button" (click)="confirmCreateConversation()"
+          [disabled]="!newConversationTitle.trim()">
+          <i class="pi pi-check"></i>
+          <span>Criar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Editar Título da Conversa -->
+  <div class="modal-overlay" *ngIf="showEditTitleModal" (click)="cancelEditTitle()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon success-icon">
+          <i class="pi pi-pencil"></i>
+        </div>
+        <h3 class="modal-title">Editar Título</h3>
+        <button class="modal-close" (click)="cancelEditTitle()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-message">
+          Edite o título da conversa:
+        </p>
+        <div class="input-field">
+          <input type="text" [(ngModel)]="editingTitle" placeholder="Digite o novo título"
+            class="conversation-title-input" (keydown.enter)="confirmEditTitle()" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-button cancel-button" (click)="cancelEditTitle()">
+          <i class="pi pi-times"></i>
+          <span>Cancelar</span>
+        </button>
+        <button class="modal-button confirm-button" (click)="confirmEditTitle()" [disabled]="!editingTitle.trim()">
+          <i class="pi pi-check"></i>
+          <span>Salvar</span>
         </button>
       </div>
     </div>

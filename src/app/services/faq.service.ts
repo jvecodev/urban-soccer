@@ -6,12 +6,42 @@ import { environment } from '../config/environment';
 export interface FaqLog {
   id: string;
   question: string;
+  answer?: string;
   userId: string;
+  conversationId?: string;
   timestamp: string;
+}
+
+export interface Conversation {
+  id: string;
+  _id?: string; // Para compatibilidade com MongoDB
+  title: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  messageCount: number;
+}
+
+export interface ConversationMessage {
+  id: string;
+  _id?: string; // Para compatibilidade com MongoDB
+  question: string;
+  answer: string;
+  conversationId: string;
+  timestamp: string;
+}
+
+export interface ConversationDetails {
+  conversation: Conversation;
+  messages: ConversationMessage[];
 }
 
 export interface FaqHistoryResponse {
   logs: FaqLog[];
+}
+
+export interface ConversationsResponse {
+  conversations: Conversation[];
 }
 
 @Injectable({
@@ -30,7 +60,7 @@ export class FaqService {
     });
   }
 
-  askQuestionStream(question: string): Observable<string> {
+  askQuestionStream(question: string, conversationId?: string): Observable<{chunk: string, conversationId?: string}> {
     const token = localStorage.getItem('auth_token');
 
     return new Observable(observer => {
@@ -40,7 +70,10 @@ export class FaqService {
         return;
       }
 
-
+      const body: any = { question };
+      if (conversationId) {
+        body.conversation_id = conversationId;
+      }
 
       // Implementar streaming real
       fetch(`${this.apiUrl}/faq/ask/stream`, {
@@ -49,11 +82,9 @@ export class FaqService {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ question })
+        body: JSON.stringify(body)
       })
       .then(response => {
-
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -62,11 +93,19 @@ export class FaqService {
           throw new Error('Response body is null');
         }
 
+        // Capturar conversation_id do header se uma nova conversa foi criada
+        const newConversationId = response.headers.get('X-Conversation-ID');
+
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
         const processStream = async () => {
           try {
+            // Se há um novo conversation_id, enviar primeiro
+            if (newConversationId) {
+              observer.next({ chunk: '', conversationId: newConversationId });
+            }
+
             while (true) {
               const { done, value } = await reader.read();
 
@@ -78,7 +117,7 @@ export class FaqService {
               const chunk = decoder.decode(value, { stream: true });
 
               if (chunk) {
-                observer.next(chunk);
+                observer.next({ chunk, conversationId: newConversationId || undefined });
               }
             }
           } catch (error) {
@@ -109,5 +148,31 @@ export class FaqService {
   deleteFaqQuestion(logId: string): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.apiUrl}/faq/${logId}`, { headers });
+  }
+
+  // Métodos para gerenciar conversações
+  getConversations(): Observable<ConversationsResponse> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<ConversationsResponse>(`${this.apiUrl}/faq/conversations`, { headers });
+  }
+
+  createConversation(title: string): Observable<Conversation> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<Conversation>(`${this.apiUrl}/faq/conversations`, { title }, { headers });
+  }
+
+  getConversationDetails(conversationId: string): Observable<ConversationDetails> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<ConversationDetails>(`${this.apiUrl}/faq/conversations/${conversationId}`, { headers });
+  }
+
+  updateConversationTitle(conversationId: string, title: string): Observable<Conversation> {
+    const headers = this.getAuthHeaders();
+    return this.http.put<Conversation>(`${this.apiUrl}/faq/conversations/${conversationId}`, { title }, { headers });
+  }
+
+  deleteConversation(conversationId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.apiUrl}/faq/conversations/${conversationId}`, { headers });
   }
 }
