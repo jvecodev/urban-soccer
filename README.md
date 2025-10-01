@@ -122,6 +122,7 @@ Existem duas maneiras de executá-lo: **localmente** ou via **Docker** (recomend
 
 A estrutura de pastas segue o padrão do Angular, organizada para escalabilidade e manutenção.
 
+```bash
 urban-soccer/
 ├── .vscode/               # Configurações do VS Code
 ├── node_modules/          # Dependências do Node.js
@@ -150,4 +151,5 @@ urban-soccer/
 ├── package.json           # Dependências e scripts do projeto
 ├── style-guide.md         # Guia de Estilo Visual
 └── tsconfig.json          # Configuração do TypeScript
+```
 
