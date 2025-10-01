@@ -103,4 +103,8 @@ A hierarquia tipográfica define a voz e a clareza do jogo. Cada fonte tem um pa
 
   * Borda: `Ciano Elétrico (#30C9F9)`
   * Texto Digitado: `Cinza Claro (#C9CBCA)`
-* Style-guide.md
+
+![example](./public/image.png)
+![example](./public/login.png)
+![example](./public/footer.png)
+
