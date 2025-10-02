@@ -29,8 +29,8 @@
 
     <!-- Área do Chat -->
     <div class="chat-area">
-      <!-- Mensagens da conversa atual -->
-      <div class="chat-messages" *ngIf="currentConversation && currentMessages.length > 0">
+      <!-- Mensagens da conversa atual (apenas quando há conversa selecionada) -->
+      <div class="chat-messages" *ngIf="currentConversation && currentMessages.length > 0 && !currentQuestion">
         <div class="message-container">
           <div class="message-pair" *ngFor="let message of currentMessages">
             <div class="message user-message">
@@ -46,38 +46,36 @@
         </div>
       </div>
 
-      <!-- Conversa atual em tempo real -->
-      <div class="chat-messages" *ngIf="currentQuestion && !currentConversation">
+      <!-- Conversa atual em tempo real (quando há uma pergunta sendo processada) -->
+      <div class="chat-messages" *ngIf="currentQuestion">
         <div class="message-container">
-          <div class="message user-message">
-            <div class="message-content">{{ currentQuestion }}</div>
-          </div>
-          <div class="message bot-message">
-            <div class="message-header">
-              <strong>Mestre da Várzea</strong>
+          <!-- Mensagens históricas da conversa (se existir conversa selecionada) -->
+          <div class="message-pair" *ngFor="let message of currentMessages">
+            <div class="message user-message">
+              <div class="message-content">{{ message.question }}</div>
             </div>
-            <div class="message-content">
-              <span *ngIf="isLoading && !currentAnswer" class="loading-text">Processando sua pergunta...</span>
-              <span *ngIf="currentAnswer || isStreaming">{{ currentAnswer }}</span>
-              <span class="typing-indicator" *ngIf="isStreaming && currentAnswer">|</span>
+            <div class="message bot-message">
+              <div class="message-header">
+                <strong>Mestre da Várzea</strong>
+              </div>
+              <div class="message-content">{{ message.answer }}</div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="new-message" *ngIf="currentQuestion && currentConversation">
-        <div class="message-container">
-          <div class="message user-message">
-            <div class="message-content">{{ currentQuestion }}</div>
-          </div>
-          <div class="message bot-message">
-            <div class="message-header">
-              <strong>Mestre da Várzea</strong>
+          <!-- Nova mensagem em tempo real -->
+          <div class="message-pair new-message">
+            <div class="message user-message">
+              <div class="message-content">{{ currentQuestion }}</div>
             </div>
-            <div class="message-content">
-              <span *ngIf="isLoading && !currentAnswer" class="loading-text">Processando sua pergunta...</span>
-              <span *ngIf="currentAnswer || isStreaming">{{ currentAnswer }}</span>
-              <span class="typing-indicator" *ngIf="isStreaming && currentAnswer">|</span>
+            <div class="message bot-message">
+              <div class="message-header">
+                <strong>Mestre da Várzea</strong>
+              </div>
+              <div class="message-content">
+                <span *ngIf="isLoading && !currentAnswer" class="loading-text">Processando sua pergunta...</span>
+                <span *ngIf="currentAnswer || isStreaming">{{ currentAnswer }}</span>
+                <span class="typing-indicator" *ngIf="isStreaming && currentAnswer">|</span>
+              </div>
             </div>
           </div>
         </div>

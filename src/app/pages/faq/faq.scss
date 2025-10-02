@@ -210,8 +210,10 @@
   padding-top: 1.5rem;
   margin-top: 1rem;
 
-  .message-container {
-    gap: 1rem;
+  &.message-pair {
+    border-top: 2px solid var(--ciano-eletrico);
+    padding-top: 1.5rem;
+    margin-top: 1rem;
   }
 }
 

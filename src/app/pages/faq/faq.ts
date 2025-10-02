@@ -84,7 +84,16 @@ export class Faq implements OnInit, OnDestroy {
       ).subscribe({
         next: (response: {chunk: string, conversationId?: string}) => {
           if (response.conversationId && !this.currentConversation) {
-            this.loadConversations(); // Recarregar lista para incluir nova conversa
+            this.currentConversation = {
+              id: response.conversationId,
+              title: currentQuestion.substring(0, 50) + (currentQuestion.length > 50 ? '...' : ''),
+              messageCount: 1,
+              updatedAt: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+              userId: ''
+            };
+            this.loadConversations();
+            window.location.reload();
           }
 
           if (this.isLoading && response.chunk) {
@@ -101,13 +110,19 @@ export class Faq implements OnInit, OnDestroy {
         complete: () => {
           this.isLoading = false;
           this.isStreaming = false;
-          this.cdr.detectChanges();
 
-          // Recarregar conversas e mensagens da conversa atual
-          this.loadConversations();
-          if (this.currentConversation) {
-            this.loadConversationMessages(this.currentConversation.id);
-          }
+          // Aguardar um pouco antes de recarregar para evitar conflitos
+          setTimeout(() => {
+            this.loadConversations();
+            if (this.currentConversation && this.currentConversation.id) {
+              // Limpar mensagens temporárias antes de carregar as persistidas
+              this.currentQuestion = '';
+              this.currentAnswer = '';
+              this.loadConversationMessages(this.currentConversation.id);
+            }
+          }, 1000);
+
+          this.cdr.detectChanges();
         },
         error: (error: any) => {
           console.error('Erro ao fazer pergunta:', error);
@@ -245,10 +260,12 @@ export class Faq implements OnInit, OnDestroy {
     const conversationsSub = this.faqService.getConversations().subscribe({
       next: (response: any) => {
 
-        this.conversations = (response.conversations || []).map((conv: any) => ({
-          ...conv,
-          id: conv.id || conv._id
-        }));
+        this.conversations = (response.conversations || [])
+          .map((conv: any) => ({
+            ...conv,
+            id: conv.id || conv._id
+          }))
+          .filter((conv: any) => conv.id && conv.id !== 'undefined' && conv.id !== 'null'); // Filtrar conversas sem ID válido
 
       },
       error: (error: any) => {
@@ -261,7 +278,7 @@ export class Faq implements OnInit, OnDestroy {
 
   loadConversationMessages(conversationId: string) {
 
-    if (!conversationId || conversationId === 'undefined' || conversationId === 'null') {
+    if (!conversationId || conversationId === 'undefined' || conversationId === 'null' || conversationId.trim() === '') {
       console.error('❌ ID da conversa inválido:', conversationId);
       this.showFeedbackMessage('Erro: ID da conversa inválido.', 'error');
       return;
@@ -299,15 +316,24 @@ export class Faq implements OnInit, OnDestroy {
       return;
     }
 
-    this.currentConversation = conversation;
-
-    this.currentMessages = [];
-
-    this.showConversations = false;
+    // Limpar estado atual primeiro
     this.clearCurrentChat();
 
-    this.cdr.detectChanges();
+    // Definir nova conversa
+    this.currentConversation = {
+      id: conversation.id,
+      title: conversation.title,
+      messageCount: conversation.messageCount,
+      updatedAt: conversation.updatedAt,
+      createdAt: conversation.createdAt,
+      userId: conversation.userId
+    };
 
+    this.currentMessages = [];
+    this.showConversations = false;
+
+
+    this.cdr.detectChanges();
     this.loadConversationMessages(conversation.id);
   }
 
@@ -376,17 +402,21 @@ export class Faq implements OnInit, OnDestroy {
   }
 
   editConversationTitle() {
-    if (!this.currentConversation) return;
+    if (!this.currentConversation || !this.currentConversation.id) {
+      this.showFeedbackMessage('Erro: conversa não selecionada ou ID inválido.', 'error');
+      return;
+    }
 
     this.editingTitle = this.currentConversation.title;
     this.showEditTitleModal = true;
   }
 
   confirmEditTitle() {
-    if (!this.currentConversation || !this.editingTitle.trim()) {
-      this.showFeedbackMessage('Por favor, insira um título válido.', 'error');
+    if (!this.currentConversation || !this.currentConversation.id || !this.editingTitle.trim()) {
+      this.showFeedbackMessage('Por favor, insira um título válido ou selecione uma conversa.', 'error');
       return;
     }
+
 
     const updateSub = this.faqService.updateConversationTitle(
       this.currentConversation.id,
@@ -394,7 +424,6 @@ export class Faq implements OnInit, OnDestroy {
     ).subscribe({
       next: (conversation: Conversation) => {
         this.showEditTitleModal = false;
-        this.editingTitle = '';
         this.currentConversation = conversation;
         this.loadConversations();
         this.showFeedbackMessage('Título atualizado com sucesso!', 'success');
@@ -406,6 +435,7 @@ export class Faq implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(updateSub);
+    window.location.reload();
   }
 
   cancelEditTitle() {
@@ -418,12 +448,20 @@ export class Faq implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
+    if (!conversation || !conversation.id) {
+      this.showFeedbackMessage('Erro: conversa inválida para exclusão.', 'error');
+      return;
+    }
+
     this.conversationToDelete = conversation;
     this.showDeleteModal = true;
   }
 
   confirmDeleteConversation() {
-    if (!this.conversationToDelete) return;
+    if (!this.conversationToDelete || !this.conversationToDelete.id) {
+      this.showFeedbackMessage('Erro: conversa inválida para exclusão.', 'error');
+      return;
+    }
 
     const deleteSub = this.faqService.deleteConversation(this.conversationToDelete.id).subscribe({
       next: () => {
