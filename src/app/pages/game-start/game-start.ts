@@ -177,6 +177,10 @@ export class GameStart implements OnInit, OnDestroy {
           return;
         }
 
+        // Para qualquer áudio anterior e reseta estados
+        this.stopNarration();
+        this.isPaused.set(false);
+
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
         this.gameState.set(gameData.gameState);
@@ -219,6 +223,9 @@ export class GameStart implements OnInit, OnDestroy {
 
     this.campaignService.startGame(campaignId).subscribe({
       next: (gameData: GameStartResponse) => {
+        // Para qualquer áudio anterior e reseta estados
+        this.stopNarration();
+        this.isPaused.set(false);
 
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
@@ -291,6 +298,9 @@ export class GameStart implements OnInit, OnDestroy {
 
     this.campaignService.playGame(campaignId, { actionId: actionCard.actionId }).subscribe({
       next: (response: GamePlayResponse) => {
+        // Para qualquer áudio anterior e reseta estados para a nova narração
+        this.stopNarration();
+        this.isPaused.set(false);
 
         this.currentNarration.set(response.narration);
         this.availableCards.set(response.availableCards);
@@ -338,11 +348,6 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   private speakNarration(text: string) {
-    // Só reproduz automaticamente se o usuário já deu permissão
-    if (!this.autoPlayEnabled()) {
-      console.log('🔇 Auto-play de áudio desabilitado. Usuário deve clicar em reproduzir.');
-      return;
-    }
 
     if (this.isSpeaking()) {
       this.stopNarration();
@@ -419,9 +424,7 @@ export class GameStart implements OnInit, OnDestroy {
         this.isSpeaking.set(false);
 
         if (event.error === 'not-allowed') {
-          console.log('🔇 Permissão de áudio negada pelo navegador');
           this.audioPermissionGranted.set(false);
-          this.autoPlayEnabled.set(false);
         }
       };
 
@@ -459,7 +462,6 @@ export class GameStart implements OnInit, OnDestroy {
       if (!this.autoPlayEnabled()) {
         this.autoPlayEnabled.set(true);
         this.audioPermissionGranted.set(true);
-        console.log('🔊 Auto-play de áudio habilitado após interação do usuário');
       }
 
       const currentText = this.currentNarration();

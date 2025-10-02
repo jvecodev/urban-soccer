@@ -100,8 +100,8 @@
           </div>
           <div class="playback-controls">
             <p-button
-              [icon]="isPaused() ? 'pi pi-play' : (isSpeaking() ? 'pi pi-pause' : 'pi pi-play')"
-              [label]="isPaused() ? 'Retomar' : (isSpeaking() ? 'Pausar' : 'Reproduzir')"
+              [icon]="(isSpeaking() && !isPaused()) ? 'pi pi-pause' : 'pi pi-play'"
+              [label]="(isSpeaking() && !isPaused()) ? 'Pausar' : 'Reproduzir'"
               (onClick)="toggleNarration()"
               severity="secondary"
               size="small"
@@ -111,14 +111,15 @@
         </div>
       </div>
       <div class="narration-content">
-        <div class="narration-status" *ngIf="isSpeaking()">
+        <div class="narration-status" *ngIf="isSpeaking() && !isPaused()">
           <i class="pi pi-volume-up speaking-icon"></i>
           <span>Reproduzindo narração...</span>
         </div>
-        <div class="narration-status auto-play-disabled" *ngIf="!autoPlayEnabled() && currentNarration()">
-          <i class="pi pi-info-circle"></i>
-          <span>Clique em "Reproduzir" para ouvir a narração</span>
+        <div class="narration-status" *ngIf="isPaused()">
+          <i class="pi pi-pause-circle speaking-icon"></i>
+          <span>Narração pausada</span>
         </div>
+        
         <p class="current-narration" [class.speaking]="isSpeaking()">{{ currentNarration() }}</p>
       </div>
     </div>
