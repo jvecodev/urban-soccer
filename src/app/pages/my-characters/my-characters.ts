@@ -338,7 +338,8 @@ export class MyCharacters implements OnInit {
     if (character.player && character.player.imageUrl) {
       return character.player.imageUrl;
     }
-    return '';
+    // Retorna um placeholder ou imagem padrão se não houver imageUrl
+    return 'assets/imgs/urbanSoccer.png';
   }
 
   getPlayerStats(character: UserCharacter) {
@@ -364,13 +365,14 @@ export class MyCharacters implements OnInit {
     const target = event.target as HTMLImageElement;
     if (target) {
       target.style.display = 'none';
-      const container = target.closest('.character-avatar');
-      if (container) {
-        const fallbackIcon = container.querySelector(
-          '.fallback-icon'
-        ) as HTMLElement;
-        if (fallbackIcon) {
-          fallbackIcon.style.display = 'flex';
+      
+      // Procura o container da imagem
+      const imageContainer = target.closest('.character-image-top');
+      if (imageContainer) {
+        // Mostra o overlay quando a imagem falha
+        const overlay = imageContainer.querySelector('.image-overlay') as HTMLElement;
+        if (overlay) {
+          overlay.style.display = 'flex';
         }
       }
     }

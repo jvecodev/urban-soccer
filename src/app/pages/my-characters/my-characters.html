@@ -74,7 +74,6 @@
         <!-- Character Image (Top of card) -->
         <div class="character-image-top">
           <img
-            *ngIf="getPlayerImage(character)"
             [src]="getPlayerImage(character)"
             [alt]="character.characterName"
             class="character-image"
@@ -82,7 +81,7 @@
             (error)="onImageError($event)"
           />
 
-          <div class="image-overlay" *ngIf="!getPlayerImage(character)">
+          <div class="image-overlay" style="display: none;">
             <i [class]="getArchetypeIcon(character)" class="overlay-icon"></i>
           </div>
 
