@@ -5,6 +5,7 @@ import { environment } from '../config/environment';
 
 export interface FaqLog {
   id: string;
+  _id?: string;
   question: string;
   answer?: string;
   userId: string;
@@ -14,7 +15,7 @@ export interface FaqLog {
 
 export interface Conversation {
   id: string;
-  _id?: string; // Para compatibilidade com MongoDB
+  _id?: string;
   title: string;
   userId: string;
   createdAt: string;
@@ -24,7 +25,7 @@ export interface Conversation {
 
 export interface ConversationMessage {
   id: string;
-  _id?: string; // Para compatibilidade com MongoDB
+  _id?: string;
   question: string;
   answer: string;
   conversationId: string;
@@ -93,7 +94,6 @@ export class FaqService {
           throw new Error('Response body is null');
         }
 
-        // Capturar conversation_id do header se uma nova conversa foi criada
         const newConversationId = response.headers.get('X-Conversation-ID');
 
         const reader = response.body.getReader();
@@ -101,8 +101,7 @@ export class FaqService {
 
         const processStream = async () => {
           try {
-            // Se há um novo conversation_id, enviar primeiro
-            if (newConversationId) {
+             if (newConversationId) {
               observer.next({ chunk: '', conversationId: newConversationId });
             }
 

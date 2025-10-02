@@ -171,66 +171,89 @@
     </p-card>
   </div>
 
-<!-- Player Name Dialog -->
-<p-dialog [(visible)]="showNameDialog" [modal]="true" [closable]="true" [resizable]="false" [draggable]="false"
-  styleClass="player-name-dialog edit-profile-dialog" (onHide)="cancelSelection()">
-
-
-  <div class="dialog-content" *ngIf="selectedArchetype()">
-    <div class="selected-player-info">
-      <div class="player-preview">
-        <div class="preview-avatar" [attr.data-archetype]="selectedArchetype()!.id">
-          <i [class]="getArchetypeIcon(selectedArchetype()!.id)"></i>
+<!-- Custom Player Name Modal -->
+<div class="custom-modal-overlay" *ngIf="showNameDialog()" (click)="cancelSelection()">
+  <div class="custom-modal" (click)="$event.stopPropagation()" *ngIf="selectedArchetype()">
+    <!-- Modal Header -->
+    <div class="custom-modal-header">
+      <div class="header-line"></div>
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="pi pi-plus"></i>
         </div>
-        <div class="player-details">
-          <h3>{{ selectedArchetype()!.name }}</h3>
-          <p-tag [value]="selectedArchetype()!.title" [style]="{'background-color': selectedArchetype()!.primaryColor}">
-          </p-tag>
+        <h2 class="header-title">CRIAR PERSONAGEM</h2>
+      </div>
+      <button class="close-button" (click)="cancelSelection()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="custom-modal-content">
+      <!-- Character Preview -->
+      <div class="character-preview-section">
+        <div class="character-preview">
+          <div class="preview-avatar" [attr.data-player-id]="selectedArchetype()!.id">
+            <i [class]="getArchetypeIcon(selectedArchetype()!.id)"></i>
+            <div class="avatar-glow"></div>
+          </div>
+          <div class="character-details">
+            <h3 class="character-name">{{ selectedArchetype()!.name }}</h3>
+            <div class="character-tag">
+              <span>{{ selectedArchetype()!.title }}</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Name Input Section -->
+      <div class="name-input-section">
+        <label for="playerName" class="input-label">
+          <span class="label-dot"></span>
+          NOME DO JOGADOR
+        </label>
+        <div class="input-container">
+          <input
+            id="playerName"
+            type="text"
+            [ngModel]="playerName()"
+            (ngModelChange)="playerName.set($event)"
+            placeholder="Digite o nome do seu jogador"
+            maxlength="20"
+            class="custom-input"
+            autocomplete="off"
+          />
+          <div class="input-border"></div>
+        </div>
+        <small class="input-help">
+          <i class="pi pi-info-circle"></i>
+          Máximo 20 caracteres (mínimo 2)
+        </small>
       </div>
     </div>
 
-    <div class="name-input-section">
-      <!-- Campo Nome do Jogador -->
-      <div class="form-group">
-        <label for="playerName">Nome do Jogador *</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>
-            <i class="pi pi-user"></i>
-          </p-inputGroupAddon>
-          <input
-            pInputText
-            id="playerName"
-            type="text"
-            [(ngModel)]="playerName"
-            placeholder="Digite o nome do seu jogador"
-            maxlength="20"
-            class="p-inputtext">
-        </p-inputGroup>
-        <small class="input-help">Máximo 20 caracteres</small>
+    <!-- Modal Footer -->
+    <div class="custom-modal-footer">
+      <div class="footer-line"></div>
+      <div class="dialog-actions">
+        <button class="custom-button cancel-button" (click)="cancelSelection()">
+          <i class="pi pi-times"></i>
+          <span>CANCELAR</span>
+          <div class="button-shimmer"></div>
+        </button>
+        <button
+          class="custom-button save-button"
+          (click)="confirmPlayerCreation()"
+          [disabled]="!playerName().trim() || playerName().trim().length < 2"
+        >
+          <i class="pi pi-check"></i>
+          <span>CRIAR JOGADOR</span>
+          <div class="button-shimmer"></div>
+        </button>
       </div>
     </div>
   </div>
-
-  <ng-template pTemplate="footer">
-    <div class="modal-actions">
-      <p-button
-        label="CANCELAR"
-        icon="pi pi-times"
-        (onClick)="cancelSelection()"
-        class="p-button-secondary"
-        type="button">
-      </p-button>
-      <p-button
-        label="CRIAR JOGADOR"
-        icon="pi pi-check"
-        (onClick)="confirmPlayerCreation()"
-        [disabled]="!playerName().trim()"
-        class="p-button-primary">
-      </p-button>
-    </div>
-  </ng-template>
-</p-dialog>
+</div>
 
 <!-- Toast Messages -->
 <p-toast position="top-right"></p-toast>

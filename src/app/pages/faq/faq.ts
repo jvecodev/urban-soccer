@@ -83,18 +83,14 @@ export class Faq implements OnInit, OnDestroy {
         this.currentConversation?.id
       ).subscribe({
         next: (response: {chunk: string, conversationId?: string}) => {
-          // Se recebemos um novo conversationId, atualizar a conversa atual
           if (response.conversationId && !this.currentConversation) {
-            console.log('🆕 Nova conversa criada automaticamente:', response.conversationId);
             this.loadConversations(); // Recarregar lista para incluir nova conversa
           }
 
-          // Para o loading assim que receber o primeiro chunk real
           if (this.isLoading && response.chunk) {
             this.isLoading = false;
           }
 
-          // Adiciona o chunk à resposta atual
           if (response.chunk) {
             this.currentAnswer += response.chunk;
           }
@@ -165,7 +161,6 @@ export class Faq implements OnInit, OnDestroy {
   deleteFaqQuestion(logId: string, event: Event) {
     event.stopPropagation(); // Previne que o clique ative o selectHistoryQuestion
 
-    // Encontra o item a ser deletado
     const itemToDelete = this.history.find(item => item.id === logId);
     if (itemToDelete) {
       this.itemToDelete = itemToDelete;
@@ -174,13 +169,11 @@ export class Faq implements OnInit, OnDestroy {
   }
 
   confirmDeleteQuestion() {
-    // Se estamos deletando uma conversa
     if (this.conversationToDelete) {
       this.confirmDeleteConversation();
       return;
     }
 
-    // Se estamos deletando uma mensagem individual (histórico antigo)
     if (!this.itemToDelete) return;
 
     const logId = this.itemToDelete.id;
@@ -188,15 +181,12 @@ export class Faq implements OnInit, OnDestroy {
 
     const deleteSub = this.faqService.deleteFaqQuestion(logId).subscribe({
       next: (response: any) => {
-        console.log('✅ Delete bem-sucedido - Recarregando página...');
 
-        // Recarrega a página completamente (equivalente ao F5)
         window.location.reload();
       },
       error: (error: any) => {
         console.error('Erro ao deletar pergunta:', error);
 
-        // Mostra feedback de erro
         const errorMessage = error?.error?.detail || 'Erro ao deletar pergunta. Tente novamente.';
         this.showFeedbackMessage(errorMessage, 'error');
 
@@ -226,7 +216,6 @@ export class Faq implements OnInit, OnDestroy {
     this.feedbackType = type;
     this.showFeedbackModal = true;
 
-    // Auto-close após 3 segundos
     setTimeout(() => {
       this.closeFeedbackModal();
     }, 3000);
@@ -252,19 +241,15 @@ export class Faq implements OnInit, OnDestroy {
     return item.id;
   }
 
-  // Métodos para gerenciar conversações
   loadConversations() {
     const conversationsSub = this.faqService.getConversations().subscribe({
       next: (response: any) => {
-        console.log('📊 Resposta das conversações:', response);
 
-        // Mapear _id para id se necessário (compatibilidade com MongoDB)
         this.conversations = (response.conversations || []).map((conv: any) => ({
           ...conv,
-          id: conv.id || conv._id  // Usa 'id' se existir, senão usa '_id'
+          id: conv.id || conv._id
         }));
 
-        console.log('📋 Conversações mapeadas:', this.conversations);
       },
       error: (error: any) => {
         console.error('Erro ao carregar conversações:', error);
@@ -275,30 +260,28 @@ export class Faq implements OnInit, OnDestroy {
   }
 
   loadConversationMessages(conversationId: string) {
-    console.log('🔍 Carregando mensagens para conversa ID:', conversationId);
 
-    if (!conversationId || conversationId === 'undefined') {
+    if (!conversationId || conversationId === 'undefined' || conversationId === 'null') {
       console.error('❌ ID da conversa inválido:', conversationId);
+      this.showFeedbackMessage('Erro: ID da conversa inválido.', 'error');
       return;
     }
 
     const messagesSub = this.faqService.getConversationDetails(conversationId).subscribe({
       next: (response: ConversationDetails) => {
-        console.log('💬 Detalhes da conversa recebidos:', response);
 
-        // Mapear _id para id nas mensagens também
         this.currentMessages = (response.messages || []).map((msg: any) => ({
           ...msg,
           id: msg.id || msg._id
         }));
 
-        // Mapear _id para id na conversa
         this.currentConversation = {
           ...response.conversation,
           id: response.conversation.id || (response.conversation as any)._id
         };
 
-        console.log('📝 Mensagens carregadas:', this.currentMessages.length);
+
+        this.cdr.detectChanges();
       },
       error: (error: any) => {
         console.error('Erro ao carregar mensagens da conversa:', error);
@@ -309,13 +292,23 @@ export class Faq implements OnInit, OnDestroy {
   }
 
   selectConversation(conversation: Conversation) {
-    console.log('🎯 Selecionando conversa:', conversation);
-    console.log('🆔 ID da conversa:', conversation.id);
+
+    if (!conversation.id) {
+      console.error('❌ Tentativa de selecionar conversa sem ID válido:', conversation);
+      this.showFeedbackMessage('Erro: conversa sem ID válido.', 'error');
+      return;
+    }
 
     this.currentConversation = conversation;
-    this.loadConversationMessages(conversation.id);
+
+    this.currentMessages = [];
+
     this.showConversations = false;
     this.clearCurrentChat();
+
+    this.cdr.detectChanges();
+
+    this.loadConversationMessages(conversation.id);
   }
 
   createNewConversation() {
@@ -330,26 +323,47 @@ export class Faq implements OnInit, OnDestroy {
     }
 
     const createSub = this.faqService.createConversation(this.newConversationTitle.trim()).subscribe({
-      next: (conversation: any) => {
-        console.log('✅ Nova conversa criada:', conversation);
+      next: (response: any) => {
 
-        // Mapear _id para id se necessário
-        const mappedConversation = {
-          ...conversation,
-          id: conversation.id || conversation._id
+        const conversationId = response.conversation_id || response.id || response._id;
+
+        if (!conversationId) {
+          console.error('❌ Nenhum ID válido retornado pela API:', response);
+          this.showFeedbackMessage('Erro: ID da conversa não encontrado.', 'error');
+          return;
+        }
+
+        const mappedConversation: Conversation = {
+          id: conversationId,
+          title: this.newConversationTitle.trim(),
+          messageCount: 0,
+          updatedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          userId: '' // Será preenchido pelo backend
         };
 
-        console.log('🔄 Conversa mapeada:', mappedConversation);
 
         this.showNewConversationModal = false;
         this.newConversationTitle = '';
+
+        this.currentConversation = mappedConversation;
+        this.currentMessages = [];
+
+        this.showConversations = false;
+        this.showHistory = false;
+
+        this.clearCurrentChat();
+
         this.loadConversations();
-        this.selectConversation(mappedConversation);
-        this.showFeedbackMessage('Nova conversa criada com sucesso!', 'success');
+
+        this.cdr.detectChanges();
       },
       error: (error: any) => {
         console.error('Erro ao criar conversa:', error);
         this.showFeedbackMessage('Erro ao criar nova conversa. Tente novamente.', 'error');
+
+        this.showNewConversationModal = false;
+        this.cdr.detectChanges();
       }
     });
 
@@ -413,9 +427,7 @@ export class Faq implements OnInit, OnDestroy {
 
     const deleteSub = this.faqService.deleteConversation(this.conversationToDelete.id).subscribe({
       next: () => {
-        console.log('✅ Conversa deletada com sucesso - Recarregando página...');
 
-        // Recarrega a página completamente (equivalente ao F5)
         window.location.reload();
       },
       error: (error: any) => {

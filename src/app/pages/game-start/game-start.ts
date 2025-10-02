@@ -152,17 +152,14 @@ export class GameStart implements OnInit, OnDestroy {
       ? this.campaignService.resumeGame(campaignId)
       : this.campaignService.startGame(campaignId);
 
-    console.log(`🎮 ${action === 'resume' ? 'Resumindo' : 'Iniciando'} jogo para campanha:`, campaignId);
 
     gameObservable.subscribe({
       next: (gameData: GameStartResponse) => {
-        console.log('🎮 Dados do jogo carregados:', gameData);
 
         if (!gameData.narration || !gameData.availableCards || gameData.availableCards.length === 0) {
           console.error('❌ Dados do jogo incompletos:', gameData);
 
           if (action === 'resume') {
-            console.log('🔄 Tentando iniciar campanha do zero devido a dados incompletos...');
             this.startGameFromScratch(campaignId);
             return;
           }
@@ -214,11 +211,9 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   private startGameFromScratch(campaignId: string) {
-    console.log('🎮 Iniciando jogo do zero para campanha:', campaignId);
 
     this.campaignService.startGame(campaignId).subscribe({
       next: (gameData: GameStartResponse) => {
-        console.log('🎮 Dados do jogo carregados (do zero):', gameData);
 
         this.currentNarration.set(gameData.narration);
         this.availableCards.set(gameData.availableCards);
@@ -226,7 +221,6 @@ export class GameStart implements OnInit, OnDestroy {
         this.narrationHistory.set([gameData.narration]);
         this.isLoading.set(false);
 
-        // Lê a narração em voz alta
         this.speakNarration(gameData.narration);
       },
       error: (error) => {
@@ -259,13 +253,11 @@ export class GameStart implements OnInit, OnDestroy {
   selectCard(actionCard: ActionCard) {
     if (this.isPlayingAction() || this.isGameOver()) return;
 
-    // Se o card já está selecionado, executa a ação
     if (this.selectedCard()?.actionId === actionCard.actionId) {
       this.executeAction(actionCard);
       return;
     }
 
-    // Seleciona o card e mostra o contexto
     this.selectedCard.set(actionCard);
     this.showCardConfirmation.set(true);
   }
@@ -274,7 +266,6 @@ export class GameStart implements OnInit, OnDestroy {
     const campaign = this.selectedCampaign();
     if (!campaign || this.isPlayingAction() || this.isGameOver()) return;
 
-    // Tenta usar id ou _id (compatibilidade com MongoDB)
     const campaignId = campaign.id || (campaign as any)._id;
 
     if (!campaignId) {
@@ -287,7 +278,6 @@ export class GameStart implements OnInit, OnDestroy {
       return;
     }
 
-    // Limpa a seleção
     this.selectedCard.set(null);
     this.showCardConfirmation.set(false);
 
@@ -296,22 +286,18 @@ export class GameStart implements OnInit, OnDestroy {
     this.campaignService.playGame(campaignId, { actionId: actionCard.actionId }).subscribe({
       next: (response: GamePlayResponse) => {
 
-        // Atualiza o estado do jogo
         this.currentNarration.set(response.narration);
         this.availableCards.set(response.availableCards);
         this.gameState.set(response.gameState);
 
-        // Adiciona narração ao histórico
         const history = this.narrationHistory();
         history.push(response.narration);
         this.narrationHistory.set([...history]);
 
-        // Verifica se o jogo acabou
         if (response.isGameOver) {/* Lines 232-234 omitted */}
 
         this.isPlayingAction.set(false);
 
-        // Lê a narração em voz alta
         this.speakNarration(response.narration);
       },
       error: (error) => {
@@ -336,7 +322,6 @@ export class GameStart implements OnInit, OnDestroy {
     this.showCardConfirmation.set(false);
   }
 
-  // Método mantido para compatibilidade (agora chama selectCard)
   playAction(actionCard: ActionCard) {
     this.selectCard(actionCard);
   }
@@ -348,7 +333,6 @@ export class GameStart implements OnInit, OnDestroy {
 
     this.isSpeaking.set(true);
 
-    // Primeiro tenta usar o TTS do backend
     this.speakWithBackend(text).catch(() => {
       this.speakWithBrowser(text);
     });
@@ -397,7 +381,6 @@ export class GameStart implements OnInit, OnDestroy {
 
   private speakWithBrowser(text: string) {
     if ('speechSynthesis' in window) {
-      // Para a fala anterior se estiver ativa
       speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
@@ -459,11 +442,9 @@ export class GameStart implements OnInit, OnDestroy {
     if (this.audioElement && !this.audioElement.paused) {
       this.audioElement.pause();
       this.isPaused.set(true);
-      console.log('⏸️ Narração pausada');
     } else if ('speechSynthesis' in window && speechSynthesis.speaking) {
       speechSynthesis.pause();
       this.isPaused.set(true);
-      console.log('⏸️ Narração pausada (browser)');
     }
   }
 
@@ -471,18 +452,15 @@ export class GameStart implements OnInit, OnDestroy {
     if (this.audioElement && this.audioElement.paused) {
       this.audioElement.play();
       this.isPaused.set(false);
-      console.log('▶️ Narração retomada');
     } else if ('speechSynthesis' in window && speechSynthesis.paused) {
       speechSynthesis.resume();
       this.isPaused.set(false);
-      console.log('▶️ Narração retomada (browser)');
     }
   }
 
   onVolumeChange(volume: number) {
     this.narrationVolume.set(volume);
 
-    // Atualiza o volume do áudio ativo
     if (this.audioElement) {
       this.audioElement.volume = volume / 100;
     }
@@ -497,7 +475,6 @@ export class GameStart implements OnInit, OnDestroy {
     this.router.navigate(['/my-campaigns']);
   }
 
-  // Métodos para controle de pausa da campanha
   showPauseCampaignModal(): void {
     this.showPauseModal.set(true);
   }
@@ -522,7 +499,6 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   exitWithoutSaving(): void {
-    // Para a narração se estiver tocando
     this.stopNarration();
 
     const campaign = this.selectedCampaign();
@@ -539,7 +515,6 @@ export class GameStart implements OnInit, OnDestroy {
       return;
     }
 
-    // Reseta a campanha para o estado inicial
     this.campaignService.resetCampaign(campaignId).subscribe({
       next: () => {
         this.messageService.add({
@@ -555,7 +530,6 @@ export class GameStart implements OnInit, OnDestroy {
       error: (error) => {
         console.error('❌ Erro ao resetar campanha:', error);
 
-        // Mesmo com erro, navega de volta - o usuário quer sair
         this.messageService.add({
           severity: 'warn',
           summary: 'Saindo da Campanha',
@@ -575,7 +549,6 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   getActionIcon(actionId: string): string {
-    // Mapeamento de ícones para diferentes tipos de ação
     const iconMap: { [key: string]: string } = {
       'tocar_curto': 'pi pi-send',
       'drible_rapido': 'pi pi-forward',
@@ -648,18 +621,18 @@ export class GameStart implements OnInit, OnDestroy {
     }
   }
 
-  getContextColor(context?: string): string {
-    switch (context) {
-      case 'meio_campo':
-        return '#4CAF50'; // Verde
-      case 'ataque':
-        return '#FF9800'; // Laranja
-      case 'chance_clara_de_gol':
-        return '#FFD700'; // Dourado
-      case 'defesa_pressionada':
-        return '#F44336'; // Vermelho
-      default:
-        return '#607D8B'; // Cinza azulado
-    }
-  }
+  // getContextColor(context?: string): string {
+  //   switch (context) {
+  //     case 'meio_campo':
+  //       return '#4CAF50'; // Verde
+  //     case 'ataque':
+  //       return '#FF9800'; // Laranja
+  //     case 'chance_clara_de_gol':
+  //       return '#FFD700'; // Dourado
+  //     case 'defesa_pressionada':
+  //       return '#F44336'; // Vermelho
+  //     default:
+  //       return '#607D8B'; // Cinza azulado
+  //   }
+  // }
 }

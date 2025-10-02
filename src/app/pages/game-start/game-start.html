@@ -68,8 +68,7 @@
         <div class="score-item context-item">
           <span class="score-label">Situação</span>
           <div class="context-info">
-            <i [class]="getContextIcon(gameState()?.gameContext)"
-               [style.color]="getContextColor(gameState()?.gameContext)"></i>
+            <i [class]="getContextIcon(gameState()?.gameContext)"></i>
             <span class="context-label">{{ getGameContextLabel() }}</span>
           </div>
         </div>
@@ -154,7 +153,7 @@
         <div class="confirmation-context">
           <div class="context-badge">
             <i [class]="getContextIcon(gameState()?.gameContext)"
-               [style.color]="getContextColor(gameState()?.gameContext)"></i>
+               ></i>
             <span>{{ getGameContextLabel() }}</span>
           </div>
         </div>
@@ -188,7 +187,6 @@
         <div
           class="action-card"
           [class.disabled]="isPlayingAction()"
-          [class.selected]="selectedCard()?.actionId === card.actionId"
           (click)="selectCard(card)"
         >
           <div class="action-icon">

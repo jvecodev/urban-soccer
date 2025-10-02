@@ -9,10 +9,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+
 import { Button } from '../../components/atoms/button/button';
 
 import { MessageService } from 'primeng/api';
@@ -36,10 +33,6 @@ import { UserCharacterCreate } from '../../models/userCharacter';
     TagModule,
     ProgressBarModule,
     ToastModule,
-    DialogModule,
-    InputTextModule,
-    InputGroupModule,
-    InputGroupAddonModule,
     Button
   ],
   templateUrl: './player-selection.html',

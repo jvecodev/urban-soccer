@@ -412,6 +412,65 @@
   justify-content: center;
   align-items: center;
 
+  app-button {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+
+    ::ng-deep button {
+      width: 100%;
+      height: 50px;
+      background: var(--ciano-eletrico);
+      color: var(--azul-noite);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--font-secondary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+
+      i {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      &:hover:not(:disabled) {
+        background: var(--amarelo-dourado);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(48, 201, 249, 0.3);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        background: rgba(48, 201, 249, 0.3);
+        color: rgba(20, 34, 61, 0.5);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.6;
+      }
+    }
+
+    &.new-conversation-btn ::ng-deep button {
+      background: var(--laranja-vibrante);
+
+      &:hover:not(:disabled) {
+        background: var(--amarelo-dourado);
+        box-shadow: 0 4px 12px rgba(235, 110, 25, 0.3);
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -419,10 +478,22 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
-    span{
-      font-size: 12px;
-    }
 
+    app-button {
+      flex: 1;
+      min-width: 100px;
+      max-width: none;
+
+      ::ng-deep button {
+        height: 45px;
+        font-size: 0.8rem;
+        padding: 0.625rem 0.75rem;
+
+        span {
+          font-size: 12px;
+        }
+      }
+    }
   }
 }
 
