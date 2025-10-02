@@ -33,7 +33,7 @@
         <div class="header-actions">
           <p-button
             icon="pi pi-pause"
-            label="Pausar"
+            label="Sair"
             (onClick)="showPauseCampaignModal()"
             severity="secondary"
             size="small"
@@ -284,14 +284,14 @@
     </div>
 
     <div class="pause-message">
-      <h4>Deseja pausar a campanha?</h4>
+      <h4>Deseja sair da campanha?</h4>
       <p>Você pode escolher uma das opções abaixo:</p>
 
       <div class="pause-options">
         <div class="option-card save-option">
           <i class="pi pi-save"></i>
           <div class="option-content">
-            <h5>Pausar e Salvar</h5>
+            <h5>Sair e Salvar</h5>
             <p>Salva seu progresso atual e retorna ao menu principal</p>
           </div>
         </div>
@@ -319,7 +319,7 @@
         styleClass="pause-exit-btn"
       ></p-button>
       <p-button
-        label="Pausar e Salvar"
+        label="Sair e Salvar"
         icon="pi pi-save"
         (onClick)="pauseAndExit()"
         severity="success"
