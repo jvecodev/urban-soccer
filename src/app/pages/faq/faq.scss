@@ -182,6 +182,8 @@
   flex: 1;
   max-height: 600px;
   overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; // Melhora o scroll em dispositivos iOS
 }
 
 .message-container {
@@ -476,6 +478,15 @@
 }
 
 @media (max-width: 768px) {
+  .chat-messages {
+    padding: 1.5rem;
+    max-height: 400px; // Reduz altura em mobile para dar mais espaço ao input
+
+    // Configurações específicas para melhor scroll em mobile
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
   .buttons-container {
     flex-wrap: wrap;
     gap: 0.5rem;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,9 @@ import { Button } from '../../components/atoms/button/button';
   templateUrl: './faq.html',
   styleUrls: ['./faq.scss']
 })
-export class Faq implements OnInit, OnDestroy {
+export class Faq implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('chatMessagesContainer', { static: false }) chatMessagesContainer!: ElementRef;
+
   question: string = '';
   currentQuestion: string = '';
   currentAnswer: string = '';
@@ -61,8 +63,56 @@ export class Faq implements OnInit, OnDestroy {
     this.loadHistory(); // Manter para compatibilidade
   }
 
+  ngAfterViewInit() {
+  }
+
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  /**
+   * Faz scroll automático para o final do chat de forma suave
+   */
+  private scrollToBottom(smooth: boolean = true): void {
+    try {
+      setTimeout(() => {
+        if (this.chatMessagesContainer?.nativeElement) {
+          const element = this.chatMessagesContainer.nativeElement;
+
+          if (element.scrollHeight > element.clientHeight) {
+            const scrollOptions: ScrollToOptions = {
+              top: element.scrollHeight,
+              behavior: smooth ? 'smooth' : 'auto'
+            };
+
+            if (element.scrollTo) {
+              element.scrollTo(scrollOptions);
+            } else {
+              element.scrollTop = element.scrollHeight;
+            }
+          }
+        }
+      }, 50);
+    } catch (error) {
+      console.warn('Erro ao fazer scroll automático:', error);
+    }
+  }
+
+  /**
+   * Força scroll para baixo durante o streaming (mais rápido)
+   */
+  private scrollToBottomImmediate(): void {
+    try {
+      if (this.chatMessagesContainer?.nativeElement) {
+        const element = this.chatMessagesContainer.nativeElement;
+
+        if (element.scrollHeight > element.clientHeight) {
+          element.scrollTop = element.scrollHeight;
+        }
+      }
+    } catch (error) {
+      console.warn('Erro ao fazer scroll imediato:', error);
+    }
   }
 
   async askQuestion() {
@@ -71,11 +121,15 @@ export class Faq implements OnInit, OnDestroy {
     }
 
     const currentQuestion = this.question.trim();
-    this.currentQuestion = currentQuestion; // Salva a pergunta para exibição
+    this.currentQuestion = currentQuestion;
     this.isLoading = true;
     this.isStreaming = true;
     this.currentAnswer = '';
-    this.question = ''; // Limpa o campo de entrada
+    this.question = '';
+
+    setTimeout(() => {
+      this.scrollToBottom(true);
+    }, 100);
 
     try {
       const streamSub = this.faqService.askQuestionStream(
@@ -98,24 +152,26 @@ export class Faq implements OnInit, OnDestroy {
 
           if (this.isLoading && response.chunk) {
             this.isLoading = false;
+            this.scrollToBottom(true);
           }
 
           if (response.chunk) {
             this.currentAnswer += response.chunk;
+
+            this.scrollToBottomImmediate();
           }
 
-          // Força a detecção de mudanças para o efeito de digitação
           this.cdr.detectChanges();
         },
         complete: () => {
           this.isLoading = false;
           this.isStreaming = false;
 
-          // Aguardar um pouco antes de recarregar para evitar conflitos
+          this.scrollToBottom(true);
+
           setTimeout(() => {
             this.loadConversations();
             if (this.currentConversation && this.currentConversation.id) {
-              // Limpar mensagens temporárias antes de carregar as persistidas
               this.currentQuestion = '';
               this.currentAnswer = '';
               this.loadConversationMessages(this.currentConversation.id);
@@ -129,6 +185,9 @@ export class Faq implements OnInit, OnDestroy {
           this.currentAnswer = 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente mais tarde.';
           this.isLoading = false;
           this.isStreaming = false;
+
+          this.scrollToBottom(true);
+
           this.cdr.detectChanges();
         }
       });
@@ -139,6 +198,8 @@ export class Faq implements OnInit, OnDestroy {
       this.currentAnswer = 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente mais tarde.';
       this.isLoading = false;
       this.isStreaming = false;
+
+      this.scrollToBottom(true);
     }
   }
 
@@ -147,10 +208,9 @@ export class Faq implements OnInit, OnDestroy {
   loadHistory() {
     const historySub = this.faqService.getMyHistory().subscribe({
       next: (response: any) => {
-        // Mapear _id para id se necessário (compatibilidade com MongoDB)
         this.history = response.logs.map((log: any) => ({
           ...log,
-          id: log.id || log._id  // Usa 'id' se existir, senão usa '_id'
+          id: log.id || log._id
         }));
       },
       error: (error: any) => {
@@ -174,7 +234,7 @@ export class Faq implements OnInit, OnDestroy {
   }
 
   deleteFaqQuestion(logId: string, event: Event) {
-    event.stopPropagation(); // Previne que o clique ative o selectHistoryQuestion
+    event.stopPropagation();
 
     const itemToDelete = this.history.find(item => item.id === logId);
     if (itemToDelete) {
@@ -265,7 +325,7 @@ export class Faq implements OnInit, OnDestroy {
             ...conv,
             id: conv.id || conv._id
           }))
-          .filter((conv: any) => conv.id && conv.id !== 'undefined' && conv.id !== 'null'); // Filtrar conversas sem ID válido
+          .filter((conv: any) => conv.id && conv.id !== 'undefined' && conv.id !== 'null');
 
       },
       error: (error: any) => {
@@ -297,6 +357,9 @@ export class Faq implements OnInit, OnDestroy {
           id: response.conversation.id || (response.conversation as any)._id
         };
 
+        setTimeout(() => {
+          this.scrollToBottom(false);
+        }, 100);
 
         this.cdr.detectChanges();
       },
@@ -316,10 +379,8 @@ export class Faq implements OnInit, OnDestroy {
       return;
     }
 
-    // Limpar estado atual primeiro
     this.clearCurrentChat();
 
-    // Definir nova conversa
     this.currentConversation = {
       id: conversation.id,
       title: conversation.title,
@@ -335,6 +396,10 @@ export class Faq implements OnInit, OnDestroy {
 
     this.cdr.detectChanges();
     this.loadConversationMessages(conversation.id);
+
+    setTimeout(() => {
+      this.scrollToBottom(true);
+    }, 200);
   }
 
   createNewConversation() {
@@ -365,7 +430,7 @@ export class Faq implements OnInit, OnDestroy {
           messageCount: 0,
           updatedAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
-          userId: '' // Será preenchido pelo backend
+          userId: '' 
         };
 
 

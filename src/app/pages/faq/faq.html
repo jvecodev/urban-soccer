@@ -30,7 +30,7 @@
     <!-- Área do Chat -->
     <div class="chat-area">
       <!-- Mensagens da conversa atual (apenas quando há conversa selecionada) -->
-      <div class="chat-messages" *ngIf="currentConversation && currentMessages.length > 0 && !currentQuestion">
+      <div class="chat-messages" #chatMessagesContainer *ngIf="currentConversation && currentMessages.length > 0 && !currentQuestion">
         <div class="message-container">
           <div class="message-pair" *ngFor="let message of currentMessages">
             <div class="message user-message">
@@ -47,7 +47,7 @@
       </div>
 
       <!-- Conversa atual em tempo real (quando há uma pergunta sendo processada) -->
-      <div class="chat-messages" *ngIf="currentQuestion">
+      <div class="chat-messages" #chatMessagesContainer *ngIf="currentQuestion">
         <div class="message-container">
           <!-- Mensagens históricas da conversa (se existir conversa selecionada) -->
           <div class="message-pair" *ngFor="let message of currentMessages">
