@@ -63,6 +63,10 @@ export class GameStart implements OnInit, OnDestroy {
   narrationVolume = signal(80);
   isPaused = signal(false);
 
+  // Controle de permissão de áudio
+  audioPermissionGranted = signal(false);
+  autoPlayEnabled = signal(false);
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -179,7 +183,8 @@ export class GameStart implements OnInit, OnDestroy {
         this.narrationHistory.set([gameData.narration]);
         this.isLoading.set(false);
 
-        this.speakNarration(gameData.narration);
+        // Não reproduz automaticamente - usuário deve clicar para ouvir
+        console.log('🎵 Narração carregada. Clique no botão de reproduzir para ouvir.');
       },
       error: (error) => {
         console.error('❌ Erro ao carregar jogo:', error);
@@ -221,7 +226,8 @@ export class GameStart implements OnInit, OnDestroy {
         this.narrationHistory.set([gameData.narration]);
         this.isLoading.set(false);
 
-        this.speakNarration(gameData.narration);
+        // Não reproduz automaticamente - usuário deve clicar para ouvir
+        console.log('🎵 Narração carregada. Clique no botão de reproduzir para ouvir.');
       },
       error: (error) => {
         console.error('❌ Erro ao iniciar jogo do zero:', error);
@@ -298,7 +304,12 @@ export class GameStart implements OnInit, OnDestroy {
 
         this.isPlayingAction.set(false);
 
-        this.speakNarration(response.narration);
+        // Só reproduz automaticamente se o auto-play estiver habilitado
+        if (this.autoPlayEnabled()) {
+          this.speakNarration(response.narration);
+        } else {
+          console.log('🎵 Nova narração disponível. Clique no botão de reproduzir para ouvir.');
+        }
       },
       error: (error) => {
         console.error('❌ Erro ao executar ação:', error);
@@ -327,6 +338,12 @@ export class GameStart implements OnInit, OnDestroy {
   }
 
   private speakNarration(text: string) {
+    // Só reproduz automaticamente se o usuário já deu permissão
+    if (!this.autoPlayEnabled()) {
+      console.log('🔇 Auto-play de áudio desabilitado. Usuário deve clicar em reproduzir.');
+      return;
+    }
+
     if (this.isSpeaking()) {
       this.stopNarration();
     }
@@ -390,6 +407,7 @@ export class GameStart implements OnInit, OnDestroy {
       utterance.volume = this.narrationVolume() / 100;
 
       utterance.onstart = () => {
+        console.log('🎵 Narração iniciada via navegador');
       };
 
       utterance.onend = () => {
@@ -399,6 +417,12 @@ export class GameStart implements OnInit, OnDestroy {
       utterance.onerror = (event) => {
         console.error('❌ Erro na narração do navegador:', event);
         this.isSpeaking.set(false);
+
+        if (event.error === 'not-allowed') {
+          console.log('🔇 Permissão de áudio negada pelo navegador');
+          this.audioPermissionGranted.set(false);
+          this.autoPlayEnabled.set(false);
+        }
       };
 
       speechSynthesis.speak(utterance);
@@ -431,6 +455,13 @@ export class GameStart implements OnInit, OnDestroy {
     } else if (this.isPaused()) {
       this.resumeNarration();
     } else {
+      // Habilita auto-play na primeira interação do usuário
+      if (!this.autoPlayEnabled()) {
+        this.autoPlayEnabled.set(true);
+        this.audioPermissionGranted.set(true);
+        console.log('🔊 Auto-play de áudio habilitado após interação do usuário');
+      }
+
       const currentText = this.currentNarration();
       if (currentText) {
         this.speakNarration(currentText);

@@ -270,6 +270,21 @@
             color: var(--amarelo-dourado);
             font-weight: 500;
           }
+
+          &.auto-play-disabled {
+            background: rgba(100, 150, 255, 0.1);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            animation: none;
+
+            i {
+              color: rgba(100, 150, 255, 0.8);
+              font-size: 1.1rem;
+            }
+
+            span {
+              color: rgba(100, 150, 255, 0.9);
+            }
+          }
         }
 
         .current-narration {

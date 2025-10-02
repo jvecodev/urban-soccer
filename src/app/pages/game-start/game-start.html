@@ -115,6 +115,10 @@
           <i class="pi pi-volume-up speaking-icon"></i>
           <span>Reproduzindo narração...</span>
         </div>
+        <div class="narration-status auto-play-disabled" *ngIf="!autoPlayEnabled() && currentNarration()">
+          <i class="pi pi-info-circle"></i>
+          <span>Clique em "Reproduzir" para ouvir a narração</span>
+        </div>
         <p class="current-narration" [class.speaking]="isSpeaking()">{{ currentNarration() }}</p>
       </div>
     </div>
