@@ -264,6 +264,28 @@ export class Auth {
   }
 
   /**
+   * Método público para verificar o status atual da autenticação
+   */
+  public getAuthStatus(): { hasToken: boolean; isValid: boolean; token?: string } {
+    const token = localStorage.getItem('auth_token');
+    const hasToken = !!token;
+    const isValid = hasToken && !this.isTokenExpired();
+
+    console.log('🔍 Status da autenticação:', {
+      hasToken,
+      isValid,
+      tokenLength: token?.length || 0,
+      tokenPreview: token ? `${token.substring(0, 20)}...` : 'null'
+    });
+
+    return {
+      hasToken,
+      isValid,
+      token: token || undefined
+    };
+  }
+
+  /**
    * Verifica se o token está expirado
    * Implementação básica - você pode melhorar decodificando o JWT
    */

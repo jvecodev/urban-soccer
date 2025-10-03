@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError, timeout, retry } from 'rxjs';
+import { Observable, catchError, throwError, timeout, retry as rxjsRetry } from 'rxjs';
 import { environment } from '../config/environment';
 
 @Injectable({
@@ -26,14 +26,19 @@ export class Api {
       ...options?.headers
     });
 
+    // Timeout customizado baseado no tipo de operação
+    const timeoutValue = options?.timeout ||
+      (endpoint.includes('generate-options') ? environment.aiTimeout : environment.apiTimeout) ||
+      15000;
+
     // Debug de requisições importantes
     if (endpoint.includes('campaign')) {
-
+      console.log('📦 Data:', data);
     }
 
     return this.http.post<T>(url, data, { headers })
       .pipe(
-        timeout(environment.apiTimeout || 10000),
+        timeout({ each: timeoutValue }),
         catchError(this.handleError)
       );
   }
@@ -157,20 +162,37 @@ export class Api {
   private handleError(error: any): Observable<never> {
     let errorMessage = 'Erro desconhecido';
 
+    console.log('🔍 Debugging error structure:', {
+      error: error,
+      status: error?.status,
+      statusText: error?.statusText,
+      errorObj: error?.error,
+      message: error?.message,
+      type: typeof error
+    });
+
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Erro: ${error.error.message}`;
-    } else {
+    } else if (error.status !== undefined) {
       switch (error.status) {
         case 0:
           if (error.error instanceof ProgressEvent) {
-            errorMessage = 'CORS: Usuário pode ter sido criado com sucesso.';
+            errorMessage = 'CORS: Problema de conectividade ou CORS.';
           } else {
             errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
           }
           break;
-        case 201:
-          // 201 é sucesso para criação, não deveria ser erro
-          errorMessage = 'Usuário criado com sucesso';
+        case 401:
+          errorMessage = 'Não autorizado. Token expirado ou inválido.';
+          break;
+        case 403:
+          errorMessage = 'Acesso negado. Verifique suas permissões.';
+          break;
+        case 404:
+          errorMessage = 'Endpoint não encontrado. Verifique a URL da API.';
+          break;
+        case 400:
+          errorMessage = error.error?.detail || 'Dados inválidos enviados para a API.';
           break;
         case 422:
           if (error.error?.detail && Array.isArray(error.error.detail)) {
@@ -187,16 +209,19 @@ export class Api {
           }
           break;
         case 500:
-          errorMessage = 'Usuário pode ter sido criado com sucesso.';
-          break;
-        case 404:
-          errorMessage = 'Endpoint não encontrado. Verifique a URL da API.';
-          break;
-        case 400:
-          errorMessage = error.error?.detail || 'Dados inválidos enviados para a API.';
+          errorMessage = 'Erro interno do servidor.';
           break;
         default:
           errorMessage = error.error?.detail || error.error?.message || `Erro ${error.status}: ${error.statusText}`;
+      }
+    } else {
+      // Caso onde error.status é undefined - isso pode acontecer com erros de timeout ou CORS
+      if (error.name === 'TimeoutError' || error.message?.includes('timeout')) {
+        errorMessage = 'Timeout: A requisição demorou muito para responder.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'Erro de conexão desconhecido. Verifique se a API está rodando.';
       }
     }
 

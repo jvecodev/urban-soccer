@@ -21,8 +21,11 @@ export class CampaignService {
       user_character_id: userCharacterId
     };
 
+    console.log('🎯 Iniciando geração de campanhas para personagem:', userCharacterId);
 
-    return this.api.post<CampaignGenerateResponse>('/campaigns/generate-options', body);
+    return this.api.post<CampaignGenerateResponse>('/campaigns/generate-options', body, {
+      timeout: 60000 // 60 segundos para operações de IA
+    });
   }
 
   /**

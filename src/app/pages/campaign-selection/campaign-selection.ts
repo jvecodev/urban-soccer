@@ -118,7 +118,22 @@ export class CampaignSelection implements OnInit {
       return;
     }
 
-    // Debug detalhado antes da chamada
+    const authStatus = this.auth.getAuthStatus();
+
+    if (!authStatus.isValid) {
+      console.error('❌ Token inválido ou expirado, redirecionando para login');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Sessão Expirada',
+        detail: 'Sua sessão expirou. Faça login novamente.',
+      });
+      this.auth.logout();
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 2000);
+      this.isLoading.set(false);
+      return;
+    }
 
     this.campaignService.generateCampaignOptions(userCharacter._id).subscribe({
       next: (response) => {
@@ -129,19 +144,36 @@ export class CampaignSelection implements OnInit {
         console.error('❌ Erro ao gerar opções de campanha:', error);
         console.error('❌ Status do erro:', error.status);
         console.error('❌ Detalhes do erro:', error.error);
+        console.error('❌ Mensagem do erro:', error.message);
         this.isLoading.set(false);
 
         let errorMessage = 'Erro ao gerar opções de campanha.';
 
-        if (error.status === 401) {
-          errorMessage = 'Sessão expirada. Faça login novamente.';
-          // Limpa dados de autenticação
-          this.auth.logout();
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        } else if (error.status === 0) {
-          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+        // Se o error é uma instância de Error (vindo do handleError), usa a mensagem diretamente
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else {
+          // Fallback para estrutura de erro HTTP tradicional
+          if (error.status === 401 || error.message?.includes('Não autorizado') || error.message?.includes('Token expirado')) {
+            errorMessage = 'Sessão expirada. Faça login novamente.';
+            // Limpa dados de autenticação
+            this.auth.logout();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          } else if (error.status === 403 || error.message?.includes('Acesso negado')) {
+            errorMessage = 'Acesso negado. Faça login novamente.';
+            this.auth.logout();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          } else if (error.status === 0 || error.message?.includes('conectividade')) {
+            errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+          } else if (error.error?.detail) {
+            errorMessage = error.error.detail;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
         }
 
         this.messageService.add({
@@ -200,12 +232,32 @@ export class CampaignSelection implements OnInit {
 
         let errorMessage = 'Erro ao criar campanha.';
 
-        if (error.status === 400) {
-          errorMessage = 'Dados inválidos para criação da campanha.';
-        } else if (error.status === 401) {
-          errorMessage = 'Sessão expirada. Faça login novamente.';
-        } else if (error.status === 0) {
-          errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+        // Se o error é uma instância de Error (vindo do handleError), usa a mensagem diretamente
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else {
+          // Fallback para estrutura de erro HTTP tradicional
+          if (error.status === 400) {
+            errorMessage = 'Dados inválidos para criação da campanha.';
+          } else if (error.status === 401 || error.message?.includes('Não autorizado')) {
+            errorMessage = 'Sessão expirada. Faça login novamente.';
+            this.auth.logout();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          } else if (error.status === 403 || error.message?.includes('Acesso negado')) {
+            errorMessage = 'Acesso negado. Faça login novamente.';
+            this.auth.logout();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          } else if (error.status === 0 || error.message?.includes('conectividade')) {
+            errorMessage = 'Problema de conectividade. Verifique se a API está rodando.';
+          } else if (error.error?.detail) {
+            errorMessage = error.error.detail;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
         }
 
         this.messageService.add({
