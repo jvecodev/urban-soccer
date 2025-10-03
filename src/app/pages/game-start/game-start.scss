@@ -25,18 +25,25 @@
       margin: 0 auto;
       padding: 0 2rem;
 
-      .header-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+      @media (max-width: 480px) {
+        padding: 0 1rem;
+      }
 
-        @media (max-width: 768px) {
-          flex-direction: column;
-          text-align: center;
-        }
+        .header-nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 1rem;
 
-        .header-title-section {
+          @media (max-width: 768px) {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+          }
+
+          @media (max-width: 480px) {
+            gap: 1rem;
+          }        .header-title-section {
           flex: 1;
           text-align: center;
 
@@ -65,6 +72,12 @@
           display: flex;
           gap: 1rem;
           align-items: center;
+
+          @media (max-width: 480px) {
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+          }
         }
       }
     }
@@ -74,6 +87,11 @@
     max-width: 1200px;
     margin: 1.5rem auto;
     padding: 0 2rem;
+
+    @media (max-width: 480px) {
+      padding: 0 1rem;
+      margin: 1rem auto;
+    }
 
     .game-state-card {
       background: rgba(255, 255, 255, 0.1);
@@ -87,9 +105,15 @@
         display: flex;
         justify-content: center;
         gap: 3rem;
+        flex-wrap: wrap;
 
         @media (max-width: 768px) {
-          gap: 2rem;
+          gap: 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+          gap: 1rem;
+          justify-content: space-around;
         }
 
         .score-item {
@@ -109,6 +133,10 @@
             font-weight: 700;
             color: var(--branco-puro);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+
+            @media (max-width: 480px) {
+              font-size: 1.4rem;
+            }
           }
 
           &.context-item {
@@ -142,6 +170,11 @@
     margin: 2rem auto;
     padding: 0 2rem;
 
+    @media (max-width: 480px) {
+      padding: 0 1rem;
+      margin: 1.5rem auto;
+    }
+
     .narration-card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
@@ -150,6 +183,11 @@
       padding: 2rem;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       position: relative;
+
+      @media (max-width: 480px) {
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
 
       &::before {
         content: '';
@@ -169,6 +207,12 @@
         gap: 1rem;
         margin-bottom: 1.5rem;
 
+        @media (max-width: 768px) {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1.5rem;
+        }
+
         .narration-title {
           display: flex;
           align-items: center;
@@ -184,6 +228,10 @@
             font-weight: 600;
             color: var(--branco-puro);
             margin: 0;
+
+            @media (max-width: 480px) {
+              font-size: 1.2rem;
+            }
           }
         }
 
@@ -198,6 +246,11 @@
             gap: 0.75rem;
           }
 
+          @media (max-width: 480px) {
+            width: 100%;
+            align-items: stretch;
+          }
+
           .volume-control {
             display: flex;
             align-items: center;
@@ -207,6 +260,13 @@
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.2);
 
+            @media (max-width: 480px) {
+              flex-wrap: wrap;
+              justify-content: center;
+              padding: 0.75rem;
+              gap: 0.5rem;
+            }
+
             .volume-icon {
               color: var(--ciano-eletrico);
               font-size: 1rem;
@@ -214,6 +274,10 @@
 
             ::ng-deep .volume-slider {
               width: 100px;
+
+              @media (max-width: 480px) {
+                width: 80px;
+              }
 
               .p-slider {
                 background: rgba(255, 255, 255, 0.2);
@@ -243,6 +307,11 @@
           .playback-controls {
             display: flex;
             gap: 0.5rem;
+
+            @media (max-width: 480px) {
+              width: 100%;
+              justify-content: center;
+            }
           }
         }
       }
@@ -296,6 +365,17 @@
           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
           transition: all 0.3s ease;
 
+          @media (max-width: 768px) {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: left;
+          }
+
+          @media (max-width: 480px) {
+            font-size: 1rem;
+            line-height: 1.5;
+          }
+
           &.speaking {
             color: var(--branco-puro);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
@@ -311,9 +391,18 @@
     margin: 2rem auto;
     padding: 0 2rem;
 
+    @media (max-width: 480px) {
+      padding: 0 1rem;
+      margin: 1.5rem auto;
+    }
+
     .actions-header {
       text-align: center;
       margin-bottom: 2rem;
+
+      @media (max-width: 480px) {
+        margin-bottom: 1.5rem;
+      }
 
       h3 {
         font-size: 1.6rem;
@@ -321,6 +410,10 @@
         color: var(--branco-puro);
         margin: 0 0 0.5rem 0;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
+        @media (max-width: 480px) {
+          font-size: 1.3rem;
+        }
       }
 
       .actions-subtitle {
@@ -328,11 +421,20 @@
         color: rgba(255, 255, 255, 0.8);
         margin: 0;
         font-weight: 400;
+
+        @media (max-width: 480px) {
+          font-size: 0.9rem;
+          padding: 0 1rem;
+        }
       }
     }
 
     .card-confirmation-section {
       margin-bottom: 2rem;
+
+      @media (max-width: 480px) {
+        margin-bottom: 1.5rem;
+      }
 
       .confirmation-card {
         background: rgba(255, 215, 0, 0.1);
@@ -343,11 +445,21 @@
         box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
         animation: slideInDown 0.3s ease-out;
 
+        @media (max-width: 480px) {
+          padding: 1rem;
+          border-radius: 12px;
+        }
+
         .confirmation-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           margin-bottom: 1rem;
+
+          @media (max-width: 480px) {
+            flex-direction: column;
+            gap: 1rem;
+          }
 
           .selected-card-info {
             display: flex;
@@ -365,6 +477,11 @@
               justify-content: center;
               flex-shrink: 0;
 
+              @media (max-width: 480px) {
+                width: 40px;
+                height: 40px;
+              }
+
               i {
                 font-size: 1.5rem;
                 color: var(--azul-escuro);
@@ -380,6 +497,10 @@
                 color: var(--amarelo-dourado);
                 margin: 0 0 0.5rem 0;
                 text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+
+                @media (max-width: 480px) {
+                  font-size: 1.1rem;
+                }
               }
 
               .selected-card-description {
@@ -442,6 +563,7 @@
 
           @media (max-width: 480px) {
             flex-direction: column;
+            gap: 0.75rem;
           }
         }
       }
@@ -470,6 +592,12 @@
           align-items: center;
           gap: 1.5rem;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+          @media (max-width: 480px) {
+            padding: 1rem;
+            gap: 1rem;
+            border-radius: 12px;
+          }
 
           &:hover:not(.disabled) {
             transform: translateY(-4px);
@@ -533,9 +661,18 @@
             box-shadow: 0 4px 16px rgba(0, 185, 255, 0.3);
             position: relative;
 
+            @media (max-width: 480px) {
+              width: 50px;
+              height: 50px;
+            }
+
             i {
               font-size: 1.8rem;
               color: var(--azul-escuro);
+
+              @media (max-width: 480px) {
+                font-size: 1.5rem;
+              }
             }
           }
 
@@ -548,6 +685,10 @@
               font-weight: 600;
               color: var(--branco-puro);
               margin: 0 0 0.5rem 0;
+
+              @media (max-width: 480px) {
+                font-size: 1.1rem;
+              }
             }
 
             .action-description {
@@ -555,6 +696,11 @@
               color: rgba(255, 255, 255, 0.8);
               margin: 0;
               line-height: 1.4;
+
+              @media (max-width: 480px) {
+                font-size: 0.9rem;
+                line-height: 1.3;
+              }
             }
           }
 
@@ -645,6 +791,10 @@
     align-items: center;
     justify-content: center;
 
+    @media (max-width: 480px) {
+      padding: 1rem;
+    }
+
     .action-loading-content {
       text-align: center;
       color: var(--branco-puro);
@@ -653,18 +803,30 @@
         font-size: 3rem;
         color: var(--ciano-eletrico);
         margin-bottom: 1.5rem;
+
+        @media (max-width: 480px) {
+          font-size: 2.5rem;
+        }
       }
 
       h3 {
         font-size: 1.6rem;
         font-weight: 600;
         margin: 0 0 0.5rem 0;
+
+        @media (max-width: 480px) {
+          font-size: 1.3rem;
+        }
       }
 
       p {
         font-size: 1rem;
         opacity: 0.8;
         margin: 0;
+
+        @media (max-width: 480px) {
+          font-size: 0.9rem;
+        }
       }
     }
   }

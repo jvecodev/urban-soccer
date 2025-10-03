@@ -23,13 +23,7 @@
           [text]="true"
         ></p-button>
 
-        <div class="header-title-section">
-          <h1 class="header-title">{{ getCampaignName() }}</h1>
-          <p class="header-subtitle" *ngIf="gameState()">
-            {{ gameState()?.score }} | Tempo: {{ gameState()?.time }}'
-          </p>
-        </div>
-
+       
         <div class="header-actions">
           <p-button
             icon="pi pi-pause"
@@ -119,7 +113,7 @@
           <i class="pi pi-pause-circle speaking-icon"></i>
           <span>Narração pausada</span>
         </div>
-        
+
         <p class="current-narration" [class.speaking]="isSpeaking()">{{ currentNarration() }}</p>
       </div>
     </div>
