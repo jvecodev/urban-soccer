@@ -29,6 +29,28 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./campaign-selection.scss'],
   providers: [MessageService],
 })
+
+/**
+ * @class CampaignSelection
+ * @description Componente que permite ao usuário selecionar ou gerar uma nova campanha para seu personagem
+ * @implements OnInit
+ * @property {Signal<boolean>} isLoading - Indica se os dados estão sendo carregados
+ * @property {Signal<boolean>} isCreatingCampaign - Indica se uma campanha está sendo criada
+ * @property {Signal<CampaignOption[]>} campaignOptions - Opções de campanha geradas para o personagem
+ * @property {Signal<UserCharacter | null>} selectedUserCharacter - Personagem do usuário selecionado
+ * @property {Signal<any | null>} selectedPlayer - Jogador associado ao personagem selecionado
+ * @method ngOnInit - Inicializa o componente, verifica autenticação e carrega dados do personagem e opções de campanha
+ * @method loadCharacterData - Carrega os dados do personagem selecionado do localStorage
+ * @method generateCampaignOptions - Gera opções de campanha chamando a API com o ID do personagem
+ * @method selectCampaign - Seleciona uma opção de campanha e cria a campanha chamando a API
+ * @method goToMyCampaigns - Navega para a página de "Minhas Campanhas"
+ * @method refreshOptions - Recarrega as opções de campanha
+ * @method getCharacterName - Retorna o nome do personagem selecionado
+ * @method getCharacterArchetype - Retorna o arquétipo do personagem selecionado
+ * @method getCharacterImage - Retorna a imagem do arquétipo do personagem selecionado
+ *
+ */
+
 export class CampaignSelection implements OnInit {
   isLoading = signal(true);
   isCreatingCampaign = signal(false);
@@ -47,7 +69,6 @@ export class CampaignSelection implements OnInit {
   ngOnInit() {
 
 
-    // Verifica se o usuário está autenticado antes de prosseguir
     if (!this.auth.isAuthenticated()) {
       console.error('❌ Usuário não autenticado, redirecionando para login');
       this.messageService.add({
@@ -64,7 +85,6 @@ export class CampaignSelection implements OnInit {
 
     this.loadCharacterData();
 
-    // Pequeno delay para garantir que tudo está inicializado
     setTimeout(() => {
       this.generateCampaignOptions();
     }, 100);
@@ -74,7 +94,6 @@ export class CampaignSelection implements OnInit {
 
   private loadCharacterData() {
 
-    // Carrega dados do personagem selecionado do localStorage
     const selectedUserCharacterData = localStorage.getItem('selectedUserCharacter');
     const selectedPlayerData = localStorage.getItem('selectedPlayer');
 
@@ -149,14 +168,11 @@ export class CampaignSelection implements OnInit {
 
         let errorMessage = 'Erro ao gerar opções de campanha.';
 
-        // Se o error é uma instância de Error (vindo do handleError), usa a mensagem diretamente
         if (error instanceof Error) {
           errorMessage = error.message;
         } else {
-          // Fallback para estrutura de erro HTTP tradicional
           if (error.status === 401 || error.message?.includes('Não autorizado') || error.message?.includes('Token expirado')) {
             errorMessage = 'Sessão expirada. Faça login novamente.';
-            // Limpa dados de autenticação
             this.auth.logout();
             setTimeout(() => {
               this.router.navigate(['/login']);
@@ -210,7 +226,6 @@ export class CampaignSelection implements OnInit {
     this.campaignService.createCampaign(campaignData).subscribe({
       next: (createdCampaign: Campaign) => {
 
-        // Salva a campanha criada no localStorage
         localStorage.setItem('selectedCampaign', JSON.stringify(createdCampaign));
 
         this.messageService.add({
@@ -221,7 +236,6 @@ export class CampaignSelection implements OnInit {
 
         this.isCreatingCampaign.set(false);
 
-        // Navega para o game-start após 1.5 segundos
         setTimeout(() => {
           this.router.navigate(['/game-start']);
         }, 1500);
@@ -232,11 +246,9 @@ export class CampaignSelection implements OnInit {
 
         let errorMessage = 'Erro ao criar campanha.';
 
-        // Se o error é uma instância de Error (vindo do handleError), usa a mensagem diretamente
         if (error instanceof Error) {
           errorMessage = error.message;
         } else {
-          // Fallback para estrutura de erro HTTP tradicional
           if (error.status === 400) {
             errorMessage = 'Dados inválidos para criação da campanha.';
           } else if (error.status === 401 || error.message?.includes('Não autorizado')) {

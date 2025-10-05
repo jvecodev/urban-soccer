@@ -21,6 +21,18 @@ import { TermsModal } from '../../components/organism/terms-modal/terms-modal';
     templateUrl: './signup.html',
     styleUrls: ['./signup.scss', '../../shared/toast-styles.scss']
 })
+
+/**
+ * @class Signup
+ * @description Componente que exibe a página de cadastro com campos para nome, email, senha e confirmação de senha
+ * @method submit - Realiza o processo de cadastro chamando o serviço de autenticação
+ * @method goToLogin - Navega para a página de login
+ * @method openTermsModal - Abre o modal dos termos de uso
+ * @method closeTermsModal - Fecha o modal dos termos de uso
+ * @method openPrivacyModal - Abre o modal da política de privacidade
+ * @method closePrivacyModal - Fecha o modal da política de privacidade
+ */
+
 export class Signup {
 
     name: string = '';
@@ -39,7 +51,6 @@ export class Signup {
             return;
         }
 
-        // Validações básicas e simplificadas
         if (!this.name?.trim()) {
             this.messageService.add({
                 severity: 'error',
@@ -60,7 +71,6 @@ export class Signup {
             return;
         }
 
-        // Validação de email simplificada
         if (!this.email.includes('@')) {
             this.messageService.add({
                 severity: 'error',
@@ -118,7 +128,6 @@ export class Signup {
                     life: 2000
                 });
 
-                // Redirecionamento mais rápido
                 setTimeout(() => {
                     this.router.navigate(['/login']);
                 }, 1500);
@@ -128,7 +137,6 @@ export class Signup {
                 console.error('❌ Erro no signup:', error);
                 this.isLoading = false;
 
-                // Simplificando o tratamento de erro
                 if (error.message.includes('Email já está em uso') || error.message.includes('already exists')) {
                     this.messageService.add({
                         severity: 'warn',
@@ -137,7 +145,6 @@ export class Signup {
                         life: 4000
                     });
                 } else if (error.status === 0 || error.message.includes('CORS')) {
-                    // Caso CORS - provavelmente usuário foi criado
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Conta criada!',
@@ -148,7 +155,6 @@ export class Signup {
                         this.router.navigate(['/login']);
                     }, 2000);
                 } else if (error.status === 500 || error.status === 201) {
-                    // Erro 500 ou 201 - usuário provavelmente foi criado
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Conta criada!',

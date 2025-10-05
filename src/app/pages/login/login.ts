@@ -17,6 +17,14 @@ import { Auth } from '../../services/auth';
     templateUrl: './login.html',
     styleUrls: ['./login.scss', '../../shared/toast-styles.scss']
 })
+
+/**
+ * @class Login
+ * @description Componente que exibe a página de login com campos para email e senha
+ * @method onLogin - Realiza o processo de login chamando o serviço de autenticação
+ * @method goToSignup - Navega para a página de cadastro
+ * @constructor - Injeta os serviços necessários (Router, MessageService, Auth)
+ */
 export class Login {
     email: string = '';
     password: string = '';
@@ -26,12 +34,10 @@ export class Login {
     constructor(private router: Router, private messageService: MessageService, private authService: Auth) {}
 
     onLogin() {
-        // Prevenir múltiplas execuções
         if (this.isLoading) {
             return;
         }
 
-        // Validar campos obrigatórios - mostrar apenas um toast por vez
         if (!this.email && !this.password) {
             this.messageService.add({
                 severity: 'error',
@@ -64,7 +70,6 @@ export class Login {
 
         this.isLoading = true;
 
-        // Login com API real
         const loginData = {
             email: this.email,
             password: this.password
@@ -106,7 +111,6 @@ export class Login {
     }
 
     goToSignup() {
-        // Verificar se há dados preenchidos para avisar sobre a perda
         if (this.email || this.password) {
             this.messageService.add({
                 severity: 'info',

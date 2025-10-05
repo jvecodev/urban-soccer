@@ -19,13 +19,12 @@ import { filter } from 'rxjs/operators';
 })
 export class App implements OnInit, OnDestroy {
   protected title = 'urban-soccer';
-  public showHeader = false; // Iniciar como false para evitar flash
+  public showHeader = false;
   private routerSubscription?: Subscription;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Verificar estado inicial após o Angular ter inicializado completamente
     setTimeout(() => {
       this.updateHeaderVisibility();
     }, 0);
@@ -40,7 +39,7 @@ export class App implements OnInit, OnDestroy {
 
   private updateHeaderVisibility(): void {
     const currentUrl = this.router.url;
-    // Ocultar header nas páginas de loading, login e signup
+    //Ocultar header nas páginas de loading, login e signup
     this.showHeader = !(currentUrl === '/loading' || currentUrl === '/login' || currentUrl === '/signup' || currentUrl === '/' || currentUrl === '');
   }
 

@@ -26,12 +26,10 @@ export class Api {
       ...options?.headers
     });
 
-    // Timeout customizado baseado no tipo de operação
     const timeoutValue = options?.timeout ||
       (endpoint.includes('generate-options') ? environment.aiTimeout : environment.apiTimeout) ||
       15000;
 
-    // Debug de requisições importantes
     if (endpoint.includes('campaign')) {
       console.log('📦 Data:', data);
     }

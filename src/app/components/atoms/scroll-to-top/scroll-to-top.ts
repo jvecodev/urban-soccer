@@ -8,6 +8,15 @@ import { CommonModule } from '@angular/common';
     templateUrl: './scroll-to-top.html',
     styleUrl: './scroll-to-top.scss'
 })
+
+/**
+ * @class ScrollToTop
+ * @description Componente que exibe um botão para rolar a página para o topo quando o usuário rola para baixo
+ * @implements OnInit, OnDestroy
+ * @method ngOnInit - Inicializa o componente e verifica a posição de rolagem
+ * @method ngOnDestroy - Limpa os listeners ao destruir o componente
+ */
+
 export class ScrollToTop implements OnInit, OnDestroy {
     isVisible = false;
 

@@ -39,6 +39,25 @@ import { UserCharacterCreate } from '../../models/userCharacter';
   styleUrls: ['./player-selection-new.scss'],
   providers: [MessageService]
 })
+
+/**
+ * @class PlayerSelection
+ * @description Componente que exibe a seleção de personagens para o usuário criar um novo jogador
+ * @implements OnInit
+ * @method ngOnInit - Inicializa o componente e carrega os arquétipos de personagens
+ * @method loadPlayers - Carrega os arquétipos de personagens da API
+ * @method selectArchetype - Seleciona um arquétipo de personagem e abre o diálogo de nomeação
+ * @method confirmPlayerCreation - Confirma a criação do personagem com o nome e arquétipo selecionados
+ * @method cancelSelection - Cancela a seleção do arquétipo e fecha o diálogo
+ * @method reloadPlayers - Recarrega a lista de arquétipos de personagens
+ * @method getAttributeColor - Retorna a cor associada a um valor de atributo
+ * @method getAttributeIcon - Retorna o ícone associado a um atributo específico
+ * @method getArchetypeIcon - Retorna o ícone associado a um arquétipo de personagem
+ * @method onImageError - Manipula erros de carregamento de imagem para arquétipos
+ * @method navigateToHome - Navega para a página inicial
+ * @method navigateToDashboard - Navega para o dashboard do usuário
+ */
+
 export class PlayerSelection implements OnInit {
   isLoading = signal(true);
   showNameDialog = signal(false);
@@ -88,7 +107,6 @@ export class PlayerSelection implements OnInit {
     this.loadPlayers();
   }
 
-  // Carrega os players da API
   private loadPlayers() {
     this.isLoading.set(true);
     this.loadingError.set(null);
@@ -168,7 +186,6 @@ export class PlayerSelection implements OnInit {
       return;
     }
 
-    // Criar personagem na API
     const characterData: UserCharacterCreate = {
       playerId: archetype.id,
       characterName: name
@@ -178,7 +195,6 @@ export class PlayerSelection implements OnInit {
     this.userCharacterService.createUserCharacter(characterData).subscribe({
       next: (createdCharacter) => {
 
-        // Salva dados locais para compatibilidade
         const newPlayer: Player = {
           id: archetype.id,
           name: name,

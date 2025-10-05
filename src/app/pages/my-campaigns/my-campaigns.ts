@@ -30,15 +30,29 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./my-campaigns.scss'],
   providers: [MessageService],
 })
+
+/**
+ * @class MyCampaigns
+ * @description Componente que exibe a lista de campanhas do usuário, permitindo iniciar, continuar, revisar ou deletar campanhas
+ * @implements OnInit
+ * @property {Signal<boolean>} isLoading - Indica se os dados estão sendo carregados
+ * @property {Signal<Campaign[]>} campaigns - Lista de campanhas do usuário
+ * @property {Signal<boolean>} showDeleteModal - Controla a visibilidade do modal de confirmação de exclusão
+ * @property {Signal<Campaign | null>} campaignToDelete - Armazena a campanha selecionada para exclusão
+ * @property {Signal<boolean>} showSummaryModal - Controla a visibilidade do modal de resumo da campanha
+ * @property {Signal<Campaign | null>} campaignToReview - Armazena a campanha selecionada para revisão
+ * @method loadUserCampaigns - Carrega as campanhas do usuário do serviço de campanha
+ * @method selectCampaign - Seleciona uma campanha e decide a ação (iniciar, continuar, revisar)
+ * @method startCampaign - Inicia uma nova campanha
+ */
+
 export class MyCampaigns implements OnInit {
   isLoading = signal(true);
   campaigns = signal<Campaign[]>([]);
 
-  // Modal de confirmação de exclusão
   showDeleteModal = signal(false);
   campaignToDelete = signal<Campaign | null>(null);
 
-  // Modal de resumo da campanha
   showSummaryModal = signal(false);
   campaignToReview = signal<Campaign | null>(null);
 
@@ -51,7 +65,6 @@ export class MyCampaigns implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Verifica se o usuário está autenticado antes de prosseguir
     if (!this.auth.isAuthenticated()) {
       console.error('❌ Usuário não autenticado, redirecionando para login');
       this.messageService.add({
@@ -114,14 +127,11 @@ export class MyCampaigns implements OnInit {
 
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
 
-    // Verifica o status da campanha para decidir a ação
     if (campaign.status === 'abandoned' || campaign.status === 'completed') {
       this.reviewCampaign(campaign);
     } else if (this.hasRealProgress(campaign)) {
-      // Só usa resume se realmente tem progresso (ações jogadas)
       this.resumeCampaign(campaign);
     } else {
-      // Sempre usa start se não há progresso real, mesmo se já foi "iniciada"
       this.startCampaign(campaign);
     }
   }
@@ -161,8 +171,6 @@ export class MyCampaigns implements OnInit {
       detail: `Revisando ${campaign.campaignName}...`,
     });
 
-    // Para campanhas finalizadas, podemos mostrar um resumo ou redirecionar para uma página de revisão
-    // Por enquanto, vou mostrar os detalhes da campanha sem tentar fazer resume
     setTimeout(() => {
       this.showCampaignSummary(campaign);
     }, 1000);
@@ -317,13 +325,11 @@ export class MyCampaigns implements OnInit {
       return 0;
     }
 
-    // Se tem time (lances jogados), usa como base do progresso
     if (progress.time && progress.time > 0) {
       const maxLances = 10; // Máximo de lances por campanha
       return Math.min(Math.round((progress.time / maxLances) * 100), 100);
     }
 
-    // Fallback para estrutura antiga
     if (progress.totalLevels && progress.totalLevels > 0) {
       return Math.round((progress.currentLevel / progress.totalLevels) * 100);
     }

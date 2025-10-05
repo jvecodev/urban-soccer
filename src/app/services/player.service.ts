@@ -50,13 +50,10 @@ export class PlayerService {
    * Converte um player da API para arquétipo do frontend
    */
   private convertApiPlayerToArchetype(apiPlayer: ApiPlayer): PlayerArchetype {
-    // Mapeia stats do backend para attributes do frontend
     const attributes = this.mapStatsToAttributes(apiPlayer.stats, apiPlayer.rarity);
 
-    // Define cores baseadas na raridade
     const colors = this.getColorsForRarity(apiPlayer.rarity);
 
-    // Define título baseado na especialidade
     const title = this.getTitleFromSpecialAbility(apiPlayer.stats.specialAbility);
 
     return {

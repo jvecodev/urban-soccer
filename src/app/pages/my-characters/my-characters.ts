@@ -36,6 +36,32 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./my-characters.scss'],
   providers: [MessageService, ConfirmationService],
 })
+
+/**
+ * @class MyCharacters
+ * @description Componente que exibe a lista de personagens do usuário, permitindo criar, editar e deletar personagens
+ * @implements OnInit
+ * @method goToPlayerSelection - Navega para a página de seleção de jogador para criar um novo personagem
+ * @method ngOnInit - Inicializa o componente e carrega os personagens do usuário
+ * @method loadMyCharacters - Carrega os personagens do usuário a partir do serviço
+ * @method refreshCharacters - Recarrega a lista de personagens
+ * @method selectCharacter - Seleciona um personagem e navega para a seleção de campanha
+ * @method editCharacter - Abre o diálogo de edição para o personagem selecionado
+ * @method confirmEdit - Confirma a edição do nome do personagem
+ * @method deleteCharacter - Deleta o personagem selecionado após confirmação
+ * @method closeEditDialog - Fecha o diálogo de edição e limpa os dados temporários
+ * @method getArchetypeIcon - Retorna o ícone associado ao arquétipo do personagem
+ * @method getArchetypeName - Retorna o nome do arquétipo do personagem
+ * @method getPlayerRarity - Retorna a raridade do jogador (Comum ou Único)
+ * @method getPlayerImage - Retorna a URL da imagem do jogador
+ * @method getPlayerStats - Retorna as estatísticas do jogador
+ * @method createNewCharacter - Navega para a página de seleção de jogador para criar um novo personagem
+ * @method navigateToHome - Navega para a página inicial
+ * @method navigateToDashboard - Navega para o dashboard do usuário
+ * @method onImageError - Manipula erros de carregamento de imagem, exibindo um overlay
+ * @method getAttributeColor - Retorna a cor associada a um valor de atributo específico
+ */
+
 export class MyCharacters implements OnInit {
   isLoading = signal(true);
   myCharacters = signal<UserCharacter[]>([]);
@@ -95,7 +121,6 @@ export class MyCharacters implements OnInit {
     });
   }
 
-  // Método público para refresh da tela
   refreshCharacters() {
     this.loadMyCharacters();
   }
@@ -110,7 +135,6 @@ export class MyCharacters implements OnInit {
       return;
     }
 
-    // Salva o personagem selecionado no localStorage
     const playerData = {
       id: character.player._id,
       name: character.characterName,
@@ -338,7 +362,6 @@ export class MyCharacters implements OnInit {
     if (character.player && character.player.imageUrl) {
       return character.player.imageUrl;
     }
-    // Retorna um placeholder ou imagem padrão se não houver imageUrl
     return 'assets/imgs/urbanSoccer.png';
   }
 
@@ -365,11 +388,9 @@ export class MyCharacters implements OnInit {
     const target = event.target as HTMLImageElement;
     if (target) {
       target.style.display = 'none';
-      
-      // Procura o container da imagem
+
       const imageContainer = target.closest('.character-image-top');
       if (imageContainer) {
-        // Mostra o overlay quando a imagem falha
         const overlay = imageContainer.querySelector('.image-overlay') as HTMLElement;
         if (overlay) {
           overlay.style.display = 'flex';

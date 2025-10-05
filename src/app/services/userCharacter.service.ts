@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, throwError, catchError, EMPTY } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Api } from './api';
 import { Auth } from './auth';
 import {
-  UserCharacter,
   UserCharacterCreate,
   UserCharacterUpdate,
   UserCharacterPublic,
@@ -21,10 +20,8 @@ export class UserCharacterService {
   ) {}
 
   private setupAuthToken(): void {
-    // Primeiro tenta pegar da memória
     let token = this.auth.getToken();
 
-    // Se não encontrar na memória, tenta pegar do localStorage
     if (!token) {
       const storedToken = localStorage.getItem('auth_token');
       if (storedToken) {

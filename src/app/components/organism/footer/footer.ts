@@ -17,6 +17,31 @@ import { TermsModal } from '../terms-modal/terms-modal';
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })
+
+/**
+ * @class Footer
+ * @description Componente que exibe o rodapé do site com links, informações de contato e um formulário de contato
+ * @implements OnInit, OnDestroy, AfterViewInit
+ * @property {boolean} showModal - Indica se o modal de sucesso está visível
+ * @property {boolean} isSubmitting - Indica se o formulário está sendo enviado
+ * @property {boolean} showTermsModal - Indica se o modal de termos está visível
+ * @property {boolean} showPrivacyModal - Indica se o modal de privacidade está visível
+ * @property {IntersectionObserver} observer - Observador para detectar quando os elementos do rodapé entram na viewport
+ * @property {object} formData - Dados do formulário de contato
+ * @method ngOnInit - Inicializa o componente e configura o IntersectionObserver
+ * @method ngAfterViewInit - Configura a observação dos elementos do rodapé após a visualização ser inicializada
+ * @method ngOnDestroy - Desconecta o IntersectionObserver ao destruir o componente
+ * @method onSubmit - Manipula o envio do formulário de contato
+ * @method closeModal - Fecha o modal de sucesso
+ * @method onModalBackdropClick - Fecha o modal ao clicar no backdrop
+ * @method onModalContentClick - Impede o fechamento do modal ao clicar no conteúdo
+ * @method openTermsModal - Abre o modal de termos
+ * @method closeTermsModal - Fecha o modal de termos
+ * @method openPrivacyModal - Abre o modal de privacidade
+ * @method closePrivacyModal - Fecha o modal de privacidade
+ * @method navigateTo
+ */
+
 export class Footer implements OnInit, OnDestroy, AfterViewInit {
   showModal = false;
   isSubmitting = false;
@@ -59,20 +84,15 @@ export class Footer implements OnInit, OnDestroy, AfterViewInit {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const element = entry.target as HTMLElement;
-          // Remover classes anteriores para permitir reanimação
           element.classList.remove('animate-out-view');
           element.style.animationPlayState = 'running';
 
-          // Forçar reflow
           element.offsetHeight;
 
-          // Adicionar nova animação
           element.classList.add('animate-in-view');
 
-          // Adicionar classes especiais para efeitos visuais
           if (element.classList.contains('animate-footer-social')) {
             element.classList.add('social-visible');
-            // Reativar animação dos links sociais
             this.reactivateSocialAnimations(element);
           }
         } else {
@@ -86,7 +106,6 @@ export class Footer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private reactivateSocialAnimations(element: HTMLElement) {
-    // Reativar animações dos elementos sociais
     setTimeout(() => {
       element.style.transform = 'scale(1.05)';
       setTimeout(() => {
@@ -112,7 +131,6 @@ export class Footer implements OnInit, OnDestroy, AfterViewInit {
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    // Validação básica
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
@@ -124,17 +142,14 @@ export class Footer implements OnInit, OnDestroy, AfterViewInit {
     this.isSubmitting = true;
 
     try {
-      // Envia o formulário para FormSubmit
       const response = await fetch(form.action, {
         method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        // Limpa o formulário
         this.formData = { name: '', email: '', message: '' };
         form.reset();
-        // Mostra o modal de sucesso
         this.showModal = true;
       } else {
         console.error('Erro ao enviar formulário');

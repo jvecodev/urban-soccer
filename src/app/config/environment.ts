@@ -1,3 +1,8 @@
+
+/**
+ * Environment configuration for development mode.
+ */
+
 export const environment = {
   production: false,
   // apiUrl: 'http://localhost:8000',

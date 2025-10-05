@@ -17,6 +17,25 @@ import { ScrollToTop } from '../../components/atoms/scroll-to-top/scroll-to-top'
     templateUrl: './home.html',
     styleUrl: './home.scss'
 })
+
+/**
+ * @class Home
+ * @description Componente que exibe a página inicial do site com cabeçalho, seção principal, recursos e rodapé
+ * @implements OnInit, OnDestroy, AfterViewInit
+ * @property {ElementRef} homeContainer - Referência ao contêiner principal da página
+ * @property {IntersectionObserver} observer - Observador para detectar quando os elementos entram na viewport
+ * @property {Function} scrollListener - Listener para detectar eventos de scroll
+ * @property {number} lastScrollY - Última posição Y do scroll para determinar a direção do scroll
+ * @method ngOnInit - Inicializa o componente, configura o listener de scroll e o IntersectionObserver
+ * @method ngAfterViewInit - Configura a observação dos elementos após a visualização ser inicializada e dispara animações de entrada
+ * @method ngOnDestroy - Desconecta o IntersectionObserver e remove o listener de scroll ao destruir o componente
+ * @method triggerEntranceAnimations - Dispara animações de entrada para os elementos principais
+ * @method setupIntersectionObserver - Configura o IntersectionObserver para monitorar elementos específicos
+ * @method observeElements - Inicia a observação dos elementos designados
+ * @method setupScrollListener - Configura o listener para detectar a direção e velocidade do scroll, aplicando classes CSS apropriadas
+ * 
+ */
+
 export class Home implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('homeContainer', { static: true }) homeContainer!: ElementRef;
 
@@ -30,7 +49,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // Animação instantânea ao entrar na home
         this.triggerEntranceAnimations();
         setTimeout(() => {
             this.observeElements();
@@ -70,19 +88,13 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const element = entry.target as HTMLElement;
-                    // Remover classes anteriores para permitir reanimação
                     element.classList.remove('animate-out-view');
-                    // Forçar reflow para garantir que a classe seja removida
                     element.offsetHeight;
-                    // Adicionar nova animação
                     element.classList.add('animate-in-view');
                 } else {
                     const element = entry.target as HTMLElement;
-                    // Remover classes anteriores para permitir reanimação
                     element.classList.remove('animate-in-view');
-                    // Forçar reflow
                     element.offsetHeight;
-                    // Adicionar animação de saída
                     element.classList.add('animate-out-view');
                 }
             });
@@ -102,7 +114,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             const scrollDirection = currentScrollY > this.lastScrollY ? 'down' : 'up';
             const scrollSpeed = Math.abs(currentScrollY - this.lastScrollY);
 
-            // Atualizar classes baseado na direção do scroll
             const body = document.body;
             const allElements = document.querySelectorAll('app-features, app-footer, app-first-organism');
 
@@ -110,13 +121,11 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
                 body.classList.add('scrolling-down');
                 body.classList.remove('scrolling-up');
 
-                // Adicionar efeito de scroll para baixo nos elementos
                 allElements.forEach((element, index) => {
                     const htmlElement = element as HTMLElement;
                     htmlElement.classList.add('scroll-down-effect');
                     htmlElement.classList.remove('scroll-up-effect');
 
-                    // Adicionar delay baseado na posição do elemento
                     htmlElement.style.animationDelay = `${index * 0.1}s`;
                 });
 
@@ -124,18 +133,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
                 body.classList.add('scrolling-up');
                 body.classList.remove('scrolling-down');
 
-                // Adicionar efeito de scroll para cima nos elementos
                 allElements.forEach((element, index) => {
                     const htmlElement = element as HTMLElement;
                     htmlElement.classList.add('scroll-up-effect');
                     htmlElement.classList.remove('scroll-down-effect');
 
-                    // Adicionar delay baseado na posição do elemento (inverso)
                     htmlElement.style.animationDelay = `${(allElements.length - index - 1) * 0.1}s`;
                 });
             }
 
-            // Adicionar classe de velocidade baseada na velocidade do scroll
             if (scrollSpeed > 10) {
                 body.classList.add('fast-scrolling');
                 setTimeout(() => body.classList.remove('fast-scrolling'), 300);

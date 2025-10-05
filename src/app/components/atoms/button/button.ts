@@ -15,6 +15,13 @@ export class Button {
 
   @Output() onClick = new EventEmitter<Event>();
 
+  /**
+   * @method handleClick
+   * @param event - Evento do clique
+   * @returns void
+   * @description Emite o evento de clique se o botão não estiver desabilitado
+   */
+
   handleClick(event: Event): void {
     if (!this.disabled) {
       this.onClick.emit(event);

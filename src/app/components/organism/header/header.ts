@@ -18,6 +18,19 @@ import { UserAvatar } from '../../atoms/user-avatar/user-avatar';
     standalone: true,
     imports: [Toolbar, AvatarModule, ButtonModule, RouterModule, CommonModule, MenuModule, UserAvatar, Button]
 })
+
+/**
+ * @class Header
+ * @description Componente que exibe o cabeçalho do site com navegação e informações do usuário
+ * @implements OnInit, OnDestroy
+ * @property {boolean} isMobileMenuOpen - Indica se o menu móvel está aberto
+ * @property {Subscription} userSubscription - Assinatura para monitorar mudanças no usuário atual
+ * @property {Computed<boolean>} isAuthenticated - Computed que verifica se o usuário está autenticado
+ * @property {Computed<any>} currentUser - Computed que retorna os dados do usuário atual
+ * @method ngOnInit - Inicializa o componente e configura a assinatura para mudanças no usuário
+ * @method ngOnDestroy - Limpa a assinatura ao destruir o componente
+ */
+
 export class Header implements OnInit, OnDestroy {
     isMobileMenuOpen = false;
     private userSubscription?: Subscription;

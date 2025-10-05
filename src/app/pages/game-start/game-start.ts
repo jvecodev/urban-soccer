@@ -36,6 +36,22 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./game-start.scss'],
   providers: [MessageService],
 })
+
+/**
+ * @class GameStart
+ * @description Componente que gerencia a interface de jogo, incluindo narração, seleção de ações e estado do jogo
+ * @implements OnInit, OnDestroy
+ * @property {Signal<boolean>} isLoading - Indica se o jogo está carregando
+ * @property {Signal<boolean>} isPlayingAction - Indica se uma ação está sendo processada
+ * @property {Signal<Campaign | null>} selectedCampaign - Armazena a campanha selecionada
+ * @property {Signal<string>} currentNarration - Armazena a narração atual do jogo
+ * @property {Signal<ActionCard[]>} availableCards - Armazena os cards de ação disponíveis
+ * @property {Signal<GameState | null>} gameState - Armazena o estado atual do jogo
+ * @property {Signal<boolean>} isGameOver - Indica se o jogo terminou
+ * @property {Signal<'win' | 'lose' | 'draw' | null>} gameResult - Armazena o resultado do jogo
+ * ...
+ */
+
 export class GameStart implements OnInit, OnDestroy {
   isLoading = signal(true);
   isPlayingAction = signal(false);
@@ -298,7 +314,6 @@ export class GameStart implements OnInit, OnDestroy {
 
     this.campaignService.playGame(campaignId, { actionId: actionCard.actionId }).subscribe({
       next: (response: GamePlayResponse) => {
-        // Para qualquer áudio anterior e reseta estados para a nova narração
         this.stopNarration();
         this.isPaused.set(false);
 
@@ -314,7 +329,6 @@ export class GameStart implements OnInit, OnDestroy {
 
         this.isPlayingAction.set(false);
 
-        // Só reproduz automaticamente se o auto-play estiver habilitado
         if (this.autoPlayEnabled()) {
           this.speakNarration(response.narration);
         } else {
@@ -444,7 +458,6 @@ export class GameStart implements OnInit, OnDestroy {
       this.audioElement = null;
     }
 
-    // Para TTS do navegador
     if ('speechSynthesis' in window) {
       speechSynthesis.cancel();
     }
@@ -458,7 +471,6 @@ export class GameStart implements OnInit, OnDestroy {
     } else if (this.isPaused()) {
       this.resumeNarration();
     } else {
-      // Habilita auto-play na primeira interação do usuário
       if (!this.autoPlayEnabled()) {
         this.autoPlayEnabled.set(true);
         this.audioPermissionGranted.set(true);
@@ -653,19 +665,4 @@ export class GameStart implements OnInit, OnDestroy {
         return 'pi pi-circle';
     }
   }
-
-  // getContextColor(context?: string): string {
-  //   switch (context) {
-  //     case 'meio_campo':
-  //       return '#4CAF50'; // Verde
-  //     case 'ataque':
-  //       return '#FF9800'; // Laranja
-  //     case 'chance_clara_de_gol':
-  //       return '#FFD700'; // Dourado
-  //     case 'defesa_pressionada':
-  //       return '#F44336'; // Vermelho
-  //     default:
-  //       return '#607D8B'; // Cinza azulado
-  //   }
-  // }
 }

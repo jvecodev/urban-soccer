@@ -28,6 +28,22 @@ import { UserAvatar } from '../../components/atoms/user-avatar/user-avatar';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
+
+/**
+ * @class Dashboard
+ * @description Componente que exibe o dashboard do usuário com opções para editar perfil, ver personagens e deletar conta
+ * @implements OnInit
+ * @property {Signal<User | null>} currentUser - Signal que armazena os dados do usuário atual
+ * @property {Signal<boolean>} isEditModalVisible - Signal que controla a visibilidade do modal de edição de perfil
+ * @property {Signal<boolean>} isLoading - Signal que indica se uma operação está em andamento
+ * @property {FormGroup} editForm - Formulário reativo para edição do perfil do usuário
+ * @property {Computed<string>} userInitial - Computed que retorna a inicial do nome do usuário
+ * @method ngOnInit - Inicializa o componente e carrega os dados do usuário
+ * @method loadUserData - Carrega os dados do usuário atual do serviço de autenticação
+ * @method navigateToMyCharacters - Navega para a página
+ * 
+ */
+
 export class Dashboard implements OnInit {
   currentUser = signal<User | null>(null);
   isEditModalVisible = signal<boolean>(false);
@@ -232,7 +248,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // Getters para facilitar validação no template
   get usernameErrors() {
     const control = this.editForm.get('username');
     if (control?.touched && control?.errors) {

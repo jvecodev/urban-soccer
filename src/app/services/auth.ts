@@ -137,7 +137,6 @@ export class Auth {
     return this.api.patch<UserProfile>(`/users/${userId}`, updateData)
       .pipe(
         tap((updatedProfile) => {
-          // Atualiza o usuário atual com os novos dados
           const currentUser = this.getCurrentUser();
           if (currentUser) {
             const updatedUser: User = {
@@ -251,12 +250,9 @@ export class Auth {
         this.api.setAuthToken(token);
 
 
-        // Removi a chamada automática para /users/me que estava causando erro 401
-        // A atualização do perfil pode ser feita manualmente quando necessário
 
       } catch (error) {
         console.error('❌ Erro ao carregar usuário do localStorage:', error);
-        // Chama logout para limpar todos os dados corrompidos
         this.logout();
       }
     } else {
@@ -295,7 +291,6 @@ export class Auth {
     }
 
     try {
-      // Implementação real para JWT
       if (this.token.includes('.')) {
         const payload = JSON.parse(atob(this.token.split('.')[1]));
         const currentTime = Math.floor(Date.now() / 1000);
@@ -304,7 +299,6 @@ export class Auth {
 
         return isExpired;
       } else {
-        // Se não é um JWT válido, considerar válido por 1 hora
         return false;
       }
     } catch (error) {

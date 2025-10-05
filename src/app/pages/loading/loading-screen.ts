@@ -9,10 +9,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './loading-screen.html',
   styleUrls: ['./loading-screen.scss']
 })
+
+/**
+ * @class LoadingScreen
+ * @description Componente que exibe uma tela de carregamento com animações e progresso
+ * @implements OnInit, OnDestroy
+ * @property {boolean} isExiting - Indica se a tela de carregamento está saindo
+ * @property {number} loadingProgress - Progresso atual do carregamento (0-100)
+ * @property {number} currentStage - Estágio atual do carregamento (1-4)
+ * @property {string} currentLoadingText - Texto descritivo do estágio atual
+ * @property {boolean} logoError - Indica se houve um erro ao carregar o logo
+ */
 export class LoadingScreen implements OnInit, OnDestroy {
   private progressInterval?: number;
 
-  // Propriedades públicas para o template
   isExiting = false;
   loadingProgress = 0;
   currentStage = 1;
@@ -20,7 +30,6 @@ export class LoadingScreen implements OnInit, OnDestroy {
   logoError = false;
   particles: any[] = [];
 
-  // Estágios simplificados
   loadingStages = [
     { icon: 'pi pi-cog', text: 'Inicializando sistema' },
     { icon: 'pi pi-users', text: 'Carregando jogadores' },
@@ -36,7 +45,6 @@ export class LoadingScreen implements OnInit, OnDestroy {
     // console.log('LoadingScreen ngOnInit - Progress:', this.loadingProgress);
     this.initParticles();
 
-    // Inicia o progresso imediatamente
     setTimeout(() => {
       this.startProgress();
     }, 100);
@@ -47,7 +55,6 @@ export class LoadingScreen implements OnInit, OnDestroy {
   }
 
   private initParticles(): void {
-    // Cria 20 partículas simples
     for (let i = 0; i < 20; i++) {
       this.particles.push({
         x: Math.random() * 1200,
@@ -58,14 +65,12 @@ export class LoadingScreen implements OnInit, OnDestroy {
   }
 
   private startProgress(): void {
-    // console.log('Iniciando progresso...');
 
     this.progressInterval = setInterval(() => {
       if (this.loadingProgress < 100) {
         this.loadingProgress += 5; // 5% por vez para ser mais rápido
         this.updateStageAndText();
         this.cdr.markForCheck();
-        // console.log('Progresso:', this.loadingProgress + '%', 'Estágio:', this.currentStage);
       } else {
         this.completeLoading();
       }
@@ -73,7 +78,6 @@ export class LoadingScreen implements OnInit, OnDestroy {
   }
 
   private updateStageAndText(): void {
-    // Atualiza o estágio baseado no progresso
     if (this.loadingProgress >= 0 && this.loadingProgress < 25) {
       this.currentStage = 1;
       this.currentLoadingText = this.loadingStages[0].text;

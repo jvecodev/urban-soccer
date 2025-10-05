@@ -13,6 +13,9 @@ import { Button } from '../../components/atoms/button/button';
   templateUrl: './faq.html',
   styleUrls: ['./faq.scss']
 })
+
+
+
 export class Faq implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('chatMessagesContainer', { static: false }) chatMessagesContainer!: ElementRef;
 
@@ -22,31 +25,30 @@ export class Faq implements OnInit, OnDestroy, AfterViewInit {
   isLoading: boolean = false;
   isStreaming: boolean = false;
 
-  // Sistema de conversações
   conversations: Conversation[] = [];
   currentConversation: Conversation | null = null;
   currentMessages: ConversationMessage[] = [];
   showConversations: boolean = false;
 
-  // Histórico antigo (compatibilidade)
+  //Histórico antigo (compatibilidade)
   history: FaqLog[] = [];
   showHistory: boolean = false;
 
-  // Modal de confirmação
+  //Modal de confirmação
   showDeleteModal: boolean = false;
   itemToDelete: FaqLog | null = null;
   conversationToDelete: Conversation | null = null;
 
-  // Modal de feedback
+  //Modal de feedback
   showFeedbackModal: boolean = false;
   feedbackMessage: string = '';
   feedbackType: 'success' | 'error' = 'success';
 
-  // Modal para criar nova conversa
+  //Modal para criar nova conversa
   showNewConversationModal: boolean = false;
   newConversationTitle: string = '';
 
-  // Modal para editar título da conversa
+  //Modal para editar título da conversa
   showEditTitleModal: boolean = false;
   editingTitle: string = '';
 
@@ -60,7 +62,7 @@ export class Faq implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.loadConversations();
-    this.loadHistory(); // Manter para compatibilidade
+    this.loadHistory();
   }
 
   ngAfterViewInit() {
@@ -430,7 +432,7 @@ export class Faq implements OnInit, OnDestroy, AfterViewInit {
           messageCount: 0,
           updatedAt: new Date().toISOString(),
           createdAt: new Date().toISOString(),
-          userId: '' 
+          userId: ''
         };
 
 

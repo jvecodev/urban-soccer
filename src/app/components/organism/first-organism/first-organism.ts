@@ -13,6 +13,21 @@ import { Subscription } from 'rxjs';
     templateUrl: './first-organism.html',
     styleUrl: './first-organism.scss'
 })
+
+/**
+ * @class FirstOrganism
+ * @description Componente que exibe uma mensagem de boas-vindas e um botão para criar jogador ou entrar
+ * @implements OnInit, OnDestroy
+ * @property {Subscription} userSubscription - Assinatura para monitorar mudanças no usuário atual
+ * @property {Computed<boolean>} isAuthenticated - Computed que verifica se o usuário está autenticado
+ * @property {Computed<any>} currentUser - Computed que retorna os dados do usuário atual
+ * @property {Computed<string>} buttonText - Computed que define o texto do botão com base na autenticação
+ * @property {Computed<string>} welcomeMessage - Computed que define a mensagem de boas-vindas com base no usuário atual
+ * @method ngOnInit - Inicializa o componente e configura a assinatura para mudanças no usuário
+ * @method ngOnDestroy - Limpa a assinatura ao destruir o componente
+ * @method navigateToPlayerSelection - Navega para a seleção de jogador ou para o login com
+ *
+ */
 export class FirstOrganism implements OnInit, OnDestroy {
   private userSignal = signal<any>(null);
   private userSubscription?: Subscription;

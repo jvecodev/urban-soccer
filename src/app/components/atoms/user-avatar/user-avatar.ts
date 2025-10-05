@@ -20,6 +20,17 @@ import { Router } from '@angular/router';
   `,
   styleUrls: ['./user-avatar.scss']
 })
+
+/**
+ * @class UserAvatar
+ * @description Componente que exibe um avatar de usuário com a inicial do nome e uma cor gerada
+ * @property {string} username - Nome do usuário para gerar a inicial e a cor do avatar
+ * @property {boolean} clickable - Define se o avatar é clicável (navega para o dashboard)
+ * @property {'small' | 'default' | 'large' | 'extra-large'} size - Tamanho do avatar
+ * @method onAvatarClick - Navega para o dashboard se o avatar for clicável
+ * ...
+ */
+
 export class UserAvatar {
   @Input() username: string = '';
   @Input() clickable: boolean = true;

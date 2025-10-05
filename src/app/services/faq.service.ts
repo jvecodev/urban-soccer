@@ -48,6 +48,11 @@ export interface ConversationsResponse {
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * Serviço para interagir com a API de FAQ e gerenciamento de conversas
+ */
+
 export class FaqService {
   private apiUrl = environment.apiUrl;
 
@@ -65,7 +70,6 @@ export class FaqService {
     const token = localStorage.getItem('auth_token');
 
     return new Observable(observer => {
-      // Validar se o token existe
       if (!token) {
         observer.error(new Error('Token de autenticação não encontrado'));
         return;
@@ -76,7 +80,6 @@ export class FaqService {
         body.conversation_id = conversationId;
       }
 
-      // Implementar streaming real
       fetch(`${this.apiUrl}/faq/ask/stream`, {
         method: 'POST',
         headers: {
@@ -132,9 +135,7 @@ export class FaqService {
         observer.error(error);
       });
 
-      // Cleanup function
       return () => {
-        // Cleanup resources if needed
       };
     });
   }
@@ -149,7 +150,6 @@ export class FaqService {
     return this.http.delete(`${this.apiUrl}/faq/${logId}`, { headers });
   }
 
-  // Métodos para gerenciar conversações
   getConversations(): Observable<ConversationsResponse> {
     const headers = this.getAuthHeaders();
     return this.http.get<ConversationsResponse>(`${this.apiUrl}/faq/conversations`, { headers });

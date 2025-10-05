@@ -8,6 +8,19 @@ import { CommonModule } from '@angular/common';
   templateUrl: './terms-modal.html',
   styleUrl: './terms-modal.scss'
 })
+
+/**
+ * @class TermsModal
+ * @description Componente que exibe um modal com os termos de uso ou política de privacidade
+ * @property {boolean} isVisible - Indica se o modal está visível
+ * @property {'terms' | 'privacy'} modalType - Tipo do modal (termos de uso ou política de privacidade)
+ * @property {EventEmitter<void>} closeModal - Evento emitido quando o modal é fechado
+ * @method onCloseModal - Emite o evento para fechar o modal
+ * @method onModalBackdropClick - Fecha o modal ao clicar no backdrop
+ * @method onModalContentClick - Impede o fechamento do modal ao clicar no conteúdo
+ 
+ */
+
 export class TermsModal {
   @Input() isVisible: boolean = false;
   @Input() modalType: 'terms' | 'privacy' = 'terms';
